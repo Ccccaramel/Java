@@ -1,0 +1,6 @@
+Q:如何在 html 中导入jquery?
+A:先在 WebRoot 下创建一个文件夹 js ,将 jquery.js 放入
+  然后在 html 中的 <head> 内<script type="text/javascript" src="js/*.js"></script> 即可
+
+Q:如何在浏览器中查看网站的 jquery 的版本?
+A:在 Console 下输入 $.fn.jquery 即可

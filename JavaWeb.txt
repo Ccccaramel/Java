@@ -1,4 +1,4 @@
-Q:如何在 html 中导入jquery?
+Q:如何在 html 文件中导入jquery?
 A:先在 WebRoot 下创建一个文件夹 js ,将 jquery.js 放入
   然后在 html 中的 <head> 内<script type="text/javascript" src="js/*.js"></script> 即可
 
@@ -43,3 +43,10 @@ A:打开 Tomcat 的 server.xml ,更改 Host 标签的 name 的文本内容即可
   打开 电脑的 C:\Windows\System32\drivers\etc\hosts 文件,在末行添加 127.0.0.1 [域名] 保存即可
   打开浏览器输入 [域名]:[端口号]/[虚拟目录]/index.jsp 若能访问则配置成功
   
+Q: JavaWeb 应用的组成结构及其意义
+A: JavaWebApp       Web 应用所在目录
+      |------ html,jsp,css,js 文件等      在 Web 应用根目录下,根目录下的文件外界可以直接访问
+      |------ WEB-INF 目录      包含 java 类, java 包, web 应用的配置文件,该目录下的文件外界无法直接访问,由 Web 服务器负责调用
+      |          |------ classes 目录       java 类
+      |          |------ lib 目录       Java 类运行所需的 jar 包
+      |          |------ web.xml 文件       Web 应用的配置文件

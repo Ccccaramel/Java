@@ -64,19 +64,38 @@ A:访问http://www.gacl.cn:8080/JavaWebDemo/test.jsp
 * MyEclipse 无法新建 Web 项目,又不想使用IDEA, Eclipse 虽然麻烦但毕竟曾经使用过 Eclipse
 
 Q:如何使用 Eclipse 创建 Web 项目?
-A:打开 Eclipse -> Window -> Preferences ,进入 Preferences 设置对话框,展开左侧的 Server 项
-  选择 Runtime Environment ,用鼠标单击右侧的 Add... 按钮,对话框其列出了当前 Eclipse 支持的 Tomcat 版本
-  选择与你本地的Tomcat 的版本,单击 Next 进入配置 Tomcat Server 对话框
-   Name 建议已你的 Tomcat 同名(eg:apache-tomcat-9.0.34 ,也可按系统默认名)
-   Tomcat installation directory 指向 Tomcat 的所在路径(eg:D:\apache-tomcat-9.0.34)
-  单击 Finish 完成
+A: Tomcat 下载
+    下载 Tomcat 放在硬盘里即可
+  创建 Server 服务
+    打开 Eclipse -> Window -> Preferences ,进入 Preferences 设置对话框,展开左侧的 Server 项
+    选择 Runtime Environment ,用鼠标单击右侧的 Add... 按钮,对话框其列出了当前 Eclipse 支持的 Tomcat 版本
+    选择与你本地的Tomcat 的版本,单击 Next 进入配置 Tomcat Server 对话框
+     Name 建议已你的 Tomcat 同名(eg:apache-tomcat-9.0.34 ,也可按系统默认名)
+     Tomcat installation directory 指向 Tomcat 的所在路径(eg:D:\apache-tomcat-9.0.34)
+    单击 Finish 回到 Preferences 对话框,发现新建的 Tomcat 服务在对话框的列表中列出
+  添加 Server 服务
+     Window -> Show View -> Server
+    如果没有 Server , Window -> Other... -> Server,你可以在 Server 窗口中通过 New -> Server 创建更多的 Server
+  构建 Java Web 项目
+     File -> New -> Dynamic Web Project
+    如果没有 Dynamic Web Project , File -> New -> Other... -> New Web -> Dynamic Web Project
+    单击 Next 进入 Dynamic Web Project 设置对话框,编辑项目名称直接 Finish 即可
+  创建 JSP/HTML 文件
+     JSP 是 Java 服务页面, JSP 混合了 HTML , Java 程序,特有的 JSP 标记内容,形成了 JSP 文件
+    用户通过浏览器访问 JSP 页面时, JSP 在服务器端执行 Java 程序和 JSP 标记,从数据库获取内容或进行处理操作
+    将处理后的结果转为 HTML 内容返回给浏览器
+    在 webContent 根目录下创建 index.jsp 并保存即可
+  运行 Server
+    开启 Server ,选择一个 Server 右键 Start 即可
+    在 index.jsp 内右键 Run As -> Run on Server , Eclipse 会打开自带的浏览器并打开页面
+    在本地浏览器同样可以访问
 
 <开了个小差,看了个小新闻,一个自称24岁的x女士去整容机构整眼角,之所以选y机构是因为朋友介绍说有80%的返点,半年后找到新闻记者(类似于1818?)
 说自己因眼角外翻没法上班外出见人,已经呆在家里半年,另外她是贷款(2.5w)整容,每月还两千,当她带记者去机构时前台说X机构转让
 一波三折之后找到负责人,负责人表示愿意帮x还清贷款
 当记者问x对处理结果是否满意时x的回答是
 很满意
-???无法理解>
+???>
 
 Q:Eclipse -> Window -> Preferences ,进入 Preferences 后展开左侧无 Server 项如何解决?
 A:获取你的 Eclipse 版本类型,点击 help -> About Eclipse IDE ,记住你的 Eclipse 版本号

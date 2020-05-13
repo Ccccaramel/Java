@@ -56,7 +56,30 @@ A:访问http://www.gacl.cn:8080/JavaWebDemo/test.jsp
   浏览器                     Window 的host文件                     dns 服务器                     Web 服务器                     test.jsp
      |---查询主机名对应的 ip --->|                                   |                               |                             |     
      |---------------------查询主机名对应的 ip --------------------->|                               |                             |
-     |---------------------------------根据查询的 ip 连上 Web 服务器--------------------------------->|                             |
-     |------------------------------向服务器发送 http 请求( stream 流)------------------------------>|(解析主机名, Web 应用及资源)   |
+     |---------------------------------根据查询的 ip 连上 Web 服务器--------------------------------->|                            |
+     |------------------------------向服务器发送 http 请求( stream 流)------------------------------>|(解析主机名, Web 应用及资源)  |
      |                                                                                              |------获取 Web 资源数据------>|
      |<----------------------------------------------------回送数据( stream 流)----------------------------------------------------|
+
+* MyEclipse 无法新建 Web 项目,又不想使用IDEA, Eclipse 虽然麻烦但毕竟曾经使用过 Eclipse
+
+Q:如何使用 Eclipse 创建 Web 项目?
+A:打开 Eclipse -> Window -> Preferences -> Pregerences 设置对话框,展开左侧的 Server 项
+  选择 Runtime Environment ,用鼠标单击右侧的 Add... 按钮,进入设置 Runtime Environment 对话框,其列出了当前 Eclipse 支持的 Tomcat 版本
+  选择与你本地的Tomcat 的版本,单击 Next 进入配置 Tomcat Server 对话框
+  Name 建议已你的 Tomcat 同名(eg:apache-tomcat-9.0.34), Tomcat installation directory 指向 Tomcat 的所在路径(eg:D:\apache-tomcat-9.0.34)
+  单击 Finish 完成
+
+<开了个小差,看了个小新闻,一个自称24岁的x女士去整容机构整眼角,之所以选y机构是因为朋友介绍说有80%的返点,半年后找到新闻记者(类似于1818?)
+说自己因眼角外翻没法上班外出见人,已经呆在家里半年,另外她是贷款(2.5w)整容,每月还两千,当她带记者去机构时前台说X机构转让
+一波三折之后找到负责人,负责人表示愿意帮x还清贷款
+当记者问x对处理结果是否满意时x的回答是
+很满意
+???无法理解>
+
+Q:Eclipse -> Window -> Preferences -> Pregerences 后展开左侧无 Server 项如何解决?
+A:获取你的 Eclipse 版本类型,点击 help -> About Eclipse IDE ,记住你的 Eclipse 版本号
+   help -> Install New Software... -> add... ,
+   Name 填你的版本号(eg:2020-03),一般会自动填好, Location 填 http://download.eclipse.org/releases/2020-03
+  列表会自动加载,勾选 Web,XML,Java EE and OSGi Enterprise Development ,最后一路 [Next|I accpet|Finish] 并等待下载完毕即可
+  

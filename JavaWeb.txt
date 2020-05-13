@@ -64,10 +64,11 @@ A:访问http://www.gacl.cn:8080/JavaWebDemo/test.jsp
 * MyEclipse 无法新建 Web 项目,又不想使用IDEA, Eclipse 虽然麻烦但毕竟曾经使用过 Eclipse
 
 Q:如何使用 Eclipse 创建 Web 项目?
-A:打开 Eclipse -> Window -> Preferences -> Pregerences 设置对话框,展开左侧的 Server 项
-  选择 Runtime Environment ,用鼠标单击右侧的 Add... 按钮,进入设置 Runtime Environment 对话框,其列出了当前 Eclipse 支持的 Tomcat 版本
+A:打开 Eclipse -> Window -> Preferences ,进入 Preferences 设置对话框,展开左侧的 Server 项
+  选择 Runtime Environment ,用鼠标单击右侧的 Add... 按钮,对话框其列出了当前 Eclipse 支持的 Tomcat 版本
   选择与你本地的Tomcat 的版本,单击 Next 进入配置 Tomcat Server 对话框
-  Name 建议已你的 Tomcat 同名(eg:apache-tomcat-9.0.34), Tomcat installation directory 指向 Tomcat 的所在路径(eg:D:\apache-tomcat-9.0.34)
+   Name 建议已你的 Tomcat 同名(eg:apache-tomcat-9.0.34 ,也可按系统默认名)
+   Tomcat installation directory 指向 Tomcat 的所在路径(eg:D:\apache-tomcat-9.0.34)
   单击 Finish 完成
 
 <开了个小差,看了个小新闻,一个自称24岁的x女士去整容机构整眼角,之所以选y机构是因为朋友介绍说有80%的返点,半年后找到新闻记者(类似于1818?)
@@ -77,7 +78,7 @@ A:打开 Eclipse -> Window -> Preferences -> Pregerences 设置对话框,展开�
 很满意
 ???无法理解>
 
-Q:Eclipse -> Window -> Preferences -> Pregerences 后展开左侧无 Server 项如何解决?
+Q:Eclipse -> Window -> Preferences ,进入 Preferences 后展开左侧无 Server 项如何解决?
 A:获取你的 Eclipse 版本类型,点击 help -> About Eclipse IDE ,记住你的 Eclipse 版本号
    help -> Install New Software... -> add... ,
    Name 填你的版本号(eg:2020-03),一般会自动填好, Location 填 http://download.eclipse.org/releases/2020-03

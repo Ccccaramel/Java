@@ -61,7 +61,7 @@ A:访问http://www.gacl.cn:8080/JavaWebDemo/test.jsp
      |                                                                                              |------获取 Web 资源数据------>|
      |<----------------------------------------------------回送数据( stream 流)----------------------------------------------------|
 
-*破解后的 MyEclipse 无法新建 Web 项目,又不想使用IDEA, Eclipse 虽然麻烦但毕竟曾经使用过
+*破解后的 MyEclipse 无法新建 Web 项目, Eclipse 免费但需要进行一些手动配置
 
 Q:如何使用 Eclipse 创建 Web 项目?
 A: Tomcat 下载
@@ -92,6 +92,8 @@ A: Tomcat 下载
     开启 Server ,选择一个 Server 右键 Start 即可
     在 index.jsp 内右键 Run As -> Run on Server , Eclipse 会打开自带的浏览器并打开页面
     在本地浏览器同样可以访问
+    *当配置 https 连接器后使用 Eclipse 的 Server 访问 https://... 在经过最大启动时间后会自动结束 Server
+      暂时不知道怎么解决,建议开启本地的 Tomcat 手动开启即可正常访问 
 
 <开了个小差,看了个小新闻,一个自称24岁的x女士去整容机构整眼角,之所以选y机构是因为朋友介绍说有80%的返点,半年后找到新闻记者(类似于1818?)
 说自己因眼角外翻没法上班外出见人,已经呆在家里半年,另外她是贷款(2.5w)整容,每月还两千,当她带记者去机构时前台说X机构转让
@@ -124,9 +126,9 @@ A:在 Eclipse 的左侧目录空白处右键 -> Export -> WAR file ,选择存放
   然后将请求交给相应的 Host , Host 收到请求后就会解析出用户想要访问这个 Host 下面的哪个 Web 应用
   一个 Web 应用对应一个 Context
 
-互联网上的加密原理
+*互联网上的加密原理
    Tomcat 服务器启动时会启动多个 Connector , 而 Tomcat 服务器的连接器又分为加密连接器和非加密连接器
-   当去访问例如 http://localhost:9090/ding/index.jsp 时就是使用9090端口的连接器
+  当去访问例如 http://localhost:9090/ding/index.jsp 时就是使用9090端口的连接器
     <Connector port="9090" protocol="HTTP/1.1"
       connectionTimeout="20000"
       redirectPort="8443" />
@@ -172,3 +174,186 @@ A:在 Eclipse 的左侧目录空白处右键 -> Export -> WAR file ,选择存放
        B 确认后说是的,此时 CA 机构就会为 B 的公钥做担保,生成一份数字证书给 B ,数字证书包含了 CA 的担保认证签名和 B 的公钥
        B 拿到 CA 的这份数字证书后就发给 A , A 拿到数字证书后,看到上面有 CA 的签名,就可以确定当前拿到的公钥是 B 发的
       那么就可以放心大胆的使用公钥加密数据并发送给 B 了
+
+* https 连接器
+  浏览器与服务器交互时,浏览器想将数据加密后再发送给服务器前首先要向浏览器出示一份数字证书
+  浏览器收到证书后就可以使用数字证书里面的公钥加密数据,故要想做浏览器和服务器的加密数据传输,首先得针对服务器生成一份数字证书
+  然后再配置服务器,让服务器收到浏览器的请求之后会向浏览器出示它的数字证书
+  1.生成 Tomcat 服务器的数字证书
+     SUN 公司提供了制作证书的工具 keytool ,在 JDK1.4 以后的版本中都包含了这一工具
+    它的位置在 <JAVA_HOME>\bin\keytool.exe
+    首先进入上述目录下,执行 keytool -genkey -alias tomcat -keyalg RSA 生成一个名为 tomcat 的证书,存放在 .keystore 这个密钥库中
+    执行 keytool -importkeystore -srckeystore C:\Users\44454\.keystore -destkeystore C:\Users\44454\.keystore -deststoretype pkcs12
+    此名命令的两处路径按实际调整,此路径即数字证书的路径
+    第一次使用它会要求你输入源密钥库口令,直接输入回车即可,紧接着会要求设置相关密码,随意设置,勿忘即可
+    在包含数字证书的目录下输入 keytool -list -keystore .keystore 即可查看所有证书
+
+Q:通过命令提示符输入 keytool 时提示'keytool'不是内部或外部命令...,如何配置环境变量?
+A:获取 keytool.exe 所在的路径,在用户变量的 path 中添加即可
+
+*配置 https 连接器
+  将生成的 .keystore 密钥库文件拷贝到 Tomcat 服务器的 conf 目录下
+  打开 server.xml ,注释原有 <Connector> 标签所有内容并添加如下代码
+    <Connector port="9060" protocol="org.apache.coyote.http11.Http11NioProtocol"
+			maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+			clientAuth="false" sslProtocol="TLS"
+			keystorefile="conf/.keystore" keystorePass="[你的密钥库的访问密码,我就不明写了]"/>
+  在 server.xml 文件中配置了一个端口是 9060 的加密连接器,浏览器访问 9060 端口的连接器时将会以加密的方式来访问 Web 服务器
+  这个连接器收到浏览器的请求后将会向浏览器出示一份数字证书,浏览器再用数字证书里面的公钥来加密数据
+   keystorefile="conf/.keystore" 用来指明密钥库文件的所在路径,服务器从密钥库中提取证书时需要密码
+   keystorePass="[你的密钥库的访问密码,我就不明写了]" 指明密钥库的访问密码
+  当你访问 https://localhost:9060/ 时浏览器会提醒你"该网站不安全","证书无效","此CA根目录证书不受信任"等等一些信息
+  在配置的过程中犯了一个小错误:
+    修改本地 Tomcat 的 server.xml 后去执行 Eclipse 的 Server ,导致无法访问以达到最终效果
+    最后是通过端口不一致意识到原因:我运行的是旧 Server
+    当你编辑本地的 Tomcat 之后需要重新创建 Server 或 手动修同步旧 Server
+  *建议学习 Web 开发时不要使用 https ,以免造成不必要的麻烦
+
+*安装数字证书
+  为了让浏览器信任我们生成的数字证书,需要将数字证书安装到浏览器中
+  平时访问一些加密网站之所以不需要自己安装证书,是因为系统或浏览器已经提前安装了一些受信任机构颁发的证书
+  但当访问一些个人或组织自己签发证书的网站的时候,就会收到浏览器发出的警告
+  此时可以将该证书添加到"受信任的根证书颁发机构"存储区,即将证书添加到 Windows 证书管理器的"受信任的根证书"目录中
+  1.为什么要自己签发安全证书( Self-signed CA )呢?
+    因为一些受信任机构颁发的证书年费通常不菲,而且有些时候公司或组织内部小范围使用的没有信任问题,这时候就可以自己签发一个安全证书
+    对于这种安全证书能否被信任就需要用户自己去识别了
+   Chrome 使用的是 Windows 系统里的证书,没有独立的证书存储单元
+   Chrome -> 设置 -> 高级 -> 管理证书 -> 导入 ->> 选择数字证书 ->> 证书存储项选择"受信任的根证书颁发机构" ->> 完成
+  在"个人"栏里是看不到你添加的证书的,切换到"受信任的根证书颁发机构"才可以寻找到
+  重启 Chrome 使用 https... 访问网站,虽然依旧提示"不安全",但证书信息发生了改变,不在提示此证书不受信任
+  删除证书?略
+
+Q:什么是 HTTP 协议?
+A: HTTP 是 hypertext transfer protocol(超文本传输协议) 的缩写
+  他是 TCP/IP 协议的一个应用层协议,用于定义 Web 浏览器与 Web 服务器之间交换数据的过程
+  客户端连上 Web 服务器后,若想获得 Web 服务器中的某个 Web 资源,须遵守一定的通讯格式
+   HTTP 协议用于定义客户端与 Web 服务器通讯的格式
+
+* HTTP 协议的版本: HTTP/1.0 , HTTP/1.1
+
+Q: HTTP/1.0 与 HTTP/1.1 有何区别?
+A:在 HTTP/1.0 协议中,客户端与 Web 服务器建立连接后,只能获得一个 Web 资源
+  在 HTTP/1.1 协议中,允许客户端与 Web 服务器建立连接后,在每个连接上获得多个 Web 资源
+
+Q:如何使用 telnet 模拟 HTTP 请求?
+A: HTTP 响应: cmd -> curl www.baidu.com -o baidu
+
+Q: HTTP 请求包含哪些内容?
+A:客户端连上服务器后,向服务器请求某个 Web 资源,称为客户端向服务端发送了一个请求
+  一个完整的 HTTP 请求包括:
+    1.请求行:用于描述客户端的请求方式,请求资源名称,以及使用的 HTTP 协议版本号
+      请求行中的 GET 称之为请求方式(POST,GET,HEAD,OPTIONS,DELETE,TRACE,PUT),默认请求方式为 GET
+    2.若干消息头:用于描述客户端请求哪台主机,以及客户端的一些环境信息等
+       accept:浏览器通过这个头告诉服务器,他所支持的数据类型
+       Accept-Charset:支持字符集的类型
+       Accept-Encoding:支持的压缩格式
+       Accept-Language:语言环境
+       Host:访问的主机
+       If-Modified-Since:缓存数据的时间
+       Referer:来自哪个页面,防止盗链
+       Connection:请求完毕后是断开连接还是保持连接
+
+Q:命令提示符输入 telnet 提示 "'telnet' 不是内部或外部命令,..."如何解决?
+A:打开控制面板 -> 程序 -> 启用或关闭 Windows 功能 -> 勾选 Telnet Client -> 确定
+
+Q:如何使用 telnet 模拟 HTTP 响应?
+A: HTTP 响应: cmd -> telnet -> o www.chrono.com 80
+
+Q: HTTP 响应包含哪些内容?
+A:一个 HTTP 响应代表服务器向客户端回送的数据,它包括:
+    1.状态行:用于描述服务器对请求的处理结果
+      格式: HTTP/版本号 状态码 原因叙述<CRLF>
+      eg: HTTP/1.1 200 OK
+        状态码    含义
+        100~199:表示成功接收请求,要求客户端继续提交下一次请求才能完成整个处理过程
+        200~299:表示成功接收请求并已完成整个处理过程,常用200
+        300~399:为完成请求,客户需要一步细化请求,如:请求的资源已经移动一个新地址,常用302,307,304
+        400~499:客户端的请求有错误,常用404
+        500~599:服务端出现错误,常用500
+    2.多个消息头:用于描述服务器的基本消息,以及数据的描述
+      服务器通过这些数据的描述信息可以通知客户端如何处理它回送的数据
+      常用消息头
+         Location:服务器通过这个头,告诉浏览器跳到哪里
+         Server:服务器通过这个头,告诉浏览器服务器的型号
+         Content-Encoding:服务器通过这个头,高所浏览器数据的压缩格式
+         Content-Length:...,告诉浏览器会送数据的长度
+         Content-Language:...,告诉浏览器语言环境
+         Content-Type:...,告诉浏览器回送数据的类型
+         Refresh:...,告诉浏览器定时刷新
+         Content-Disposition:...,告诉浏览器以下载方式打开数据
+         Transfer-Encoding:...,告诉浏览器数据是以分块方式回送的
+         Expires:-1,控制浏览器不要缓存
+         Cache-Control: no-cache
+         Pragma: no-cache
+    3.实体内容:服务器向客户端回送的数据
+
+Q:如何在服务端设置响应头来控制客户端浏览器的行为?
+A:1.设置 Location 响应头,实现请求重定向(这部分博客没有详细写...)
+    展开 Java Resources -> src ,右键 -> New -> Package 创建一个包,右键创建的包 -> New -> Servlet
+    新创建的 java 文件包含 doGet() 和 doPost()
+    注释掉 doGet() 原有的代码,按需求选择以下其中之一,添加如下代码
+      a.请求转发
+         request.setAttribute("list", "listValue");
+                                变量名      值
+         request.getRequestDispatcher("index.jsp").forward(request, response);
+                                      对应 jsp 文件
+        当然你得在对应的 jsp 文件的<boby></body> 标签添加 <%=request.getAttribute("list") %> 才有效果
+         eg:<body>
+              <%=request.getAttribute("list") %>
+            </body>
+        在浏览器里输入 eg:http://localhost:9090/ding/ServletDemo1
+        特点:
+          <1>.地址栏不会改变
+          <2>.在最终 Servlet 中, request 对象和中转的那个 request 是同一个对象
+          <3>.只能转发给当前 Web 应用的资源
+          <4>. / 代表的是当前 Web 应用的根目录
+      b.重定向
+         response.sendRedirect("1.jsp");
+        在浏览器里输入 eg:http://localhost:9090/ding/ServletDemo1 时会跳转至指定地址,并且地址栏也会随之发生改变
+        特点:
+          <1>.地址栏为最后响应的地址
+          <2>.在最终 Servlet 中, request 对象和中转的那个 request 不是同一个对象
+          <3>.可以重定向至任何资源
+          <4>. / 代表的是当前 Web 站点的根目录
+  2.设置 Content-Encoding 响应头,告诉浏览器数据的压缩格式
+    略
+  3.设置 Content-Type 响应头,指定回送数据类型
+    略
+  4.设置 Refresh 响应头,让浏览器定时更新
+    略
+  5.设置 Content-Disposition 响应头,让浏览器下载文件
+    略
+
+Q:什么是 Servlet ?
+A: Servlet 是 SUN 公司提供的一门用于开发动态 Web 资源的技术
+   SUN 公司在其中提供了一个 Servlet 接口,用户想要用它发送一个 Web 资源(即开发一个 Java 程序向浏览器输出数据)
+  需要完成以下2个步骤:
+     1.编写一个 Java 类,实现 Servlet 接口
+     2.把开发好的 Java 类部署到 Web 服务器中
+  按照一种约定俗成的称呼习惯,通常也把实现了 Servlet 接口的 Java 程序称为 Servlet
+
+Q:详述 Servlet 的运行过程
+A: Servlet 程序是由 Web 服务器调用, Web 服务器收到客户端的 Servlet 访问请求后
+    1. Web 服务器首先检查是否已经装载并创建了该 Servlet 的实例对象
+    2.装载并创建该 Servlet 的一个实例对象
+    3.调用 Servlet 实例对象的 init() 方法
+    4.创建一个用于封装 HTTP 请求消息的 HttpServletRequest 对象和一个代表 HTTP 响应消息的 HttpServletResponse 对象
+      然后调用 Servlet 的 service() 方法并将请求和响应对象作为参数传递进去
+    5. Web 应用程序被停止或重新启动之前, Servlet 引擎将卸载 Servlet ,并在卸载之前调用 Servlet 的 destroy() 方法
+     Servlet 调用图:
+     http://...
+         |
+       浏览器                                         Web 服务器                                                              Servlet
+         |-------------- 1.连接 Web 服务器 -------------->|                                                                       |
+         |-------------- 2.发送 Http 请求 --------------->|                                                                       |
+         |                                     3.解析客户端想访问的主机                                                            |
+         |                                     4.解析客户端想访问的 Web                                                            |
+         |                                     5.机械客户端想访问的 Web 资源                                                       |
+         |                                                |-- 6.若 Servlet 是第一次访问则服务器会加载 Servlet并创建 Servlet 对象 -->|
+         |                                                |--------------------- 7.调用 Servlet 的 init方法 --------------------->|
+         |                                                |------------------- 8.调用 Servlet 的 Service 方法 ------------------->|
+         |                                                |                                                    9. Service 方法执行,把数据写到 Response 中
+         |<-- 10. Web 服务器取出 Response数据回送给浏览器 --|<----------------------------------------------------------------------|
+
+Q:如何在 Eclipse 中开发 Servlet ?
+A:在 Eclipse 中

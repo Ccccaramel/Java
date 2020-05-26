@@ -51,6 +51,10 @@ public class JavaPolymorphism {
 		 *   1.继承
 		 *   2.重写
 		 *   3.父类引用子对象
+		 * 多态的实现方式
+		 *   1.重写
+		 *   2.接口
+		 *   3.抽象类和抽象方法
 		 */
 		show(new Cat());
 		show(new Dog());

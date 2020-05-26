@@ -1,0 +1,238 @@
+Q:集合 TreeMap 与 TreeSet 的区别?
+A: TreeMap: 
+     TreeMap 底层数据结构:红黑树
+    红黑树特性:
+      1.每个节点只能是红色或黑色
+      2.根节点是黑色
+      3.每个叶节点( NLL 节点,空节点)是黑色的
+      4.若一个节点是红色的,那么它的两个子节点都是黑的,即一条路径上不出现相邻的两个红色节点
+      5.从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点
+    特点:
+       TreeSet 是非线程安全的,但是可以通过
+          Map m=Collections.synchronizedSortedMap(new TreeMap());
+      来实现线程安全
+     TreeMap 是用键进行排序的,默认采用升序,通过 Comparable 或 Comparator 来排序
+     TreeMap 是 SortedMap 接口基于红黑树的实现,此类保证了映射按照升序排列关键字
+    根据使用的构造方法不同,可能会按照键的类的自然顺序进行排序,或者按照创建时所提供的比较器(自定义)进行排序
+      1.允许值重复,不允许键重复
+      2.键不可为 null (除非比较器对 null 做了处理),值可为 null 
+     TreeMap 应用:
+      (见 JavaTreeMap.java )
+   TreeSet:
+     TreeSet 实现了对 TreeMap 的封装,应用方法一样,值都为 new Object() ,键不能重复
+     TreeSet 排序与 TreeMap 一样( 详见 Java.java )
+  主要区别:
+    应用场景不同, TreeSet 的应用场景是实现 key 值去重以及对 key 值进行排序
+
+Q: HashMap 与 TreeMap 的区别?
+  实现方式:
+      HashMap :基于哈希表实现,使用 HashMap 要求添加的键类明确定义了 HashCode() 和 equals() 方法(可重写这两个方法)
+      为了优化 HashMap 空间的使用,你可以调优初始容量和负载因子
+      TreeMap :基于红黑树实现, TreeMap 无调优项,因为该树总处于平衡状态
+  用途:
+      HashMap 适用于在 Map 中插入,删除和定位元素
+      TreeMap 适用于按照自然顺序或自定义顺序遍历键
+      HashMap 通常比 TreeMap 快点,建议使用 HashMap ,在排序时使用 TreeMap
+      ContainsKey 方法不同, HashMap 使用 equals() 方法进行比较, TreeMap 使用比较器进行比较,若差值为0则两者相等
+
+*转换符
+  'b':将参数格式化为 boolean 类型输出,'B'的效果相同,但结果中字母为大写
+  'h':将参数格式化为散列输出,原理:Integer.toHexString(arg.hashCode()),'H'的效果相同,但结果中字母为大写
+  's':将参数格式化为字符串输出,如果参数实现了 Formattable 接口,则调用 formatTo 方法。'S'的效果相同
+  'c':将参数格式化为Unicode字符,'C'的效果相同
+  'd':将参数格式化为十进制整数
+  'o':将参数格式化为八进制整数
+  'x':将参数格式化为十六进制整数
+  'e':将参数格式化为科学计数法的浮点数,'E'的效果相同
+  'f':将参数格式化为十进制浮点数
+  'g':根据具体情况,自动选择用普通表示方式还是科学计数法方式,'G'效果相同
+  'g':根据具体情况,自动选择用普通表示方式还是科学计数法方式,'G'效果相同
+  'a':结果被格式化为带有效位数和指数的十六进制浮点数,'A'效果相同,但结果中字母为大写
+  't':时间日期格式化前缀
+  '%':输出%
+  'n':平台独立的行分隔符, System.getProperty("line.separator") 可以取得平台独立的行分隔符
+      但是用在 format 中间未免显得过于烦琐了已经换行
+
+Q:什么是 Java 封装?
+A:封装是指一种将抽象性函式接口的实现细节部分包装并隐藏起来的方法,防止该类的代码被外部类定义的代码随机访问
+  封装最主要的功能在于我们能修改自己的实现代码,而不是用修改那些调用我们代码的程序片段
+  适当的封装可以让程序更容易理解和维护,也加强了安全性
+  封装的优点:
+    1.良好的封装能减少耦合
+    2.类内部的结构可以自由修改
+    3.可以对成员变量进行更精确的控制
+    4.隐藏信息,实现细节
+
+Q:什么是 Java 包?
+A:为了更好的组织类, Java 提供了包机制,用于区别类名的命名空间
+  包的作用:
+    1.把功能相似或相关的类或接口组织在同一个包中,方便类的查找和使用
+    2.如同文件夹一样,包采用树形目录的存储方式,同一个包中的类名字是不同的,不同的包中的类的名字是可以相同的
+      当同时调用两个不同包中相同类名的类时,应该加上包名加以区别,因此包可以避免名字冲突
+    3.包限定了访问权限,拥有包访问权限的类才能访问某个包中的类
+  使用 import 关键字导入包 
+
+Q:什么是 Java 序列化?
+A: Java 提供了一种对象序列化的机制
+  该机制中一个对象可以被表示为一个字节序列,该字节序列包括对象的数据,有关对象的类型的信息和存储在对象中数据的类型
+  将序列化对象写入文件后,可以从文件中读取出来,并且对它进行反序列化,即对象的信息,对象的数据,对象的数据类型可以用来在内存中新建对象
+  整个过程都是 Java 虚拟机( JVM )独立的,即在一个平台上序列化的对象可以在另一个完全不同的平台上反序列化该对象
+  类 ObjectInputStream 和 ObjectOutputStream 是高层次的数据流,它们包含反序列化和序列化对象的方法
+   ObjectOutputStream 类包含很多方法来写各种数据类型,但有一个特别的方法除外:
+     public final void writeObject(Object x) throws IOException
+  上述的方法序列化一个对象,并将它发送到输出流,相似的 ObjectInputStream 类包含如下反序列化一个对象的方法:
+     public final Object readObject() throws IOException,ClassNotFoundException
+  该方法从流中取出下一个对象,并将对象反序列化,它的返回值为 Object ,因此,你需要将它转换成合适的数据类型
+  ( 详见 JavaSerialization.java )
+  一个类的对象想要序列化成功,必须满足两个条件:
+    1.该类必须实现 Java.io.Serializable 接口
+    2.该类的所有属性必须是可序列化的,若有一个属性不是可序列化的,则该属性必须使用 transient 关键字注明是短暂的
+
+* Java Stream,File,IO
+   Java.io 包几乎包含了所有操作输入输出需要的类,所有这些流类代表了输入和输出目标
+   Java.io 包中的流支持很多种格式,比如基本类型,对象,本地化字符集等等
+  一个流可以理解为一个数据的序列,输入表示从一个源读取数据,输出表示向一个目标写数据
+   Java 为 I/O 提供了强大的且灵活的支持,使其更广泛地应用到文件传输和网络编程中
+  读取控制台输入
+     Java 的控制台输入由 System.in 完成
+    为了获得一个绑定到控制台的字符流,你可以把 System.in 包装在一个 BufferedReader 对象中来创建一个字符流
+    创建 BufferedReader 的基本语法:
+       BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+     BufferedReader 对象创建后便可使用 read() 方法从控制台读取一个字符,或者用 readLine() 方法读取一个字符串
+  从控制台读取多字符输入
+    从 BufferedReader 对象读取一个字符要使用 read() 方法,其语法如下:
+       int read() throws IOException
+    每次调用 read() 方法,它从输入流读取一个字符并把该字符作为整数值返回
+    当流结束的时候返回-1,该方法抛出 IOException
+  从控制台读取字符串
+  读写文件
+     FileInputStream
+      该流用于从文件读取数据,它的对象可以用关键字 new 创建
+      可以使用字符串类型的文件名创建一个输入流对象来读取文件:
+         InputStream f=new FileInputStream("../hello"); 
+      也可以使用一个文件对象来创建一个输入流对象来读取文件
+         File f=new File("../hello");
+         InputStream out=new FileInputStream(f);
+     FileOutputStream
+      该类用来创建一个文件并向文件中写数据
+      如果该流在打开文件进行输出前,目标文件不存在,那么该流会创建该文件
+      有两个构造方法可以用来创建 FileOutputStream 对象
+      使用字符串类型的文件名来创建一个输出流对象:
+         OutputStream f=new FileOutputStream("../hello");
+      也可以使用一个文件对象来创建一个输出流来写文件:
+         File f=new File("../hello");
+         OutputStream f=new FileOutputStream(f);
+  文件和 I/O的几个类:
+    1. File Calss
+    2. FileReader Class
+    3. FileWriter Class
+   Java 中的目录
+    创建目录:
+       File 类中有两个方法可以用来创建文件夹
+         mkdir() 方法创建一个文件夹,成功返回 true ,失败返回 false
+         mkdirs() 方法创建一个文件夹和它的所有父文件夹
+    读取目录:
+      一个目录其实就是一个 File 对象,它包含其它文件和文件夹
+      如果创建一个 File 对象并且它是一个目录,那么调用 isDirectory() 方法会返回 true
+      可以通过调用该对象上的 list() 方法来提取它包含的文件和文件夹的列表
+    删除文件:
+      删除文件可以使用 java.io.File.delete() 方法,但必须保证其目录下无文件夹 
+  (详见 JavaStreamFileIO.java )
+     
+* Scanner 类
+  通过 Scanner 类获取用户的输入
+  创建 Scanner 对象的基本语法:
+    Scanner s=new Scanner(System.in);
+   next():
+    1.一定要读到有效字符后才可以结束输入
+    2.对输入有效字符之前遇到的空白, next() 方法会自动将其去掉
+    3.只有输入有效字符后才将其后面输入的空白作为分隔符或结束符
+    4. next() 不能得到带有空格的字符串
+   nextLine():
+    1.以 Enter 为结束符,即 nextLine() 方法返回的是输入回车之前的所有字符
+    2.可以获得空白 
+  如果要输入 int 或 float 类型的数据,建议在输入之前先使用 hasNextXxx() 方法进行验证,再使用 nextXxx() 获取
+  (详见 JavaScanner.java )
+
+*线程
+  一个线程的生命周期
+    1.新建状态
+    2.就绪状态:线程调用 start() 方法后该线程就进入就绪状态,等待 JVM 线程调度器的调度
+    3.运行状态
+    4.阻塞状态:线程执行 sleep(睡眠),suspend(挂起) 等方法失去资源后
+      等待阻塞:运行状态中的线程执行 wait() 方法,使线程进入到等待阻塞状态
+      同步阻塞:线程再获取 synchronized 同步锁失败(因为同步锁被其它线程占用) 
+      其它阻塞:通过调用线程的 sleep() 或 join() 发出了 I/O 请求时,线程就会进入到阻塞状态
+        当 sleep() 状态超时, join() 等待线程终止或超时,或者 I/O 处理完毕,线程重新转入就绪状态 
+    5.死亡状态
+  线程优先级
+    范围:1-10
+    默认情况下优先级为5
+  创建线程:
+    1.通过实现 Runnable 接口
+      创建一个实现 Runnable 接口的类并调用 run()
+         public void run();
+      当然你可以重写该方法
+      在类中实例化一个线程对象, threadOb 是一个实现 Runnable 接口的类的实例,并且 threadName 指定新线程的名字
+         Thread(Runnable threadOb,String threadName);
+      新线程创建之后,你调用它的 start() 方法它才会运行
+         void start();
+    2.通过继承 Thread 类本身
+      创建一个类,继承 Thread 类并重写 run() 方法,该方法是新线程的入口点,它必须调用 start() 方法才能执行
+      其本质也是实现了 Runnable 接口的一个实例
+    3.通过 Callable 和 Future 创建线程
+        1.创建 Callable 接口的实现类,并实现 call() 方法,该 call() 方法将作为线程执行体,并且有返回值
+        2.创建 Callable 实现类的实例,使用 FutureTask 类来包装 Callable 对象
+          该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值 
+        3.使用 FutureTask 对象作为 Thread 对象的 target 创建并启动新线程
+        4.调用 FutureTask 对象的 get() 方法获得子线程执行结果后的返回值
+  创建线程的三种方式的对比
+    1.采用实现 Runnable,Callable 接口的方式创建多线程时,线程类只是实现了 Runnable 接口或 Callable 接口
+      还可以继承其它类
+    2.使用继承 Thread 类的方式创建多线程时,编写简单,如果需要访问当前线程,则无需使用 Thread.currentThread() 方法
+      直接使用 this 即可获得当前线程
+  线程的几个主要概念
+    1.线程同步
+    2.线程间通信
+    3.线程死锁
+    4.线程控制:挂起,停止和恢复
+  多线程的使用
+    1.有效利用多线程的关键是理解程序是并发执行而不是串行执行的
+    2.通过对多线程的使用,可以编写出非常高效的程序
+    3.上下文的切换开销很重要
+
+* Java 网络编程
+  网络编程是指编写运行在多个设备(计算机)的程序,这些设备都通过网络连接起来
+   java.net 包中 J2EE 的 API 包含有类和接口,它们提供低层次的通信细节
+  你可以直接使用这些类和接口,来专注于解决问题,而不用关注通信细节
+   java.net 包中提供了两种常见的网络协议的支持:
+     TCP: TCP 是传输控制协议的缩写,它保障了两个应用程序之间的可靠通信,通常用于互联网协议,被称为 TCP/IP
+     UDP: UDP 是用户数据报协议的缩写,一个无连接的协议,提供了应用程序之间要发送的数据的数据包
+   Socket 编程
+    套接字使用 TCP 提供了两台计算机之间的通信机制,客户端程序创建了一个套接字,并尝试连接服务器的套接字
+    当连接建立时,服务器会创建一个 Socket 对象,客户端和服务器现在可以通过 Socket 对象的写入和读取来进行通信
+     java.net.Socket 类代表一个套接字,并且 java.net.ServerSocket 类为服务器程序提供了一种来监听客户端,并于它们建立连接的机制
+    其步骤如下:
+      1.服务器实例化一个 ServerSocket 对象,表示通过服务器上的端口通信
+      2.服务器调用 ServerSocket 类的 accept() 方法,该方法将一直等待,直到客户端连接到服务器上给定的端口
+      3.服务器正在等待时,一个客户端实例化一个 Socket 对象,指定服务器名称和端口号来请求连接
+      4. Socket 类的构造函数试图将客户端连接到指定的服务器和端口号,如果通信被建立,则在客户端创建一个 Socket 对象能够于服务器进行通信
+    连接建立后,通关使用 I/O 流在进行通信,每一个 Socket 都有一个输出流和一个输入流
+    客户端的输出流连接到服务器的输入流,而客户端的输入流连接到服务器端的输出流
+     TCP 是一个双向的通信协议,因此数据可以通过两个数据流在同一个时间发送
+    (详见 JavaSocketSerer.java 和 JavaSocketClient.java )
+   URL 处理
+     URL(Uniform Resource Locator) 中文名为统一资源定位符,有时也被称为网页地址,表示为互联网上的资源,如网页或 FTP 地址
+     URL 可以分为以下几个部分:
+       protocol://host:port/path?query#fragment
+         protocol(协议) 可以是 HTTP , HTTPS , FTP 和 File , port 为端口号,path 为文件路径及文件名
+     URL 解析(以 http://www.runoob.com/index.html?language=cn#j2se)
+      协议(): http 
+      主机(): www.runoob.com
+      端口号(): 80
+      文件路径(): /index.html
+      请求参数(): language=cn
+      定位位置(): j2se ,定位到网页中 id 属性为 j2se 的 HTML 元素位置
+     URL 类方法
+      (略)
+    (详见 JavaURL.java )

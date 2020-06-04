@@ -363,7 +363,7 @@ A:在 Eclipse 中新建一个 Web Project 工程, Eclipse 会自动创建相应�
      Servlet 接口 SUN 公司定义了两个默认实现类,分别为: GenericServlet , HttpServlet
      HttpServlet 指能够处理 HTTP 请求的 Servlet ,它在原有 Servlet 接口上添加了一些与 HTTP 协议处理方法,它比 Servlet 接口的功能更强大
     因此开发人员在编写 Servlet 时通常继承这个类,而避免直接去实现 Servlet 接口
-    HttpServlet 在实现 Servlet 接口时,覆写了 Service 方法,该方法体内的代码会自动判断用户的请求方式,如 GET 请求,则调用 HttpServlet 的  doGet 方法
+    HttpServlet 在实现 Servlet 接口时,覆写了 Service 方法,该方法体内的代码会自动判断用户的请求方式,如 GET 请求,则调用 HttpServlet 的 doGet 方法
     若为 POST 请求,则调用 doPost 方法,因此开发人员在编写 Servlet 时,通常只需要覆写 doGet 或 doPost 方法,而不需要覆写 Service 方法
   通过 Eclipse 创建和编写 Servlet
     右键 src(或其下的包) -> New -> Servlet ,若 New 下没有 Servlet 则 右键 src(或其下的包) -> New -> Other... -> Web -> Servlet
@@ -454,3 +454,56 @@ Q:什么是 properties 文件?
 A:后缀 properties 是一种属性文件,这种文件以 key=value 格式存储内容
    Java 中可以使用 Properties 类读取此类文件, String value=p.getProperty(key)
   用此文件作为部分参数的存储使代码更灵活,有利于代码重构,维护方便
+
+*  HttpServletResponse 请求
+   Web 服务器收到客户端的 Http 请求,会针对每一次请求分别创建一个用于代表请求的 Request 对象和代表响应的 Response 对象
+  当想要获取客户机提交过来的数据时只需调用 Request 对象即可,向客户机输出数据只需调用 Response 对象即可
+   HttpServletResponse 对象代表服务器的响应,这个对象中封装了向客户端发送数据,发送响应头,发送响应状态码的方法
+   HttpServletResponse 对象常见应用
+    使用 OutputStream 流向客户端浏览器输出中文数据
+    使用 PrintWriter 流向客户端浏览器输出中文数据
+    使用 OutputStream 或 PrintWriter 向客户端浏览器输出数字
+    文件下载:
+      1.获取待下载的文件的绝对路径
+      2.获取待下载的文件名
+      3.设置 context-disposition 响应头控制浏览器并以下载的形式打开文件
+      4.获取待下载的文件输入流
+      5.创建数据缓冲区
+      6.通过 Response 对象获取 OutputStream 流
+      7.将 FileInputStream 流写入到 Buffer 缓冲区
+      8.使用 OutputStream 将缓冲区的数据输出到客户端浏览器(建议使用其它方法)
+    生成验证码
+    设置响应头控制浏览器的行为
+      1.设置 Http 响应头控制浏览器禁止缓存当前文档内容
+      2.设置 Http 响应头控制浏览器定时刷新网页
+      3.头通过 Response 实现请求重定向
+    ( 详见 ResponseDemo1.java )
+
+*  Web 工程中 URL 地址的推荐写法
+  在 JavaWeb 开发中,只要是写 URL 地址,那么建议最好以"/"开头,即使用绝对路径方式
+  "/"相对服务器来说代表当前的 Web 工程
+  "/"相对浏览器来说代表 Webapps 目录
+
+* 使用 ${pageContext.request.contextPath} 或 request.getContextPath() 代替 Web 目录,即两者获取到的都是"/项目名称"
+
+*  Response 细节问题
+   getOutputStream 和 getWriter 方法分别用于得到输出二进制数据 ServletOutputStream 和 输出数据 PrintWriter 对象
+   getOutputStream 和 getWriter 这两个方法互斥,调用其中一个则不可调用另一个
+   Servlet 程序向 ServletOutputStream 或 PrintWriter 对象中写入的数据将被 Servlet 引擎从 Response 里获取
+   Servlet 引擎将这些数据当作响应消息的正文,然后再与响应状态行和各响应头组合后输出到客户端
+   Servlet 的 Service 方法结束后, Servlet 引擎将检查 getWriter 或 getOutputStream 方法返回的输出流对象是否已经调用过 close 方法
+  如果没有那么 Servlet 引擎将调用 close 方法关闭该输出流对象
+  
+* 如何防止表单重复提交?
+  出现表单重复提交的情况:
+    1.网速延迟并多次点击提交按钮
+    2.提交表单后刷新(刷新动作会将你之前的操作再执行一遍)
+    3.提交后点击后退再次提交(后退并不能撤销提交)
+  利用 JavaScript 防止表单重复提交(在客户端解决)
+    定义一个变量,通过变量值来判断是否允许提交,但作用仍然有限
+  利用 Session 防止表单重复提交(在服务端解决)
+    在服务端生成一个唯一的随机标识号(令牌),同时在当前用户的 Session 域中保存这个 Token
+    然后将 Token 发送到客户端的 Form 表单中,在 Form 表单中使用隐藏域来储存这个 Token
+    表单提交的时候连同这个 Token 一起提交到服务器端,然后在服务器端判断客户端提交上来的 Token 与服务器端生成的 Token 是否一致
+    若不一致,那就是重复提交,此时服务器就不可以重复处理提交的表单
+    若一致,处理完后清除当前用户的 Session 域中存储的标识号

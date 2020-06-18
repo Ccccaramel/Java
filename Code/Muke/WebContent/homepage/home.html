@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>首页-Muke</title>
+<link rel="icon" href="../Data/img/favicon.ico">
+<link href="../bootstrap-4.1.3-dist/css/bootstrap.css" rel="stylesheet"/> 
+<script type="text/javascript" src="../jQuery/jquery-3.1.1.min.js"></script>
+<script src="../bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            //加载课程分类---数据库中前13个课程类型，
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_Course_Type.php',
+                //返回数据类型
+                dataType: 'json',
+                success: function (json) {
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#course-type").empty();
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.list;
+                    //计数
+                    var sign = 0;
+                    //获取数据
+                    $.each(list, function (index, array) {
+                        if (sign <= 13 && array['typeValue'] != 1017) {
+                            li += "<button type=\"button\" class=\"btn btn-secondary\" style=\"width: 100%;height: 100%;\" id=\"" + array['typeValue'] + "\" onclick=\"save_course_type(this)\">" + array['typeName'] + "</button>"
+                            sign++;
+                        }
+                    });
+                    $("#course-type").append(li);
+
+                },
+                error: function () {
+                    //alert("课程分类加载失败");
+                }
+            });
+
+            //加载首页滚动轮播图推广课程
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_Promotion_Course.php',
+                //返回数据类型
+                dataType: 'json',
+                success: function (json) {
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#coursesPromotion-indicators").empty();
+                    $("#coursesPromotion-inner").empty();
+                    //html语句，向里面添加代码
+                    var indicators = "";
+                    var inner = "";
+                    //获取数据库返回的数据
+                    var list = json.course;
+                    //计数
+                    var sign = 0;
+                    //获取数据
+                    $.each(list, function (index, array) {
+                        if (sign == 0) {
+                            indicators += "<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"" + sign + "\" class=\"active\"></li>";
+                            inner += "<div class=\"carousel-item active\" style=\"width: 100%;height: 100%\">" +
+                                "<img class=\"d-block w-100\" src=\"../Data/img/" + array['courseImgName'] + "\" id=" + array['courseId'] + " style=\"width: 100%;height: 100%\" onclick=\"introduce(this)\">" +
+                                "<div class=\"carousel-caption d-none d-md-block\">"+
+                                "<h5 style=\"background: rgba(0,0,0,0.4)\">"+array['courseName']+"</h5>"+
+                                "</div>"+
+                                "</div>";
+                        } else {
+                            indicators += "<li data-target=\"#carouselExampleIndicators\" data-slide-to=\"" + sign + "\"></li>";
+                            inner += "<div class=\"carousel-item\" style=\"width: 100%;height: 100%\">" +
+                                "<img class=\"d-block w-100\" src=\"../Data/img/" + array['courseImgName'] + "\" id=" + array['courseId'] + " style=\"width: 100%;height: 100%\" onclick=\"introduce(this)\">" +
+                                "<div class=\"carousel-caption d-none d-md-block\">"+
+                                "<h5 style=\"background: rgba(0,0,0,0.3)\">"+array['courseName']+"</h5>"+
+                                "</div>"+
+                                "</div>";
+                        }
+                        sign++;
+
+                    });
+                    $("#coursesPromotion-indicators").append(indicators);
+                    $("#coursesPromotion-inner").append(inner);
+                },
+                error: function () {
+                    //alert("热门课程加载失败");
+                }
+            });
+
+            //加载热门课程
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_Popular_Courses.php',
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#popularRecommendation").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#popularRecommendation").empty();
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.course;
+                    //获取数据
+                    $.each(list, function (index, array) {
+
+                        li += "<div class=\"card col-4\" style=\"width: 18rem;\">" +
+                            "<img class=\"card-img-top\" src=\"../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\">" +
+                            "<div class=\"card-body\">" +
+                            "<h5 class=\"card-title\">" + array['courseName'] + "</h5>" +
+                            "<p class=\"card-text\">" + array['courseIntroduce'] + "</p>" +
+                            "</div>" +
+                            "<div class=\"card-footer bg-transparent border-success\">" +
+                            "<button class=\"btn btn-primary\" id=" + array['courseId'] + " onclick=\"introduce(this);\">立即学习</button>" +
+                            "</div>" +
+                            "</div>";
+
+                    });
+                    $("#popularRecommendation").append(li);
+                },
+                error: function () {
+                    //alert("热门课程加载失败");
+                }
+            });
+
+            //加载最新课程
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_Latest_Courses.php',
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#latestCourse").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#latestCourse").empty();
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.course;
+                    //获取数据
+                    $.each(list, function (index, array) {
+
+                        li += "<div class=\"card col-4\" style=\"width: 18rem;\">" +
+                            "<img class=\"card-img-top\" src=\"../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\">" +
+                            "<div class=\"card-body\">" +
+                            "<h5 class=\"card-title\">" + array['courseName'] + "</h5>" +
+                            "<p class=\"card-text\">" + array['courseIntroduce'] + "</p>" +
+                            "</div>" +
+                            "<div class=\"card-footer bg-transparent border-success\">" +
+                            "<button class=\"btn btn-primary\" id=" + array['courseId'] + " onclick=\"introduce(this);\">立即学习</button>" +
+                            "</div>" +
+                            "</div>";
+
+                    });
+                    $("#latestCourse").append(li);
+                },
+                error: function () {
+                    //alert("最新课程加载失败");
+                }
+            });
+
+
+            //加载IT课程
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_IT_Courses.php',
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#IT").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#IT").empty();
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.course;
+                    //获取数据
+                    $.each(list, function (index, array) {
+
+                        li += "<div class=\"card col-4\" style=\"width: 18rem;\">" +
+                            "<img class=\"card-img-top\" src=\"../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\">" +
+                            "<div class=\"card-body\">" +
+                            "<h5 class=\"card-title\">" + array['courseName'] + "</h5>" +
+                            "<p class=\"card-text\">" + array['courseIntroduce'] + "</p>" +
+                            "</div>" +
+                            "<div class=\"card-footer bg-transparent border-success\">" +
+                            "<button class=\"btn btn-primary\" id=" + array['courseId'] + " onclick=\"introduce(this);\">立即学习</button>" +
+                            "</div>" +
+                            "</div>";
+
+                    });
+                    $("#IT").append(li);
+                },
+                error: function () {
+                    //alert("IT课程加载失败");
+                }
+            });
+
+
+            //加载文学历史课程
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Get_Literary_History_Courses.php',
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#literaryHistory").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#literaryHistory").empty();
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.course;
+                    //获取数据
+                    $.each(list, function (index, array) {
+
+                        li += "<div class=\"card col-4\" style=\"width: 18rem;\">" +
+                            "<img class=\"card-img-top\" src=\"../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\">" +
+                            "<div class=\"card-body\">" +
+                            "<h5 class=\"card-title\">" + array['courseName'] + "</h5>" +
+                            "<p class=\"card-text\">" + array['courseIntroduce'] + "</p>" +
+                            "</div>" +
+                            "<div class=\"card-footer bg-transparent border-success\">" +
+                            "<button class=\"btn btn-primary\" id=" + array['courseId'] + " onclick=\"introduce(this);\">立即学习</button>" +
+                            "</div>" +
+                            "</div>";
+
+                    });
+                    $("#literaryHistory").append(li);
+                },
+                error: function () {
+                    //alert("文学历史课程加载失败");
+                }
+            });
+        });
+
+        //点击课程名获取课程名称，跳转到课程介绍页面
+        function introduce(str) {
+            //获取课程id
+            var courseId = $(str).attr("id");
+            heats_up(courseId);
+
+        }
+
+        //课程热度增长
+        function heats_up(courseId) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Heats_Up.php',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'courseId': courseId},
+                // dataType: 'json',
+                success: function () {
+                    location.href = "course.html?courseId=" + courseId;
+                },
+                error: function () {
+                    //alert("热度增长失败");
+                }
+            });
+        }
+
+        //点击课程类型，将课程类型的id存入session，并跳转到课程类型搜索界面
+        function save_course_type(obj) {
+            var courseTypeId=obj.id;
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: '../UserBackEnd/Save_Course_Type_Id.php',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'courseTypeId': courseTypeId},
+                // dataType: 'json',
+                success: function (json) {
+                    window.location="course_type.html";
+                },
+                error: function () {
+                    //alert("此课程类别搜索失败");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<!--顶部导航栏-->
+<div id="top"></div>
+<script type="text/javascript">
+    $("#top").load("top.html");
+</script>
+
+<!--课程分类-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        课程分类
+    </div>
+
+    <div class="btn container-fluid" style="padding-top: 0px;border-top: 0px">
+        <div class="row">
+
+            <!--右侧菜单栏 -->
+            <div class="col-2" style="padding-right: 0px;padding-left: 0px">
+                <div class="btn-group-vertical carousel slide carousel-fade" role="group"
+                     aria-label="Button group with nested dropdown"
+                     style="width: 100%;height: 100%;" id="course-type">
+                </div>
+            </div>
+
+            <!--左侧轮播图-->
+            <div class="col-10" style="padding-right: 0px;padding-left: 0px;" id="carousel"
+                 style="width:100%;height:100%;">
+
+                <div id="carouselExampleIndicators" class="carousel slide" role="group"
+                     data-ride="carousel" style="width:100%;height:100%;">
+
+                    <ol class="carousel-indicators" id="coursesPromotion-indicators">
+                    </ol>
+
+                    <div class="carousel-inner" style="width: 100%;height: 100%" id="coursesPromotion-inner">
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--热门推荐-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        热门推荐
+    </div>
+    <!--卡片-->
+    <div class="container">
+        <div class="row" id="popularRecommendation">
+        </div>
+    </div>
+</div>
+<!--最新课程-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        <span>最新课程</span>
+        <!--<a style="float: right" onclick="save_course_type(this)">&gt;&gt;更多</a>-->
+    </div>
+    <!--卡片-->
+    <div class="container">
+        <div class="row" id="latestCourse">
+        </div>
+    </div>
+</div>
+<!--IT&计算机-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        <span>IT&计算机</span>
+        <a style="float: right;text-decoration:none;" id="1" href="#" onclick="save_course_type(this)">&gt;&gt;更多</a>
+    </div>
+    <!--卡片-->
+    <div class="container">
+        <div class="row" id="IT">
+        </div>
+    </div>
+</div>
+<!--文学历史-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        <span>文学历史</span>
+        <a style="float: right;text-decoration:none;" id="4" href="#" onclick="save_course_type(this)">&gt;&gt;更多</a>
+    </div>
+    <!--卡片-->
+    <div class="container">
+        <div class="row" id="literaryHistory">
+        </div>
+    </div>
+</div>
+
+<!--底部-->
+<div id="bottom"></div>
+<script type="text/javascript">
+    $("#bottom").load("bottom.html");
+</script>
+</body>
+</html>

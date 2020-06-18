@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="jQuery/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+$(function() {
+  var pathArray = window.location.pathname.split('/');
+  var secondLevelLocation = pathArray[1];
+  var loginUrl = window.location.protocol + "//"  + window.location.host + "/"+ secondLevelLocation;
+  var account=$("")
+  console.log(loginUrl);
+	$.ajax({
+	    type: 'POST',
+	    url: loginUrl+"/UC",
+	    dataType: 'json',
+	    success: function (json) {
+	        console.log(json);
+	    },
+        error:function(xhr,status,error){
+        	console.log("状态码:"+xhr.status+
+        			",状态:"+xhr.readyState+
+        			",错误信息:"+xhr.statusText+
+        			//",返回响应信息:"+xhr.responseText+
+        			",请求状态:"+status+
+        			",error:"+error);
+        }
+	});
+});
+</script>
+</head>
+<body>
+123
+</body>
+</html>

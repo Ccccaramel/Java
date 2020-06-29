@@ -46,12 +46,23 @@ public class SaveCourse extends HttpServlet {
 		int TeacherId=(int) session.getAttribute("id");
 		boolean teacher=(boolean) session.getAttribute("teacher");
 		
-		String saveImgPath=this.getServletContext().getRealPath("/Data/img");
-		String saveVideoPath=this.getServletContext().getRealPath("/Data/video");  //获取上传文件的保存目录
+		//弃用,重启 Servers 会导致资源清空
+//		String saveImgPath=this.getServletContext().getRealPath("/Data/img");
+//		String saveVideoPath=this.getServletContext().getRealPath("/Data/video");  //获取上传文件的保存目录
+		
+		String realPath = this.getServletContext().getRealPath("/");
+		String realPathParent=(new File(realPath)).getParent();
+		System.out.println("realPathParent:"+realPathParent);
+		String saveImgPath=realPathParent+"/Data/img";
+		String saveVideoPath=realPathParent+"/Data/video";  //获取上传文件的保存目录
 		ResourceUploadAndDownload resourceUploadAndDownload=new ResourceUploadAndDownload(saveImgPath, saveVideoPath);
 		Map<Object,Object> data=new HashMap<Object,Object>();
-		data=resourceUploadAndDownload.resourceUpload(request,TeacherId,teacher);
+		data=resourceUploadAndDownload.resourceUpload(request,TeacherId);  //将表单解析,整理资源并存储,将表单信息放入 Map 中并返回
 		System.out.println("data:"+data);
+		resourceUploadAndDownload.courseEntry(request,data,saveVideoPath);  //将上述返回的表单信息提取存入数据库中			
+
+
+		
 	}
 
 	/**

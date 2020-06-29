@@ -2,6 +2,7 @@ package admin.edu.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -62,6 +63,27 @@ public class CourseTypeService {
 		}
 		return courseTypeList;
 	}
+	public List<CourseType> getCourseType(int amount){  //获取指定数量的课程类型以及id
+		List<CourseType> courseTypeList=new ArrayList<>();
+		String sql="select typeValue,typeName from course_type "
+				+ "order by typeValue desc limit ?";
+		PreparedStatement prep;
+		ResultSet result;
+		try {
+			prep=CONN.prepareStatement(sql);
+			prep.setInt(1, amount);
+			result=prep.executeQuery();
+			while(result.next()) {
+				CourseType courseType=new CourseType(result.getInt("typeValue"), result.getString("typeName"));
+				courseTypeList.add(courseType);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return courseTypeList;
+	}
+	
 	public List<CourseType> getCourseType(int startPage,int pageSize){  // 获取指定页数的课程类型
 		List<CourseType> courseTypeList=new ArrayList<>();
 		String sql="select typeValue,typeName from course_type limit "+startPage+","+pageSize;
@@ -122,5 +144,21 @@ public class CourseTypeService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	public String getcourseType(int typeValue){  //获取指定课程类型(数字)的中文含义
+		String sql="select typeName from course_type where typeValue="+typeValue;
+		Statement stmt;
+		ResultSet result;
+		String typeName=null;
+		try {
+			stmt=CONN.createStatement();
+			result=stmt.executeQuery(sql);
+			result.next();
+			typeName=result.getString("typeName");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return typeName;
 	}
 }

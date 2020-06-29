@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -264,7 +265,6 @@ public class TeacherService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return false;
 	}
 	public boolean updateTeacherMessage(int id,String teacherEmail,String teachersSchool,String teacherTel,String teachersSchoolEmail) {  //管理员更改账号状态
@@ -303,5 +303,24 @@ public class TeacherService {
 			e.printStackTrace();
 		}
 		return this.teacher;
+	}
+	
+	public String getTeacherName(int teacherId) {  //获取指定教师的名字
+		String sql="select teacherName from teacher_basic_information "
+				+ "where teacherId=?";
+		String teacherName=null;
+		ResultSet result;
+		PreparedStatement prep;
+		try {
+			prep=CONN.prepareStatement(sql);
+			prep.setInt(1, teacherId);
+			result=prep.executeQuery();
+			result.next();
+			teacherName=result.getString("teacherName");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return teacherName;
 	}
 }

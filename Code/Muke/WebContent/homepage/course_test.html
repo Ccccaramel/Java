@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑测试卷-Muke</title>
+    <link rel="icon" href="../Data/img/favicon.ico">
+	<link href="../bootstrap-4.1.3-dist/css/bootstrap.css" rel="stylesheet"/> 
+	<script type="text/javascript" src="../jQuery/jquery-3.1.1.min.js"></script>
+	<script src="../bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+    <style>
+        /*拖动文件上传表单控件的样式*/
+        #drop {
+            border: 2px dashed #bbb;
+            -moz-border-radius: 5px;
+            width: 100%;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            padding: 25px;
+            text-align: center;
+            font: 20pt bold, "Vollkorn";
+            color: #bbb
+        }
+
+        #b64data {
+            width: 100%;
+        }
+
+        a {
+            text-decoration: none
+        }
+    </style>
+    <script type="text/javascript">
+		var pathArray = window.location.pathname.split('/');
+		var secondLevelLocation = pathArray[1];
+		var url = window.location.protocol + "//" + window.location.host
+				+ "/" + secondLevelLocation;
+    
+        //课程id
+        var courseId = 0;
+
+        //增添题目
+        function add_question() {
+            //获取测试卷现有的小题数量
+            var sec = $("#problem").children().length + 1;
+            // alert("本测试卷已创建有" + sec + "小题");
+            create_topic_components(sec, "problem");
+            change_total_score();
+        }
+
+        //删除最后一个小题
+        function del_question() {
+            //获取测试卷现有的小题数量
+            var sec = $("#problem").children().length;
+            // alert(sec);
+            //每测试卷必须有一小题，否则不允许删除
+            if (sec <= 1) {
+                alert("不可以无题目！");
+            } else {
+                oldData = parseInt($("#question-" + sec + "-score").val());
+                // change_total_score(0, oldData);
+
+                $("#problem-" + sec).remove();
+                change_total_score();
+            }
+        }
+
+        //点击保存测试卷按钮
+        function save_test() {
+            /**
+             * 检查表单，表单不可有空
+             **/
+            if (!check()) {
+                return;
+            }
+
+            //有测试id传入，编辑测试卷
+            if (testId != -1) {
+                // alert(testId);
+                //再次确认
+                if (window.confirm("确认保存更改吗?这将会导致已测试的学生无法查看测试卷结果以及题目解析")) {
+                    //表单提交
+                    s_test();
+                }
+            } else {
+                s_test();
+            }
+        }
+
+        //保存测试卷
+        function s_test() {
+            var form = document.getElementById("add_test");
+            var fd = new FormData(form);
+            $.ajax({
+                url: url+"/saveTest",
+                type: 'POST',
+                data: fd,
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+                success: function (response, status, xhr) {
+                    alert("保存成功!");
+                    // alert(response);
+                    console.log(response);
+                },
+                error: function () {
+                    alert("上传失败!");
+                }
+            });
+            return false;
+        }
+
+
+        //提交前对数据进行检查
+        function check() {
+            //判断测试卷名称是否为空
+            if ($("#testName").val() == "") {
+                alert("课程名称不可为空！")
+                return false;
+            }
+
+            //检测题目是否为空
+            for (var que = 1; $("#question-" + que).length > 0; que++) {
+                if ($("#question-" + que).val() == "") {
+                    alert("第" + que + "小题题目不可为空!");
+                    return false;
+                }
+                for (var opt = 1; opt <= 4; opt++) {
+                    if ($("#question-" + que + "-option-" + opt).val() == "") {
+                        alert("第" + que + "题第" + opt + "选项不可为空!");
+                        return false;
+                    }
+                }
+                if ($("#question-" + que + "-analysis").val() == "") {
+                    alert("第" + que + "小题解析不可为空!");
+                    return false;
+                }
+
+            }
+
+            // alert($("#passLine").val());
+            // alert($("#totalScore").val());
+            //判断及格线是否合乎要求
+            if (parseInt($("#passLine").val()) >= parseInt($("#totalScore").val())) {
+                alert("及格线设置不规范，请参考总分以及试卷难易度进行设置");
+                return false;
+            }
+
+            return true;
+
+        }
+
+
+        //更新总分
+        function change_total_score() {
+            var totalScore = 0;
+            for (var n = 1; $("#question-" + n + "-score").length > 0; n++) {
+                totalScore += parseInt($("#question-" + n + "-score").val());
+            }
+            $("#totalScore").val(totalScore);
+
+            //更新推荐及格分
+            var res = totalScore * 0.6;
+            $("#passLine").val(res.toFixed(0));
+        }
+
+        //加载课程菜单下拉框
+        function add_course_menu() {
+            //将课程id和中文名放入下拉菜单中
+            $.ajax({
+                url: url+'/getCourseIdName',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    var opt = "";
+                    var list = json.courseList;
+                    var i = 1;
+                    $.each(list, function (index, array) {
+                        if (courseId == 0 || courseId == array['courseId']) {
+                            opt += "<option selected value=" + array['courseId'] + " name=" + array['courseId'] + ">" + array['courseId'] + ":&nbsp;" + array['courseName'] + "</option>";
+                            i = -1;
+                        } else {
+                            opt += "<option value=" + array['courseId'] + " name=" + array['courseId'] + ">" + array['courseId'] + ":&nbsp;" + array['courseName'] + "</option>";
+                        }
+
+                    });
+                    $("#courseId").append(opt);
+                },
+                error: function () {
+                    alert("课程下拉框错误");
+                }
+            });
+        }
+
+        /**
+         * 创建小题组件，提高代码复用率
+         * num:小题组件中控件的id
+         * id:小题组件的父元素id
+         **/
+        function create_topic_components(num, id) {
+            var data = "";
+            data += "<div id=\"problem-" + num + "\">" +
+
+                "<div class=\"input-group\" style=\"margin-bottom: 8px\">" +
+
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-dark\" disabled>第" + num + "题</button>" +
+                "</div>" +
+
+                "<input type=\"text\" aria-label=\"题目内容\" id=\"question-" + num + "\" name=\"question-" + num + "\" class=\"form-control\" placeholder=\"题目内容\">" +
+
+                "<div class=\"input-group-append\">" +
+                "<button class=\"btn btn-outline-primary\" disabled>分值</button>" +
+                "</div>" +
+                "<div class=\"input-group-append\">" +
+                "<select class=\"custom-select\" id=\"question-" + num + "-score\" name=\"question-" + num + "-score\" onchange=\"change_total_score()\">" +
+                "<option value=\"1\" selected>1</option>" +
+                "<option value=\"2\">2</option>" +
+                "<option value=\"3\">3</option>" +
+                "<option value=\"4\">4</option>" +
+                "<option value=\"5\">5</option>" +
+                "<option value=\"6\">6</option>" +
+                "<option value=\"7\">7</option>" +
+                "<option value=\"8\">8</option>" +
+                "<option value=\"9\">9</option>" +
+                "<option value=\"10\">10</option>" +
+                "</select>" +
+                "</div>" +
+                "</div>" +
+                //onmousedown=\"old_select(this)\"  new_select(this)
+                "<div class=\"input-group\" style=\"margin-bottom: 6px\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-dark\" disabled>选项1</button>" +
+                "</div>" +
+                "<input type=\"text\" aria-label=\"选项内容\" id=\"question-" + num + "-option-1\" name=\"question-" + num + "-option-1\" class=\"form-control\" placeholder=\"请填写选项内容\">" +
+                "</div>" +
+                "<div class=\"input-group\" style=\"margin-bottom: 6px\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-dark\" disabled>选项2</button>" +
+                "</div>" +
+                "<input type=\"text\" aria-label=\"选项内容\" id=\"question-" + num + "-option-2\" name=\"question-" + num + "-option-2\" class=\"form-control\" placeholder=\"请填写选项内容\">" +
+                "</div>" +
+                "<div class=\"input-group\" style=\"margin-bottom: 6px\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-dark\" disabled>选项3</button>" +
+                "</div>" +
+                "<input type=\"text\" aria-label=\"选项内容\" id=\"question-" + num + "-option-3\" name=\"question-" + num + "-option-3\" class=\"form-control\" placeholder=\"请填写选项内容\">" +
+                "</div>" +
+                "<div class=\"input-group\" style=\"margin-bottom: 10px\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-dark\" disabled>选项4</button>" +
+                "</div>" +
+                "<input type=\"text\" aria-label=\"选项内容\" id=\"question-" + num + "-option-4\" name=\"question-" + num + "-option-4\" class=\"form-control\" placeholder=\"请填写选项内容\">" +
+                "</div>" +
+
+
+                "<div class=\"input-group\" style=\"margin-bottom: 6px\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-primary\" disabled>正确选项</button>" +
+                "</div>" +
+                "<div class=\"input-group-append\">" +
+                "<select class=\"custom-select\" id=\"question-" + num + "-right-key\" name=\"question-" + num + "-right-key\">" +
+                "<option value=\"1\" selected>1</option>" +
+                "<option value=\"2\">2</option>" +
+                "<option value=\"3\">3</option>" +
+                "<option value=\"4\">4</option>" +
+                "</select>" +
+                "</div>" +
+                "</div>" +
+
+                "<div class=\"input-group\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<button class=\"btn btn-outline-primary\" disabled>解析</button>" +
+                "</div>" +
+                "<input type=\"text\" aria-label=\"选项内容\" id=\"question-" + num + "-analysis\" name=\"question-" + num + "-analysis\" class=\"form-control\" placeholder=\"请填写题目解析\">" +
+                "</div>" +
+
+                "<hr>" +
+                "</div>";
+
+            $("#" + id).append(data);
+        }
+
+        /**
+         * 判断用户是如何进入此页面
+         * 1.登录后通过【教师中心】合法进入
+         * 2.直接输入url进入---首先无法获取课程列表，提交时后台无法正常运行
+         * 3.用户进入后修改url进入---会将其他教师的测试卷更改为自己的测试卷
+         * 解决方法
+         * 1.检查session，确认教师身份
+         * 2.获取教师id，检查此testid是否属于此教师
+         * 检查通过后才能继续操作
+         * 否则关闭当前页面
+         **/
+        function check_identitl(testId) {
+            $.ajax({
+                url: url+'/editTestIdentitlCheck',
+                type: 'post',
+                dataType: 'json',
+                data: {'testId': testId},
+                success: function (json) {
+                    // console.log(json);
+                    if (json.status == false) {
+                        // alert(json.message);
+                        window.open("home.html", "_self").close();
+                    }
+                },
+                error: function () {
+                    alert("账号检测错误");
+                }
+            });
+        }
+
+        /*
+         * 加载原测试卷内容
+         **/
+        function loading_test(testId) {
+            $.ajax({
+                url: url+'/getTestIntroduction',
+                type: 'post',
+                dataType: 'json',
+                data: {'testId': testId},
+                success: function (json) {
+                    console.log(json);
+
+                    var test = json.test;
+                    //获取test数组，取出课程id、测试卷名称、总分、及格分
+                    $.each(test, function (index, array) {
+                        //获取课程id
+                        courseId = array['courseId'];
+                        // alert("-"+courseId);
+                        //将课程名称填入表单
+                        $("#testName").val(array['testName']);
+                        //获取总分
+                        totalScore = array['totalScore'];
+                        //将总分填入表单
+                        $("#totalScore").val(totalScore);
+                        //获取及格分
+                        passLine = array['passLine'];
+                        //将及格分填入表单
+                        $("#passLine").val(passLine);
+                    });
+                    //获取question数组，取出题目序号、问题内容、正确答案、解析、分值
+                    var question = json.question;
+                    $.each(question, function (index, array) {
+                        var num = array['questionNumber'];
+                        //判断该小题元素是否存在
+                        if ($("#problem").length < num) {
+                            //不存在该小题的元素，则创建
+                            create_topic_components(num, "problem");
+
+                        }
+
+                        $("#question-" + num).val(array['questionContent']);
+                        $("#question-" + num + "-analysis").val(array['analysis']);
+                        $("#question-" + num + "-score").val(array['score']);
+                        $("#question-" + num + "-right-key").val(array['rightKey']);
+
+
+                        change_total_score();
+                    });
+
+                    //获取option数组，取出选项序号、选项内容,将其添入对应元素中
+                    var option = json.option;
+                    //获取课程简介
+                    $.each(option, function (index, array) {
+                        $("#question-" + array['questionNumber'] + "-option-" + array['questionOption']).val(array['optionContent']);
+                    });
+
+                },
+                error: function () {
+                    alert("测试卷内容加载错误");
+                }
+            });
+        }
+
+        //进入此页面前检测url是否有testid传入，用以判断当前操作是修改测试卷还是添加新测试卷
+        $(function () {
+
+            //获取URL
+            var url = document.URL;
+            //分割URL,获取搜索框内的关键词
+            testId = url.split("?testId=")[1];
+
+
+            //如果有传进来测试卷id，则将该测试卷原有的所有相关信息填入表格，供教师修改、编辑
+            if (testId != undefined) {
+
+                check_identitl(testId);
+
+                //更改隐藏域相应的值，
+                $("#edit").attr("value", "true");
+                $("#testId").attr("value", testId);
+
+                loading_test(testId);
+            } else {
+                /**
+                 * 存储课程id
+                 * 默认值为0---数据库中不存在课程id为0的课程，若在url中获得课程id则通过查询获得课程id并赋给它，在填充【选择课程】的下拉菜单时，若为0，则默认【选择】第一个，不为0则【选择】对应课程id
+                 */
+                testId = -1;
+                check_identitl(testId);
+                // add_course_menu();
+            }
+            /**
+             * 若是新添测试卷，【选择课程】选项会默认选第一个课程
+             * 但若是编辑一个已存在的课程则需要获取这个测试卷的所属课程id，所以必须在获取该课程id后再加载【选择课程】列表并选定对应课程
+             * 如果将这两步都异步同时加载有时【选择课程】会选中第一项，因为后者可能先运行而前者还未获取到课程id
+             **/
+            add_course_menu();
+        });
+    </script>
+
+    <script src="../JS/jszip.js"></script>
+    <script src="../JS/xlsx.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <!--课程测试卷表单-->
+    <form name="add_test" id="add_test">
+        <div class="alert alert-dark" role="alert"
+             style="width:100%;margin-bottom: 16px;elevation: deg;font-weight: bold">
+            <span>学思网-编辑测试卷</span>
+        </div>
+
+        <!--选择添加课程测试卷的课程id-->
+        <div class="input-group mb-3">
+            <!--选择课程项-->
+            <div class="input-group-prepend">
+                <button class="btn btn-dark" for="courseId" disabled>选择课程</button>
+            </div>
+            <select class="custom-select" id="courseId" name="courseId">
+
+            </select>
+        </div>
+        <!--为测试卷取名-->
+        <div class="input-group" style="margin-bottom: 16px">
+            <!--测试卷名称项-->
+            <div class="input-group-prepend">
+                <button class="btn btn-dark" disabled>测试卷名称</button>
+            </div>
+            <!--测试卷名-->
+            <input type="text" aria-label="测试卷名称" id="testName" name="testName" class="form-control"
+                   placeholder="测试卷名称">
+        </div>
+
+        <!--上传测试卷表单控件-->
+        <div class="input-group" style="margin-bottom: 16px">
+            <div id="drop">请将已编辑好的测试卷(.xlsx文件)拖入此处(注：编辑表格内容时请在所有“,”前加入“~”)</div>
+
+            <input type="checkbox" name="useworker" hidden>
+            <input type="checkbox" name="userabs" hidden>
+        </div>
+
+        <!--编辑测试卷-->
+        <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+            编辑测试卷
+        </div>
+        <div id="problem">
+            <div id="problem-1">
+                <!--题目-->
+                <div class="input-group" style="margin-bottom: 8px">
+                    <!--序号-->
+                    <div class="input-group-prepend">
+                        <button class="btn btn-dark" disabled>第1题</button>
+                    </div>
+                    <!--题目文本-->
+                    <input type="text" aria-label="题目内容" id="question-1" name="question-1" class="form-control"
+                           placeholder="题目内容">
+                    <!--题目分值-->
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" disabled>分值</button>
+                    </div>
+                    <div class="input-group-append">
+                        <select class="custom-select" id="question-1-score" name="question-1-score"
+                                onchange="change_total_score()">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                <!--选项-->
+                <div class="input-group" style="margin-bottom: 6px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-dark" disabled>选项1</button>
+                    </div>
+                    <input type="text" aria-label="选项内容" id="question-1-option-1" name="question-1-option-1"
+                           class="form-control" placeholder="请填写选项内容">
+                </div>
+                <div class="input-group" style="margin-bottom: 6px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-dark" disabled>选项2</button>
+                    </div>
+                    <input type="text" aria-label="选项内容" id="question-1-option-2" name="question-1-option-2"
+                           class="form-control" placeholder="请填写选项内容">
+                </div>
+                <div class="input-group" style="margin-bottom: 6px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-dark" disabled>选项3</button>
+                    </div>
+                    <input type="text" aria-label="选项内容" id="question-1-option-3" name="question-1-option-3"
+                           class="form-control" placeholder="请填写选项内容">
+                </div>
+                <div class="input-group" style="margin-bottom: 10px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-dark" disabled>选项4</button>
+                    </div>
+                    <input type="text" aria-label="选项内容" id="question-1-option-4" name="question-1-option-4"
+                           class="form-control" placeholder="请填写选项内容">
+                </div>
+
+                <!--正确选项-->
+                <div class="input-group" style="margin-bottom: 6px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-primary" disabled>正确选项</button>
+                    </div>
+                    <div class="input-group-append">
+                        <select class="custom-select" id="question-1-right-key" name="question-1-right-key">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--解析-->
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-primary" disabled>解析</button>
+                    </div>
+                    <input type="text" aria-label="选项内容" id="question-1-analysis" name="question-1-analysis"
+                           class="form-control" placeholder="请填写题目解析">
+                </div>
+
+                <hr>
+            </div>
+
+        </div>
+
+        <!--总分-->
+        <div class="form-group row">
+
+            <label class="col-sm-1 col-form-label">总分:</label>
+
+            <div class="input-group-prepend">
+                <input type="text" id="totalScore" name="totalScore" class="form-control-plaintext" readonly
+                       value="1">
+            </div>
+        </div>
+
+        <!--及格线-->
+        <div class="input-group" style="margin-bottom: 6px">
+
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-success" disabled>及格线</button>
+            </div>
+            <div class="input-group-append">
+                <input type="text" id="passLine" name="passLine" class="form-control" value="1">
+            </div>
+        </div>
+
+        <!--上传组件添加按钮-->
+        <button type="button" class="btn btn-outline-info" onclick="add_question();">再出一题</button>
+        <!--上传组件移除按钮-->
+        <button type="button" class="btn btn-outline-danger" onclick="del_question();">删除最后一题</button>
+
+
+        <!--隐藏域:告诉后台本次保存是添加新测试卷还是修改已存在的测试卷-->
+        <!--操作类别-->
+        <!--true:修改已有测试卷-->
+        <!--false:添加新测试卷-->
+        <input type="hidden" id="edit" name="edit" value="false">
+        <input type="hidden" id="testId" name="testId" value="">
+
+        <hr>
+        <input class="btn btn-primary" type="button" onclick="save_test();" value="保存">
+    </form>
+</div>
+<!--上传测试卷表格控件相关-->
+<!--此script放在控件之后才有效-->
+<script>
+
+    /**
+     * 获取的str是一个有规律的字符串字符串，包含所有题目以及对应的选项、正确选项、解析、分值，需要对其进行分割以获取准确的数据
+     * @param str
+     */
+    //
+    function diviction(str) {
+
+        // alert(str);
+        str = str.replace(/~,/g, "%!");
+        // alert(str);
+
+        //清空【编辑测试卷】内的内容
+        $("#problem").empty();
+
+        var arr = str.split("\n");
+        for (var i = 1; i < arr.length - 1; i++) {
+            var a = arr[i].split(",");
+            //创建小题组件
+            create_topic_components(i, "problem");
+            // str=a[0].replace(/%!/g,",");
+            // alert(str);
+            $("#question-" + i).val(a[0].replace(/%!/g, ","));
+            $("#question-" + i + "-option-1").val(a[1].replace(/%!/g, ","));
+            $("#question-" + i + "-option-2").val(a[2].replace(/%!/g, ","));
+            $("#question-" + i + "-option-3").val(a[3].replace(/%!/g, ","));
+            $("#question-" + i + "-option-4").val(a[4].replace(/%!/g, ","));
+
+            $("#question-" + i + "-right-key").val(a[5].replace(/%!/g, ","));
+            $("#question-" + i + "-score").val(a[6].replace(/%!/g, ","));
+            $("#question-" + i + "-analysis").val(a[7].replace(/%!/g, ","));
+
+            change_total_score();
+
+
+            // var m = 0;
+            // for (var n = 0; n < a.length; n++) {
+            //     alert(a[n]);
+            // }
+        }
+    }
+
+    var X = XLSX;
+    var XW = {
+        /* worker message */
+        msg: 'xlsx',
+        /* worker scripts */
+        worker: '../JS/xlsxworker.js'
+    };
+
+    var global_wb;
+
+    var process_wb = (function () {
+        var fen = document.getElementById('out');
+        var HTMLOUT = document.getElementById('htmlout');
+
+        var get_format = (function () {
+            var radios = document.getElementsByName("format");
+            return function () {
+                for (var i = 0; i < radios.length; ++i) if (radios[i].checked || radios.length === 1) return radios[i].value;
+            };
+        })();
+
+        var to_json = function to_json(workbook) {
+            var result = {};
+            workbook.SheetNames.forEach(function (sheetName) {
+                var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+                if (roa.length) result[sheetName] = roa;
+            });
+            return JSON.stringify(result, 2, 2);
+        };
+
+        var to_csv = function to_csv(workbook) {
+            var result = [];
+            workbook.SheetNames.forEach(function (sheetName) {
+                var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                // alert("csv:"+csv);
+                diviction(csv);
+                if (csv.length) {
+                    result.push("SHEET: " + sheetName);
+                    result.push("");
+                    result.push(csv);
+                }
+            });
+            return result.join("\n");
+        };
+
+        var to_fmla = function to_fmla(workbook) {
+            var result = [];
+            workbook.SheetNames.forEach(function (sheetName) {
+                var formulae = X.utils.get_formulae(workbook.Sheets[sheetName]);
+                if (formulae.length) {
+                    result.push("SHEET: " + sheetName);
+                    result.push("");
+                    result.push(formulae.join("\n"));
+                }
+            });
+            return result.join("\n");
+        };
+
+        // var to_html = function to_html(workbook) {
+        //     HTMLOUT.innerHTML = "";
+        //     workbook.SheetNames.forEach(function (sheetName) {
+        //         var htmlstr = X.write(workbook, {sheet: sheetName, type: 'string', bookType: 'html'});
+        //         alert(htmlstr);
+        //         HTMLOUT.innerHTML += htmlstr;
+        //     });
+        //     return "";
+        // };
+
+        return function process_wb(wb) {
+            global_wb = wb;
+            var output = "";
+            switch (get_format()) {
+                case "form":
+                    output = to_fmla(wb);
+                    break;
+                case "html":
+                    output = to_html(wb);
+                    break;
+                case "json":
+                    output = to_json(wb);
+                    break;
+                default:
+                    output = to_csv(wb);
+            }
+            // if(OUT.innerText === undefined) OUT.textContent = output;
+            // else
+            //     OUT.innerText = output;
+            // alert(output);
+            if (typeof console !== 'undefined') console.log("output", new Date());
+        };
+    })();
+
+    var setfmt = window.setfmt = function setfmt() {
+        if (global_wb) process_wb(global_wb);
+    };
+
+    var b64it = window.b64it = (function () {
+        var tarea = document.getElementById('b64data');
+        return function b64it() {
+            if (typeof console !== 'undefined') console.log("onload", new Date());
+            var wb = X.read(tarea.value, {type: 'base64', WTF: false});
+            process_wb(wb);
+        };
+    })();
+
+    var do_file = (function () {
+        var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
+        var domrabs = document.getElementsByName("userabs")[0];
+        if (!rABS) domrabs.disabled = !(domrabs.checked = false);
+
+        var use_worker = typeof Worker !== 'undefined';
+        var domwork = document.getElementsByName("useworker")[0];
+        if (!use_worker) domwork.disabled = !(domwork.checked = false);
+
+        var xw = function xw(data, cb) {
+            var worker = new Worker(XW.worker);
+            worker.onmessage = function (e) {
+                switch (e.data.t) {
+                    case 'ready':
+                        break;
+                    case 'e':
+                        console.error(e.data.d);
+                        break;
+                    case XW.msg:
+                        cb(JSON.parse(e.data.d));
+                        break;
+                }
+            };
+            worker.postMessage({d: data, b: rABS ? 'binary' : 'array'});
+        };
+
+        return function do_file(files) {
+            rABS = domrabs.checked;
+            use_worker = domwork.checked;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+                var data = e.target.result;
+                if (!rABS) data = new Uint8Array(data);
+                if (use_worker) xw(data, process_wb);
+                else process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+            };
+            if (rABS) reader.readAsBinaryString(f);
+            else reader.readAsArrayBuffer(f);
+        };
+    })();
+
+    (function () {
+        var drop = document.getElementById('drop');
+        if (!drop.addEventListener) return;
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            do_file(e.dataTransfer.files);
+        }
+
+        function handleDragover(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+
+        drop.addEventListener('dragenter', handleDragover, false);
+        drop.addEventListener('dragover', handleDragover, false);
+        drop.addEventListener('drop', handleDrop, false);
+    })();
+
+    (function () {
+        var xlf = document.getElementById('xlf');
+
+        // if(!xlf.addEventListener) return;
+        function handleFile(e) {
+            do_file(e.target.files);
+        }
+
+        // xlf.addEventListener('change', handleFile, false);
+    })();
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36810333-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        // var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+</body>
+</html>

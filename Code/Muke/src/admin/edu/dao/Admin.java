@@ -98,7 +98,5 @@ public class Admin implements Serializable {
 		}else{
 			return 916;  // ÕËºÅ×´Ì¬Î´Öª£¬½ûÖ¹µÇÂ¼
 		}
-		
 	}
-
 }

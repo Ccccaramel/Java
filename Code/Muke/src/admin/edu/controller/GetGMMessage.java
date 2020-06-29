@@ -48,13 +48,19 @@ public class GetGMMessage extends HttpServlet {
 		String userJson=(String) session.getAttribute("userJson");
 		System.out.println("userJson:"+userJson);
 		Admin user=gson.fromJson(userJson, Admin.class);  // 把 JSON 转换成对象
-		
-		
-		data.put("gmId",user.getGmId());
-		data.put("gmEmail",user.getGmEmail());
-		data.put("gmTel", user.getGmTel());
-		data.put("gmPowerNo",user.getGmPower());
-		data.put("gmPower", user.getPowerClass()); 
+		boolean state=false;
+		if(user==null) {
+			System.out.println("user is null");
+			
+		}else {
+			state=true;
+			data.put("gmId",user.getGmId());
+			data.put("gmEmail",user.getGmEmail());
+			data.put("gmTel", user.getGmTel());
+			data.put("gmPowerNo",user.getGmPower());
+			data.put("gmPower", user.getPowerClass()); 			
+		}
+		data.put("state", state);
 		String result=gson.toJson(data);
 		System.out.println("result:"+result);
 		response.getWriter().print(result);

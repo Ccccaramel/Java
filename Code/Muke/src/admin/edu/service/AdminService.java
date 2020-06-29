@@ -6,11 +6,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 import admin.edu.dao.Admin;
 import sun.misc.BASE64Decoder;
@@ -54,6 +57,12 @@ public class AdminService {
 		}
 		md5Str=new BigInteger(1,digest).toString(16);
 		return md5Str;
+	}
+	
+	public static int getRandom() {
+		double max=99999999,min=100000;
+		int password=(int)(Math.random()*(max-min)+min);
+		return password;
 	}
 	
 	public boolean loginId(int id,String gmPassword){  // id 登录
@@ -103,6 +112,18 @@ public class AdminService {
 		}
 		return state;
 	}
+	private void activation(int gmId) {
+		String sql="update administrator set gmAccountStatus=1 where gmId=?";
+		PreparedStatement prep;
+		try {
+			prep=CONN.prepareStatement(sql);
+			prep.setInt(1, gmId);
+			prep.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public int stateCheck(int gmId){  // 账号状态检查,返回值为数字,需根据字典表进一步判断
 		String sql="SELECT gmAccountStatus from administrator WHERE gmId="+gmId;
@@ -134,6 +155,9 @@ public class AdminService {
 				this.user.setGmTel(result.getString("gmTel"));
 				int gmPower=result.getInt("gmPower");
 				this.user.setGmPower(gmPower);
+				if(result.getInt("gmAccountStatus")==4) {  //若账号之前为未激活则登录后更改为正常
+					this.activation(result.getInt("gmId"));
+				}
 				this.user.setGmAccountStatus(result.getInt("gmAccountStatus"));
 				String gmPowerStr=this.getPowerStr(gmPower);
 				this.user.setPowerClass(gmPowerStr);
@@ -263,7 +287,13 @@ public class AdminService {
 	}
 	public List<Admin> getAllAccounts(int gmPower,String key,int startPage,int pageSize){  // 获取所有权限低于此管理员的管理员信息
 		List<Admin> adminList=new ArrayList<>();
-		String sql="SELECT gmId,gmEmail,gmTel,gmPower,gmAccountStatus from administrator WHERE gmPower<"+gmPower +" AND (gmId LIKE '%"+key+"%' OR gmEmail LIKE '%"+key+"%' OR gmTel LIKE '%"+key+"%' OR gmPower LIKE '%"+key+"%') limit "+startPage+","+pageSize,
+		String sql="SELECT gmId,gmEmail,gmTel,gmPower,gmAccountStatus "
+				+ "from administrator WHERE gmPower<"+gmPower +
+				" AND (gmId LIKE '%"+key+"%' "
+						+ "OR gmEmail LIKE '%"+key+"%' "
+								+ "OR gmTel LIKE '%"+key+"%' "
+										+ "OR gmPower LIKE '%"+key+"%') "
+												+ "limit "+startPage+","+pageSize,
 				gmEmail,gmPowerStr,accountStatusStr,gmTel;
 		int gmId,gmAccountStatus;
 		Statement stmt;
@@ -298,5 +328,47 @@ public class AdminService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public List<Admin> batchAddAdminAccount(int quantity,int gmPower) { //批量注册指定等级管理员账号
+		String sql="insert into administrator(gmPassword,gmPower,gmAccountStatus) values(?,?,?)";
+		PreparedStatement prep;
+		ResultSet result;
+		List<Admin> adminList=new ArrayList<Admin>();
+		for(int i=0;i<quantity;i++) {
+			int gmId=0;
+			String gmPassword=String.valueOf(getRandom());
+			String password=md5(gmPassword);
+			try {
+				prep=CONN.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
+				prep.setString(1, password);
+				prep.setInt(2, gmPower);
+				prep.setInt(3, 4);
+				prep.executeUpdate();
+				gmId=this.generateKeys(prep);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Admin admin=new Admin();
+			admin.setGmId(gmId);
+			admin.setGmPassword(gmPassword);
+			adminList.add(admin);
+		}
+		return adminList; 
+	}
+	public int generateKeys(PreparedStatement prep) {  //获取刚插入数据的自增 id
+		ResultSet result;
+		try {
+			result = prep.getGeneratedKeys();
+			if(result.next()) {
+				return result.getInt(1);
+			}			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return -1;
 	}
 }

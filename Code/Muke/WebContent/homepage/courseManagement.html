@@ -29,17 +29,15 @@
          * 否则关闭当前页面
          **/
         function check_identitl(courseId) {
-            // alert(courseId);
             $.ajax({
-                url: '../UserBackEnd/Edit_Course_Identitl_Check.php',
+                url: ServerUrl+'/editCourseIdentitlCheck',
                 type: 'post',
                 dataType: 'json',
                 data: {'courseId': courseId},
                 success: function (json) {
                     console.log(json);
-                    if(json.status==false){
-                        alert(json.status);
-                        alert(json.message);
+                    if(json.state==false){
+                        alert(json.state+"非法进入!");
                         window.open("home.html","_self").close();
                     }else {
                         // alert("???");
@@ -81,35 +79,42 @@
             if (courseId != undefined) {
 
                 check_identitl(courseId);
-                // alert(courseId);
+                alert(courseId);
 
                 $("#edit").attr("value", "true");
                 $("#courseId").attr("value", courseId);
 
                 $.ajax({
-                    url: '../UserBackEnd/Get_Course_Introduction.php',
+                    url: ServerUrl+'/getCourseIntroduction',
                     type: 'post',
                     dataType: 'json',
                     async: false,
                     data: {'courseId': courseId},
                     success: function (json) {
+                    	alert(json);
                         console.log(json);
 
                         var course = json.course;
                         //获取course数组，取出课程名、课程封面名、课程类型
-                        $.each(course, function (index, array) {
+                        /**$.each(course, function (index, array) {
                             $("#courseName").val(array['courseName']);
                             $("#courseImg-label").html(array['courseImgName']);
                             courseClass = array['courseClass'];
-                        });
-
+                        });**/
+                        $("#courseName").val(course['courseName']);
+                        $("#courseImg-label").html(course['courseImgName']);
+                        courseClass = course['courseClass'];
+                        
                         //获取数据库返回的数据，与课程简介相关的集合
                         var abs = json.abstract;
                         //获取课程简介
-                        $.each(abs, function (index, array) {
+                        /**$.each(abs, function (index, array) {
                             //将课程简介内容放入对应文本框中
                             $("#courseAbstract-" + array['courseSection']).val(array['courseIntroduce']);
-                        });
+                        });**/
+                        for(no in abs){
+                        	$("#courseAbstract-" + no).val(abs[no]);
+                        }
 
                         /**
                          * 将章节以及对应小节的数据放入各元素中，若没有相应元素则立即创建并添入
@@ -208,7 +213,7 @@
                         });
                     },
                     error: function () {
-                        alert("错误");
+                        alert("加载课程错误");
                     }
                 });
             }else{
@@ -392,21 +397,6 @@
                 $("#" + "chapter-" + len).remove();
             }
         }
-
-
-        //移除资源上传组件
-        // function del_resource(str) {
-        //     //获取已有资源上传组件数
-        //     var len = $("#resource").children().length;
-        //     alert("已有" + len + "章");
-        //
-        //     //每章必须有一小节，否则不允许删除
-        //     if (len <= 0) {
-        //         alert("没有什么可以移除的");
-        //     } else {
-        //         $("#" + "resource-" + len).remove();
-        //     }
-        // }
 
         //阿拉伯数字转中文
         function digital_conversion(num) {

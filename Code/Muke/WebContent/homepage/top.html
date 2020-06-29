@@ -14,25 +14,6 @@
 		var url = window.location.protocol + "//" + window.location.host
 				+ "/" + secondLevelLocation;
 
-        function createXmlHttpRequsetObject() {
-            if (window.ActiveXObject) {
-                try {
-                    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-                } catch (e) {
-                    xmlHttp = false;
-                }
-            } else {
-                try {
-                    xmlHttp = new XMLHttpRequest();
-                } catch (e) {
-                    xmlHttp = false;
-                }
-            }
-            if (!xmlHttp)
-                alert("create error!");
-            else
-                return xmlHttp;
-        }
 
         //课程搜索
         function search_course() {
@@ -49,7 +30,6 @@
         //登录按钮响应
         function submit_login() {
 
-            createXmlHttpRequsetObject();
 
             //数据检查
             var loginMode = loginCheck();
@@ -402,7 +382,7 @@
             var form = document.getElementById("Feedback");
             var fd = new FormData(form);
             $.ajax({
-                url: "../UserBackEnd/Save_Feed_Back.php",
+                url: url+"/saveFeedBack",
                 type: 'POST',
                 data: fd,
                 processData: false,  // 告诉jQuery不要去处理发送的数据
@@ -427,11 +407,8 @@
          */
         function loginRemenverMe() {
             $.ajax({
-                url: "../UserBackEnd/Cookie_Examine.php",
+                url: url+"/cookieExamine",
                 type: 'POST',
-                // data: fd,
-                // processData: false,  // 告诉jQuery不要去处理发送的数据
-                // contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
                 dataType: 'json',
                 success: function (json) {
                     if (json.state) {
@@ -439,17 +416,15 @@
                         $("#lAccount").val(json.id);
                         $("#lPassWord").val(json.password);
                         $("#lrm").click();
-                        if (json.teacher == 1) {
+                        if (json.teacher) {
                             $("#lt").click();
                         }
-
-
                     } else {
-                        // alert("你未勾选记住密码");
+                        alert(json.message);
                     }
                 },
                 error: function () {
-                    alert("意见反馈失败!");
+                    alert("记住密码检测失败!");
                 }
             });
         }
@@ -730,16 +705,33 @@
 <!--</div>-->
 </body>
 <script type="text/javascript">
+	var pathArray = window.location.pathname.split('/');
+	var secondLevelLocation = pathArray[1];
+	var url = window.location.protocol + "//" + window.location.host
+			+ "/" + secondLevelLocation;
     // 页面加载完后立即自动执行
     // 判断是否已登录
     $(function () {
-        createXmlHttpRequsetObject();
-        xmlHttp.open("POST", "../UserBackEnd/user_state.php", true);
-        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-
-        xmlHttp.onreadystatechange = StatHandler;
-
-        xmlHttp.send(null);
+    	$.ajax({
+        	url: url+'/userState',
+            type: 'POST',
+            dataType:'json',
+            success: function (response) {
+				if(response.state){
+					console.log("登录成功");
+					if(response.teacher){
+    					teacher_login_registered_successful();    						
+					}else{
+						user_login_registered_successful();
+					}
+				}else{
+					console.log("登录失败");
+				}
+            },
+            error:function(xhr,status,error){
+                alert("判断是否已登录失败!");
+             }
+        });
     });
 </script>
 </html>

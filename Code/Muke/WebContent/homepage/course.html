@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程-Muke</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<link rel="icon" href="../Data/img/favicon.ico">
+	<link href="../bootstrap-4.1.3-dist/css/bootstrap.css" rel="stylesheet"/> 
+	<script type="text/javascript" src="../jQuery/jquery-3.3.1.js"></script>
+	<script src="../bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+
+   	<script src="../jQuery/download.js"></script>
+    <script type="text/javascript">
+		var pathArray = window.location.pathname.split('/');
+		var secondLevelLocation = pathArray[1];
+		var url = window.location.protocol + "//" + window.location.host
+				+ "/" + secondLevelLocation;
+        //存储关键字的值
+        var courseId = "";
+        /**
+         * 进入此页面后将通过URL传递的课程id取出并加载课程简介、课程目录、章节测试、课程资源等等
+         */
+        $(function () {
+            //获取URL
+            var url = document.URL;
+            //分割URL,获取课程id
+            courseId = url.split("?courseId=")[1];
+            if(courseId==undefined){
+                alert("非法进入!");
+                window.open("home.html","_self").close();
+            }
+            // alert(courseId);
+            //加载课程简介
+            loading_introduction(courseId);
+            //加载课程资源
+            loading_course_resource(courseId);
+            //加载公共资源
+            loading_share_resource_resource(courseId);
+            //加载课程测试卷
+            loading_course_test(courseId);
+        });
+
+        // 加载课程简介
+        function loading_introduction(courseId) {
+            $.ajax({
+                url: url+'/getAppointCourseIntroduction',
+                type: 'post',
+                dataType: 'json',
+                data: {"courseId": courseId},
+                success: function (json) {
+                    //判断该课程是否合法
+                    if(!json.courseStatus){
+                        alert("非法进入!");
+                        window.open("home.html","_self").close();
+                    }
+
+                    //控制台打印出数据
+                    console.log(json);
+
+                    //获取数据库返回的数据，与课程基本信息相关的集合
+                    //var cou = json.course;
+                    //存放课程简介
+                    // var ca = "";
+                    //获取课程简介
+                    //$.each(cou, function (index, array) {
+                        document.getElementById("courseImg").setAttribute("src", "../../Data/img/" + json.courseImgName);
+                        //修改h标签的文本内容
+                        $("#courseName").text(json.courseName);
+                    //});
+
+                    //获取教师姓名并显示
+                    $("#teacherName").text("讲师:" + json.teacherName);
+
+                    //获取数据库返回的数据，与课程简介相关的集合
+                    var abs = json.abstract;
+                    //存放课程简介
+                    var ca = "";
+                    //获取课程简介
+                    //$.each(abs, function (index, array) {
+                    //    // alert( array['courseIntroduce'] );
+                    //    ca += "<p style=\"text-indent: 2em\">" + array['courseIntroduce'] + "</p>";
+                    //});
+                    for(no in abs){
+                    	ca += "<p style=\"text-indent: 2em\">" + abs[no] + "</p>";
+                    }
+                    //将课程简介添入相应的元素中
+                    $("#courseAbstract").append(ca);
+
+                    //更改课程收藏状态
+                    //更改按钮文本
+                    if (json.pass == true) {
+                       // if (json.collection == 1) {
+                    	   console.log("已收藏");
+                            $("#collection-course").val(1);
+                            $("#collection-course").html("已收藏");
+                       // } else if (json.collection == 0) {
+                           
+                        //}
+                    } else {
+                    	console.log("收藏");
+                    	 $("#collection-course").val(0);
+                            $("#collection-course").html("收藏");
+                        // alert(json.message);
+                    }
+
+                    //获取数据库返回的数据，与课程目相关的集合
+                    var str = json.structure;
+
+                    //获取课程目录
+                    $.each(str, function (index, array) {
+                        //单个章节div框架的id
+                        var chapter = "chapter-" + array['chapterId'];
+                        //章节名div的id
+                        var cha = "heading-" + array['chapterId'];
+                        //添入小节的列表ul的id
+                        var sec = "mian-" + array['chapterId'];
+
+                        if ($("#" + chapter).length > 0) {
+                            //若章节div存在则不用创建，直接向div内部添加小节元素
+                            var se = "";
+                            se += "<li class=\"list-group-item\"><button class=\"btn btn-link\" id=\"" + array['mvAdd'] + "\" onclick=\"video_playback(" + array['chapterId'] + "," + array['sectionId'] + ")\" style=\"text-decoration: none;color: #6a6a6a\">第" + array['sectionId'] + "小节:&nbsp;&nbsp;&nbsp;" + array['sectionName'] + "</button></li>";
+                            $("#" + sec).append(se);
+                        } else {
+
+                            var cs = "";
+                            /**
+                             * 若不存在该章节id，立即创建该元素
+                             * @type {string}
+                             */
+                            //章节div
+                            cs += "<div class=\"card\" id=\"" + chapter + "\">" +
+
+                                //章节名
+                                "<div class=\"card-header\" id=\"heading-" + array['chapterId'] + "\">" +
+                                "<h5 class=\"mb-0\">" +
+                                "<button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse-" + array['chapterId'] + "\" aria-expanded=\"";
+
+                            if (array['chapterId'] == 1) {
+                                cs += "true";
+                            } else {
+                                cs += "false";
+                            }
+
+                            cs += "\" aria-controls=\"collapse-" + array['chapterId'] + "\" style=\"text-decoration: none;color:#0a0a0a\">" +
+                                "第" + array['chapterId'] + "章&nbsp;&nbsp;&nbsp;" + array['chapterName'] +
+                                "</button>" +
+                                "</h5>" +
+                                "</div>" +
+
+                                //小节
+                                "<div id=\"collapse-" + array['chapterId'] + "\" class=\"collapse ";
+
+                            if (array['chapterId'] == 1) {
+                                cs += "show";
+                            }
+
+                            cs += "\" aria-labelledby=\"heading-" + array['chapterId'] + "\" data-parent=\"#accordionExample\">" +
+                                "<div class=\"card-body\">" +
+                                "<ul class=\"list-group list-group-flush\" id=\"" + sec + "\">" +
+                                "<li class=\"list-group-item\"><button class=\"btn btn-link\" id=\"" + array['mvAdd'] + "\" onclick=\"video_playback(" + array['chapterId'] + "," + array['sectionId'] + ")\" style=\"text-decoration: none;color: #6a6a6a\">第" + array['sectionId'] + "小节:&nbsp;&nbsp;&nbsp;" + array['sectionName'] + "</button></li>" +
+                                "</ul>" +
+                                "</div>" +
+
+                                "</div>" +
+                                "</div>";
+
+                            $("#accordionExample").append(cs);
+                        }
+
+                    });
+                },
+                error: function (err) {
+                    alert("加载课程简介错误");
+                }
+            });
+        }
+
+        /**
+         * 课程收藏
+         * 0:显示【收藏】---表示用户未收藏获已取消收藏
+         * 1:显示【已收藏】---表示用户已收藏
+         */
+        function collection_course() {
+            var sign = $("#collection-course").val();
+            $.ajax({
+                type: 'POST',
+                url: url+'/changeCollectionCourse',
+                data: {'sign': sign, "courseId": courseId},
+                dataType: 'json',
+                success: function (json) {
+                    console.log(json);
+                    //更改按钮文本
+                    if (json.pass == true) {
+                        if (sign == 1) {
+                            $("#collection-course").val(0);
+                            $("#collection-course").html("收藏");
+                            alert("你已取消收藏");
+                        } else if (sign == 0) {
+                            $("#collection-course").val(1);
+                            $("#collection-course").html("已收藏");
+                            alert("收藏成功");
+                        }
+                    } else {
+                        alert(json.message);
+                    }
+                },
+                error: function () {
+                    alert("收藏更改失败,可能你未登录");
+                }
+            });
+        }
+
+        //加载课程资源
+        function loading_course_resource(courseId) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAppointCourseResource',
+                data: {'courseId': courseId, 'share': 1},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#course-resource-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+                    if(json.count==0){
+                        $("#course-resource-table").remove();
+                        $("#course-resource").append("<div class=\"alert alert-danger\" role=\"alert\">暂无课程资源!</div>");
+                    }else {
+                        $("#course-resource-list").empty();
+                        var li = "";
+                        var list = json.list;
+                        var num = 1;
+                        $.each(list, function (index, array) {
+                            var sign = 0;
+                            var str = array['resourceName'];
+                            if (str.indexOf(".doc") != -1 || str.indexOf(".ppt") != -1 || str.indexOf(".xlsx") != -1) {
+                                sign = 1;
+                            }
+                            li += "<tr>" +
+                                "<th scope=\"row\">" + num + "</th>" +
+                                "<td>" + array['resourceName'] + "</td>" +
+                                "<td style=\"text-align: center\"><a class=\"badge badge-danger\" style=\"margin-left: 6px;margin-right: 6px\" src=\"../../Data/courseResource/" + array['linkAdd'] + "\" download=\"" + array['resourceName'] + "\">下载</a>";
+
+                            if (sign == 1) {
+                                li += "<a class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" href=\"https://view.officeapps.live.com/op/view.aspx?src=http://www.xiawasi.cn/Data/course_resource/" + array['linkAdd'] + "\">预览</a>";
+                            }
+
+                            li += "</td>" +
+                                "</tr>";
+                            num++;
+                        });
+                        $("#course-resource-list").append(li);
+                    }
+
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //加载公享资源
+        function loading_share_resource_resource(courseId) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAppointCourseResource',
+                data: {'courseId': courseId, 'share': 0},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#share-resource-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+
+                    if(json.count==0){
+                        $("#share-resource-table").remove();
+                        $("#share-resource").append("<div class=\"alert alert-danger\" role=\"alert\">暂无共享资源!</div>");
+                    }else{
+                        $("#share-resource-list").empty();
+                        var li = "";
+                        var list = json.list;
+                        var num = 1;
+                        $.each(list, function (index, array) {
+                            var sign = 0;
+                            var str = array['resourceName'];
+                            if (str.indexOf(".doc") != -1 || str.indexOf(".ppt") != -1 || str.indexOf(".pptx") != -1 || str.indexOf(".xlsx") != -1) {
+                                sign = 1;
+                            }
+                            li += "<tr>" +
+                                "<th scope=\"row\">" + num + "</th>" +
+                                "<td>" + array['resourceName'] + "</td>" +
+                                "<td style=\"text-align: center\"><a class=\"badge badge-danger\" style=\"margin-left: 6px;margin-right: 6px\" href=\"../../Data/courseResource/" + array['linkAdd'] + "\" download=\"" + array['resourceName'] + "\">下载</a>";
+                            if (sign == 1) {
+                                li += "<a class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" href=\"https://view.officeapps.live.com/op/view.aspx?src=http://www.xiawasi.cn/Data/course_resource/" + array['linkAdd'] + "\">预览</a></td>";
+                            }
+                            li += "</tr>";
+                            num++;
+                        });
+                        $("#share-resource-list").append(li);
+                    }
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //学生添加课程资源
+        function user_upload_course_resource() {
+            $.ajax({
+                url: url+'/saveCourseId',
+                type: 'post',
+                dataType: 'json',
+                data: {"courseId": courseId},
+                success: function (json) {
+                    //返回结果
+                    if (json.state) {
+                        //用户已登陆
+                        window.open("add_course_resource.html");
+                    } else {
+                        alert(json.message);
+                    }
+                },
+                error: function (err) {
+                    alert("请先登录!");
+                }
+            });
+        }
+
+        //加载课程测试卷
+        function loading_course_test(courseId) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAppointTestInformation',
+                data: {'courseId': courseId},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#test-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+                    $("#test-list").empty();
+
+                    if(json.count==0){
+                        $("#test").append("<div class=\"alert alert-danger\" role=\"alert\">此课程暂无测试资源!</div>");
+                    }else{
+                        var li = "";
+                        var list = json.itemBackList;
+                        var num = 1;
+                        $.each(list, function (index, array) {
+                            li += "<li class=\"list-group-item d-flex justify-content-between align-items-center\">" + array['testName'] +
+                                "<span class=\"btn badge badge-primary badge-pill\" onclick=\"go_test(" + array['testId'] + ");\">开始测试</span>" +
+                                "</li>";
+                            num++;
+                        });
+                        $("#test-list").append(li);
+                    }
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //点击预览
+        function preview(resourceId) {
+        }
+
+        //点击进入测试
+        function go_test(testId) {
+            $.ajax({
+                url: url+'/accountChecking',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    //返回结果
+                    // alert(json.pass);
+                    if (json.pass) {
+                        //用户已登陆
+                        window.open("test.html?testId=" + testId);
+                    } else{
+                        alert(json.message);
+                    }
+                },
+                error: function (err) {
+                    alert("请先登录!!!");
+                }
+            });
+        }
+
+        //点击单个小节进入小节视频播放界面
+        function video_playback(chapterId, sectionId) {
+            //将课程课程id、对应章节id、对应小节id存储到session中，进入learn页面后取出这些数据
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/saveVideoMessage',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'courseId': courseId, 'chapterId': chapterId, 'sectionId': sectionId},
+                dataType: 'json',
+                success: function (json) {
+                    location.href = "learn.html";
+                },
+                error: function () {
+                    alert("系统错误");
+                }
+            });
+
+        }
+
+        //信息反馈
+        function file_download_result() {
+            if (gmXmlHttp.readyState == 4 && gmXmlHttp.status == 200) {
+                var msg = gmXmlHttp.responseText;
+                if (msg == 901) {
+                    alert("账号密码不可为空！");
+                } else if (msg == 902) {
+                    alert("请检查你的账号是否正确!");
+                } else if (msg == 903) {
+                    alert("登录失败，请检查密码是否正确!");
+                } else if (msg == 904) {
+                    alert("登陆成功!");
+                    location.href = 'ManagementSystem.html';
+                } else if (msg == 905) {
+                    alert("非法访问!");
+                    location.href = 'home.html';
+                } else if (msg == 906) {
+                    alert("已安全退出!");
+                    location.href = 'home.html';
+                } else if (msg == 907) {
+                    //验证合格
+                    // location.href='GMLogin.html';
+                } else if (msg == 908) {
+                    alert("已成功修改！");
+                } else if (msg == 909) {
+                    alert("密码不可为空！");
+                } else if (msg == 910) {
+                    alert("新密码不一致！");
+                } else if (msg == 911) {
+                    alert("密码不符合要求！");
+                } else if (msg == 912) {
+                    alert("不可以与原密码相同！");
+                } else if (msg == 913) {
+                    alert("新密码不可以使用曾今使用过的密码！");
+                } else if (msg == 914) {
+                    alert("密码修改失败！");
+                } else if (msg == 915) {
+                    alert("密码修改成功！");
+                } else if (msg == 916) {
+                    alert("空！");
+                } else {
+
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<!--<div style="margin-bottom: 16px"></div>-->
+<!--顶部导航栏-->
+<div id="top"></div>
+<script>
+    $("#top").load("top.html");
+</script>
+<!--课程介绍-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        课程介绍
+    </div>
+    <div class="container" style="padding-right: 0px;padding-left: 0px;width: 100%;height: 100%">
+        <img src="../Data/img/loading.gif" style="width: 100%;height: 100%" id="courseImg">
+    </div>
+    <div class="container" style="padding-right: 0px;padding-left: 0px;width: 100%;height: 100%">
+        <div class="alert alert-success" role="alert">
+            <h2 class="alert-heading" id="courseName"></h2>
+            <hr>
+            <h4 class="alert-heading" id="teacherName"></h4>
+
+            <div id="courseAbstract">
+
+            </div>
+            <hr>
+            <button type="button" class="btn btn-outline-success" name="collection-course" id="collection-course"
+                    onclick="collection_course()" value="0">收藏
+            </button>
+        </div>
+    </div>
+</div>
+<!--课程目录-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        课程目录
+    </div>
+    <!--目录-->
+    <div class="container" style="padding-right: 0px;padding-left: 0px;width: 100%;height: 100%">
+        <div class="accordion" id="accordionExample">
+
+
+        </div>
+    </div>
+
+</div>
+<!--课程资源-->
+<div class="container" id="course-resource" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        课程资源
+    </div>
+    <table id="course-resource-table" class="table table-sm table-hover table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">资源名称</th>
+            <th scope="col" style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody id="course-resource-list">
+
+        </tbody>
+    </table>
+</div>
+<!--共享资源-->
+<div class="container" id="share-resource" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        共享资源
+        <span href="#" style="float:right" class="btn badge badge-pill badge-success"
+              onclick="user_upload_course_resource()">我要上传</span>
+    </div>
+    <table id="share-resource-table" class="table table-sm table-hover table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">资源名称</th>
+            <th scope="col" style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody id="share-resource-list">
+
+        </tbody>
+    </table>
+</div>
+
+<!--课程测试-->
+<div class="container" id="test" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        课程测试
+    </div>
+    <ul class="list-group" id="test-list">
+    </ul>
+
+</div>
+<!--底部-->
+<div id="botton"></div>
+<script>
+    $("#botton").load("botton.html");
+</script>
+</body>
+</html>

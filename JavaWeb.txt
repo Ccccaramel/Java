@@ -426,6 +426,18 @@ A: cmd -> netstat -aon|findstr "[被占用的端口号]" -> 得到进程号 -> c
 Q:如何连接 mysql ?
 A:( 导入 jar 包见mysql.txt ,代码详见 JavaMySQL.java )
 
+*  statement 对象
+   JDBC 中的 statement 对象用于向数据库发送 SQL 语句,想完成对数据库的增删改查只需要通过这个对象向数据库发送增删改查的语句即可
+   statement 对象的 executeUpdate 方法用于向数据库发送增删改查的 SQL 语句, executeUpdate 执行完毕后将返回一个整数(数据库发生变化的行数)
+   statement.executeQuery 方法用于向数据库发送查询语句, executeQuery 方法返回查询结果的 ResultSet 对象
+
+*  preparedStatement 对象
+   preparedStatement 是 statement 子类,它的实例对象可以通过调用 connection.preparedStatement() 方法获得
+  相对于 statement 对象而言可以避免 SQL 注入问题
+   statement 会使数据库频繁编译 SQL ,可能造成数据库缓冲区溢出
+   preparedStatement 可对 SQL 进行预编译,从而提高数据库的执行效率
+  并且 preparedStatement 对于 SQL 中的参数允许使用占位符的形式进行替换以简化 SQL 语句的编写  
+
 * 配置 Servlet 参数
   在
 
@@ -608,14 +620,14 @@ A: Servlet 部分
         success: function (json) {
             console.log(json);
         },
-          error:function(xhr,status,error){
-            console.log("状态码:"+xhr.status+
-                ",状态:"+xhr.readyState+
-                ",错误信息:"+xhr.statusText+
-                ",返回响应信息:"+xhr.responseText+
-                ",请求状态:"+status+
-                ",error:"+error);
-          }
+        error:function(xhr,status,error){
+          console.log("状态码:"+xhr.status+
+              ",状态:"+xhr.readyState+
+              ",错误信息:"+xhr.statusText+
+              ",返回响应信息:"+xhr.responseText+
+              ",请求状态:"+status+
+              ",error:"+error);
+        }
     });
    Jsp 部分
   $(function() {
@@ -725,3 +737,56 @@ A:模仿网上博客的代码仿写上传文件功能
       勾选 Use Tomcat installtion 并且设置 Deploy path 为 webapps来定义工程部署到指定目录下
     3.最简单的方法是修改 VM arguments 的 Dwtp.deploy 属性
        Eclipse -> 右键 Run -> Run Configurations... -> Apache Tomcat -> 单击你的 Server -> Arguments -> 编辑 VM arguments
+
+Q:每次重启 Servers 后之前上传的资源都被覆盖变为空,如何在重启 Servers 之后资源仍存在?
+A:上传的文件会保存在服务器中,每次重新部署项目 Eclipse 会把工作空间 workspace 的项目拷贝到服务器下的 webapps 目录下
+  新项目与旧项目同名故直接覆盖
+  方法一:
+    在 Tomcat 服务器的 webapps 下单独建立一个专门存放资源文件的文件夹
+  方法二:
+    使用虚拟路径的方式配置一个空项目,在涉及上传的时候直接把文件写到这个配置了虚拟路径的项目里,最终文件会保存到虚拟路径对应的物理盘符上
+    如果是 Tomcat 服务器,在 Tomcat 的 server.xml 里配置,但在实际操作过程中会发现 server.xml 也会被重写
+    因为 Eclipse 工作空间中存在一个叫 Servers 的项目,它里面有一个叫 server.xml 的文件
+    在部署时,它会覆盖掉 Tomcat 服务器中的 server.xml 
+    你可以进行如下配置,展开 Eclipse 工作空间下 Servers 的 Toncat , 打开 server.xml 更改 docBase 的值,即虚拟路径配置
+      <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true"xmlValidation="false" xmlNamespaceAware="false">
+      <!-- 虚拟路径配置 -->
+      < Context docBase="D://objimgs//upload" path="/objimgs"/>
+      </Host>
+
+<
+将数据存入数据库,然后用 Navicat 查看表的时候发现表依旧是空
+检查了语法没问题,检查了数据库索引也没问题,程序也没报错,返回的受影响行数是正确的!
+可是表依旧是空?!
+看着 Navicat 窗口,把目光移到底部
+...
+底部显示了一条查询语句 select * from table_name limit 1000,1000 ,旁边还显示一个数字"2"，没错是第二页,在旁边还有一句话"第二页无记录"
+......
+>
+
+* 我一般习惯在写 Ajax 时带上
+    error:function(xhr,status,error){
+      ...
+    }
+  方法,今天在写完一个保存更改信息的功能后进行测试的时候报错
+    'load' handler took <N>ms
+  查看数据库,后台,以及前台都未报错或报红,仅在前端的 Console 中发现如下信息
+    [Violation] 'click' handler took <N>ms
+    [Violation] 'load' handler took <N>ms
+  若想不出现此信息,建议后端即使没有必要信息需要返回,不妨随意加个数据(例如处理成功)返回
+
+* 关于上传的文件存储的问题
+  在 PHP 中我是将上传的文件存储在项目下的一个文件夹中,前端读取的时候非常方便,给 src 赋值 "../xxx/xxx.xx" 即可
+  但我似乎只会用而没在意细节,比如为什么是以 "../" 开头
+  在 使用 Java 重写上传文件部分的时候我并没有像 PHP 那样直接放在 项目的文件夹中下,而是放在 Tomcat 之下且项目之外
+  当我打算通过绝对路径去访问资源的时候发现无法读取资源,查看 img 标签的 src 地址,复制后放在浏览器的新窗口中却可以打开
+  既然 src 中的地址无误且可以访问那为什么前端界面却无法读取呢?
+  通过浏览器右键检查其标签,当鼠标悬停放在 src 上并 Open in new tab 时提示 404 ,浏览器显示的路径如下
+    http://localhost:9090/Muke/homepage/D:/apache-tomcat-9.0.34/webapps/Data/img/2020062423491810006738.jpg
+  其实正常情况 src 访问的都是相对路径(除非只是单独写一个静态 HTML 文件)
+  所以当去访问 src 的路径时后台会自动添加本项目的父目录
+
+<
+是 Eclipse 辣鸡还是我电脑辣鸡?
+或许是我辣鸡?
+>

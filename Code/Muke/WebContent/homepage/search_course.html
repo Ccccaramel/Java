@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程搜索-学思网</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="icon" href="../Data/img/favicon.ico">
+	<link href="../bootstrap-4.1.3-dist/css/bootstrap.css" rel="stylesheet"/> 
+	<script type="text/javascript" src="../jQuery/jquery-3.3.1.js"></script>
+	<script src="../bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+    <script type="text/javascript">
+        /**
+         * 每次点击top.html中的搜索按钮后都会传递搜索的关键字跳转到此页面进行课程搜索
+         */
+        var key = "";
+        //页码相关
+        $(function () {
+            //获取URL
+            var url = document.URL;
+            //分割URL,获取搜索框内的关键词
+            key = url.split("?key=")[1];
+            key = decodeURI(key);
+            // alert(key);
+            if(key=="undefined"){
+                alert("非法访问!");
+                window.open("home.html","_self").close();
+            }
+            //此页面第一次加载将会显示第一页的搜索结果
+            loading_course(1);
+            //分页栏中的元素被点击后触发函数，获取当前页数，并传递给加载数据的函数
+            $("#pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_course(rel);
+                }
+            });
+        });
+
+        //获取数据
+        var curPage = 1; //当前页码
+        var total, pageSize, totalPage;//总记录数，每页记录数，总页数
+        //加载课程
+        function loading_course(page) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/sourchCourse',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'key': key, 'pageNum': page - 1},
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#list").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#list").empty();
+                    //获取本页总数据的数量
+                    total = json.total;
+                    //获取每页容纳数据数量的最大值
+                    pageSize = json.pageSize;
+                    //获取当前页数
+                    curPage = page;
+                    //获取总页数
+                    totalPage = json.totalPage;
+                    //获取本页的数据数量(最后一页可能不为pageSize)
+                    count = json.count;
+                    //html语句，向里面添加代码
+                    var li = "";
+
+                    if(total==0){
+                        //搜索结果为0，显示“暂无相关课程”
+                        li+="<div class=\"card-body\">" +
+                            // " <img class=\"card-img-top\" src=\"../Data/img/no_found.png\" alt=\"Card image cap\">"+
+                            "<h3 class=\"card-title\">未找到相关资源</h3>" +
+                            "<p class=\"card-text\">可能关键词不准确，请重新输入关键词再进行搜索</p>\n" +
+                            "<a href=\"home.html\" class=\"btn btn-primary\">去首页看看</a>\n" +
+                            "</div>";
+                        $("#list").append(li);
+                    }else {
+                        //获取数据库返回的数据
+                        var list = json.list;
+                        //记录每次输出的是本页的第几条数据
+                        var cou = 0;
+                        //获取数据
+                        $.each(list, function (index, array) {
+
+                            // alert(array['courseImgName']);
+                            li += "<div class=\"card col-4\" style=\"width: 18rem;cursor:pointer\"  id=\"" + array['courseId'] + "\" onclick=\"introduce(this);\">" +
+                                "<img class=\"card-img-top\" src=\"../../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\" >" +
+                                "<div class=\"card-body\">" +
+                                "<span class=\"card-title\">" + array['courseName'] + "</span>" +
+                                "</div>" +
+                                "</div>";
+                            //判断是否为每行最后一条数据
+                            // if (cou % 5 == 0 || cou == count) {
+                            //     li += "</div>";
+                            // }
+                        });
+                        $("#list").append(li);
+                        $("#pagecount").html(getPageBar());
+                    }
+
+                },
+                complete: function () {
+
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //获取分页条(通用)
+        function getPageBar() {
+            //页码大于最大页数
+            if (curPage > totalPage) {
+                curPage = totalPage;
+            }
+            //页码小于1
+            if (curPage < 1) {
+                curPage = 1;
+            }
+
+            pageStr = "<span>共" + total + "条</span>&nbsp;&nbsp;<span>" + curPage + "/" + totalPage + "</span>&nbsp;&nbsp;";
+
+            //如果是第一页
+            if (curPage == 1) {
+                pageStr += "<span>首页</span>&nbsp;&nbsp;<span>上一页</span>&nbsp;&nbsp;";
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='1'>首页</a>&nbsp;</span>" +
+                    "<span>&nbsp;&nbsp;<a href='javascript:void(0)' rel='" + (curPage - 1) + "'>上一页</a> </span>&nbsp;&nbsp;";
+            }
+
+            //如果是最后一页
+            if (curPage >= totalPage) {
+                pageStr += "<span>下一页</span>&nbsp;&nbsp;<span>尾页</span>"
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='" + (parseInt(curPage) + 1) + "'>下一页</a></span>&nbsp;&nbsp;" +
+                    "<span><a href='javascript:void(0)' rel='" + totalPage + "'>尾页</a> </span>";
+            }
+            return pageStr;
+        }
+
+        //点击课程名获取课程名称，跳转到课程介绍页面
+        function introduce(str) {
+            //获取课程id
+            var courseId = $(str).attr("id");
+            heats_up(courseId);
+
+        }
+
+        //课程热度增长
+        function heats_up(courseId) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/heatsUp',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'courseId': courseId},
+                // dataType: 'json',
+                success: function () {
+                    location.href = "course.html?courseId=" + courseId;
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<!--顶部导航栏-->
+<div id="top"></div>
+<script>
+    $("#top").load("top.html");
+</script>
+<!--课程搜索结果-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+        搜索结果
+    </div>
+    <!--搜索结果-->
+    <div class="container">
+        <div id="list" class="row">
+
+            <!---->
+            <!--搜索显示部分-->
+            <!---->
+
+        </div>
+    </div>
+    <hr>
+    <!--页码-->
+
+    <div id="pagecount"></div>
+</div>
+
+<!--底部-->
+<div id="botton"></div>
+<script>
+    $("#botton").load("botton.html");
+</script>
+</body>
+</html>

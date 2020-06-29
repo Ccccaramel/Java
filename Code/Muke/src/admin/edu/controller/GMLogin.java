@@ -57,17 +57,12 @@ public class GMLogin extends HttpServlet {
 
 		Map<Object,Object> data=new HashMap<Object,Object>();
 		data.put("state",state );
+		data.put("GM",true);
 		Admin user=admindao.getUser();// 获取用户对象
 		
 		if(state) {  // 账号存在
 			// 将数据存入存入 session
 			HttpSession session=request.getSession();  // 使用 resuest 对象的 getSession() 获取 session ,若 session 不存在则创建一个
-//			session.setAttribute("gmId", user.getGmId());
-//			session.setAttribute("gmEmail", user.getGmEmail());
-//			session.setAttribute("gmTel", user.getGmTel());
-//			session.setAttribute("gmPassword", gmPassword);
-//			session.setAttribute("gmPower", user.getGmPower()); 
-//			session.setAttribute("gmAccountStatus", user.getGmAccountStatus());
 			Gson gson=new Gson();
 			String userJson=gson.toJson(user); //  对象转 JSON
 			System.out.println("userJson:"+userJson);

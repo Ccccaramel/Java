@@ -165,7 +165,7 @@
         function loading_course(page) {
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Get_Course_Message.php',
+                url: url+'/getTeacherCourseMessage',
                 data: {'pageNum': page - 1},
                 dataType: 'json',
                 beforeSend: function () {
@@ -178,14 +178,14 @@
                     curPage = page;
                     totalPage = json.totalPage;
                     var li = "";
-                    var list = json.list;
+                    var list = json.courseList;
                     $.each(list, function (index, array) {
                         li += "<tr>" +
                             "<th scope=\"row\">" + array['courseId'] + "</th>" +
                             "<td>" + array['courseName'] + "</td>" +
-                            "<td>" + array['courseClass'] + "</td>" +
-                            "<td id=\"" + array['courseId'] + "\">" + array['courseStatus'] + "</td>" +
-                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['courseId'] + ",3);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"operation(" + array['courseId'] + ",2);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"operation(" + array['courseId'] + ",1);\">恢复</span><span class=\"btn badge badge-info\" style=\"margin-left: 24px\" onclick=\"change_course(" + array['courseId'] + ");\">编辑</span></td>" +
+                            "<td>" + array['courseClassStr'] + "</td>" +
+                            "<td id=\"" + array['courseId'] + "\">" + array['courseStatusStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['courseId'] + ",3,3);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"operation(" + array['courseId'] + ",2,3);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"operation(" + array['courseId'] + ",1,3);\">恢复</span><span class=\"btn badge badge-info\" style=\"margin-left: 24px\" onclick=\"change_course(" + array['courseId'] + ");\">编辑</span></td>" +
                             "</tr>";
                     });
                     $("#course-list").append(li);
@@ -204,7 +204,7 @@
         function loading_test(page) {
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Get_Test_Message.php',
+                url: url+'/getTestMessage',
                 data: {'pageNum': page - 1},
                 dataType: 'json',
                 beforeSend: function () {
@@ -217,14 +217,14 @@
                     curPage = page;
                     totalPage = json.totalPage;
                     var li = "";
-                    var list = json.list;
+                    var list = json.testList;
                     $.each(list, function (index, array) {
                         li += "<tr>" +
                             "<th scope=\"row\">" + array['testId'] + "</th>" +
                             "<td>" + array['testName'] + "</td>" +
                             "<td>" + array['courseId'] + "</td>" +
-                            "<td id=\"" + array['testId'] + "\">" + array['testStatus'] + "</td>" +
-                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"test_operation(" + array['testId'] + ",3);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"test_operation(" + array['testId'] + ",2);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"test_operation(" + array['testId'] + ",1);\">恢复</span><span class=\"btn badge badge-info\" style=\"margin-left: 24px\" onclick=\"change_test(" + array['testId'] + "," + array['courseId'] + ");\">编辑</span></td>" +
+                            "<td id=\"" + array['testId'] + "\">" + array['testStatusStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"test_operation(" + array['testId'] + ",3,5);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"test_operation(" + array['testId'] + ",2,5);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"test_operation(" + array['testId'] + ",1,5);\">恢复</span><span class=\"btn badge badge-info\" style=\"margin-left: 24px\" onclick=\"change_test(" + array['testId'] + "," + array['courseId'] + ");\">编辑</span></td>" +
                             "</tr>";
                     });
                     $("#test-list").append(li);
@@ -243,7 +243,7 @@
         function loading_resource(page) {
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Get_Course_Resource.php',
+                url: url+'/getCourseResource',
                 data: {'pageNum': page - 1},
                 dataType: 'json',
                 beforeSend: function () {
@@ -256,14 +256,14 @@
                     curPage = page;
                     totalPage = json.totalPage;
                     var li = "";
-                    var list = json.list;
+                    var list = json.courseResouceList;
                     $.each(list, function (index, array) {
                         li += "<tr>" +
                             "<th scope=\"row\">" + array['resourceId'] + "</th>" +
                             "<td>" + array['resourceName'] + "</td>" +
                             "<td>" + array['courseId'] + "</td>" +
-                            "<td id=\"" + array['resourceId'] + "\">" + array['resourceStatus'] + "</td>" +
-                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"resource_operation(" + array['resourceId'] + ",3);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"resource_operation(" + array['resourceId'] + ",2);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"resource_operation(" + array['resourceId'] + ",1);\">恢复</span></td>" +
+                            "<td id=\"" + array['resourceId'] + "\">" + array['resourceAccountStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"resource_operation(" + array['resourceId'] + ",3,7);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"resource_operation(" + array['resourceId'] + ",2,7);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"resource_operation(" + array['resourceId'] + ",1,7);\">恢复</span></td>" +
                             "</tr>";
                     });
                     $("#resource-list").append(li);
@@ -321,20 +321,20 @@
         //   2：冻结
         //   3：注销
         //课程状态更改
-        function operation(courseId, sign) {
+        function operation(courseId, sign,category) {
             // alert("你确定要对"+id+"执行"+sign+"操作吗?");
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Change_Course_Management.php',
-                data: {'courseId': courseId, 'sign': sign},
+                url: url+'/accountManagement',
+                data: {'id': courseId, 'sign': sign,'category':category},
                 dataType: 'json',
                 success: function (json) {
-                    alert(json.state);
+                    alert(json.result);
                     if (sign == 3) {
                         //如果是删除则更新列表
                         course();
                     } else {
-                        $("#course-list #" + courseId).html(json.state);
+                        $("#course-list #" + courseId).html(json.result);
                     }
 
                 },
@@ -345,12 +345,12 @@
         }
 
         //课程资源状态更改
-        function resource_operation(resourceId, sign) {
+        function resource_operation(resourceId, sign,category) {
             // alert("你确定要对"+id+"执行"+sign+"操作吗?");
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Change_Course_Resource_Status.php',
-                data: {'resourceId': resourceId, 'sign': sign},
+                url: url+'/accountManagement',
+                data: {'id': resourceId, 'sign': sign,'category':category},
                 dataType: 'json',
                 success: function (json) {
                     // alert(json.state);
@@ -358,7 +358,7 @@
                         //如果是删除则更新列表
                         resource();
                     } else {
-                        $("#resource-list #" + resourceId).html(json.state);
+                        $("#resource-list #" + resourceId).html(json.result);
                     }
                     // $("#resource-list #" + resourceId).html(json.state);
                 },
@@ -369,12 +369,12 @@
         }
 
         //课程测试卷状态更改
-        function test_operation(testId, sign) {
+        function test_operation(testId, sign,category) {
             // alert("你确定要对" + testId + "执行" + sign + "操作吗?");
             $.ajax({
                 type: 'POST',
-                url: '../UserBackEnd/Change_Test_Status.php',
-                data: {'testId': testId, 'sign': sign},
+                url: url+'/accountManagement',
+                data: {'id': testId, 'sign': sign,'category':category},
                 dataType: 'json',
                 success: function (json) {
                     // alert(json.state);
@@ -382,7 +382,7 @@
                         //如果是删除则更新列表
                         test();
                     } else {
-                        $("#test-list #" + testId).html(json.state);
+                        $("#test-list #" + testId).html(json.result);
                     }
 
                 },
@@ -394,11 +394,16 @@
 
         //教师退出
         function teacher_exit_xuesi() {
-            // createXHRO();
-            xmlHttp.open("POST", "../UserBackEnd/exit.php", true);
-            xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-            xmlHttp.onreadystatechange = statHandler;
-            xmlHttp.send(null);
+            $.ajax({
+                type: 'POST',
+                url: url+'/exit',
+                success: function (json) {
+                	location.href = 'home.html';
+                },
+                error: function () {
+                    alert("操作失败");
+                }
+            });
         }
 
         //数据返回后端处理结果反馈给用户，便于指导用户正确操作
@@ -478,14 +483,14 @@
 
         //编辑或修改课程
         function change_course(courseId) {
-            window.open("course_management.html?courseId=" + courseId);
+            window.open("courseManagement.html?courseId=" + courseId);
         }
 
         //添加课程测试卷
         function add_course_test() {
             //在此之前判断该教师是否已发布过课程
             $.ajax({
-                url: '../UserBackEnd/Check_Teacher_Course.php',
+                url: url+'/checkTeacherCourse',
                 type: 'post',
                 dataType: 'json',
                 success: function (json) {
@@ -514,7 +519,7 @@
         function add_course_resources() {
             //在此之前判断该教师是否已发布过课程
             $.ajax({
-                url: '../UserBackEnd/Check_Teacher_Course.php',
+                url: url+'/checkTeacherCourse',
                 type: 'post',
                 dataType: 'json',
                 success: function (json) {

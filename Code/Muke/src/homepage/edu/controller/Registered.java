@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import homepage.edu.service.StudentService;
 import homepage.edu.service.TeacherService;
 
 /**
@@ -52,7 +53,8 @@ public class Registered extends HttpServlet {
 			result=teacherService.registered(teacherName, teachersSchool, teacherIDcard, teacherTel, userEmail, teacherQualification, userPassword, teachersSchoolEmail);			
 		}else {  // Ñ§Éú×¢²á
 			System.out.println("student registered");
-
+			StudentService studentService=new StudentService();
+			result=studentService.registered(userEmail, userPassword);
 		}
 		System.out.println("Registered-result:"+result);
 		data.put("result", result);

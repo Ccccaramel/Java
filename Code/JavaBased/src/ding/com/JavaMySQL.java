@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.mysql.cj.xdevapi.PreparableStatement;
+//import com.mysql.cj.xdevapi.PreparableStatement;
 
 public class JavaMySQL {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";

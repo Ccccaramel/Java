@@ -56,4 +56,28 @@ public class test extends JFrame {
     public static void main(String[] args) {
         new test();
     }
+
+    /**
+     * 将 money 字符串(仅包含数字和小数点)例如 xxxxxxx.xxx 装换成 x,xxx,xxx.xxx 类型
+     * @param money
+     * @return
+     */
+    private String moneyFormat(String money){
+        String str="";
+        int index=money.indexOf(".");
+        if(index==-1){ // true,沒有小數點, money 的長度即爲位數; false 有小數點, index 即爲  money 的位數
+            index=money.length();
+        }
+
+        if(index<=3){
+            str = money;
+        }else{
+            StringBuffer string= new StringBuffer(money);
+            for(index-=3;index>0;index-=3){
+                string.insert(index, ",");
+            }
+            str = string.toString();
+        }
+        return str;
+    }
 }

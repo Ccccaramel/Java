@@ -1,0 +1,69 @@
+Q:关于 MAMIFEST.MF plugin.xml build.properties
+A:它们共享同一个编辑器(Plug-in Manifest Editor)
+     Manifest 编辑器的 Overview, Dependencies, Runtime, 三个标签页是 MAMIFEST.MF 文件的图形化编辑器
+     Extensions, Extension Points, 两个标签页是 plugin.xml 文件的图形化编辑器
+     Build 标签页是 build.properties 文件的图形化编辑器
+    以及对应这三个文件的文本编辑器
+   MAMIFEST.MF 
+    以下为某一项目的 MAMIFEST.MF 内的配置信息:
+      Manifest-Version: 1.0
+      Bundle-ManifestVersion: 2
+      Bundle-Name: Huge Boss Application
+      Bundle-SymbolicName: huge.boss.application;singleton:=true
+      Bundle-Version: 1.0.0.qualifier
+      Require-Bundle: ui.common,
+      ui.businessacceptance;bundle-version="1.0.0",
+      ui.businessconfiguration;bundle-version="1.0.0",
+      ui.productmanagement;bundle-version="1.0.0",
+      ui.product;bundle-version="1.0.0",
+      ui.customer;bundle-version="1.0.0",
+      ui.workordertreatment;bundle-version="1.0.0",
+      ui.servicemanagement;bundle-version="1.0.0",
+      ui.notemanagement;bundle-version="1.0.0",
+      ui.employeemanagement;bundle-version="1.0.0",
+      ui.miscprocess;bundle-version="1.0.0",
+      ui.partnermanagement;bundle-version="1.0.0",
+      ui.report;bundle-version="1.0.0",
+      sysway.spring.client;bundle-version="1.0.0",
+      ui.resourcemanagement;bundle-version="1.0.0",
+      sysway.vo;bundle-version="1.0.0"
+      Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+    配置信息分类:
+      1.一般属性
+         Manifest-Version      用来定义 Manifest 文件的版本
+         Created-By            声明该文件的生成者,一般该属性由 JAR 命令行工具生成的
+         Signature-Version     定义 JAR 文件的签名版本
+         Class-Path            应用程序或类装载器使用该值来构建内部的类搜索路径
+      2.应用程序相关属性
+         Main-Class            定义 JAR 文件的入口类,该类必须是一个可执行的类,一旦定义该属性即可通过 java -jar x.jar 来运行该 JAR 文件?
+      3.小程序(Applet)相关属性
+         Extension-List        该属性指定了小程序需要的扩展信息列表,列表中的每一个名字对应以下属性
+                                 <extension>-Extension-Name
+                                 <extension>-Specifiation-Version
+                                 <extension>-Implementation-Vendor-ID
+                                 <extension>-Implementation-URL
+      4.扩展标识属性
+         Extension-Name        该属性定义了 JAR 文件的标识,例如 Extension-Name:Struts Framework
+      5.包扩展属性
+         Implementation-Title        定义扩展实现的标题
+         Implementation-Version      定义扩展实现的版本
+         Implementation—Vendor       定义扩展实现的组织
+         Implementation-Vendor-Id    定义扩展实现的组织的标识
+         Implementation-URL          定义该扩展包的下载地址(URL)
+         Specifiation-Title          定义扩展规范的标题
+         Specifiation-Version        定义扩展规范的版本
+         Specifiation-Vendor         声明维护该规范的组织
+         Sealed                      定义 JAR 文件是否封存,值可以是 TRUE 或 FALSE
+      6.签名相关属性
+        参照 JavaMail 所提供的 mail.jar 中的一段
+          Name: javax/mail/Address.class
+          Digest-Algorithms: SHA MD5 
+          SHA-Digest: AjR7RqnN//cdYGouxbd06mSVfI4=
+          MD5-Digest: ZnTIQ2aQAtSNIOWXI1pQpw==
+       7.自定义属性
+        除了以上属性,你也可以在 MAMIFEST.MF 中增加自己的属性以及响应的值
+        ...
+
+Q:什么是 JAR 文件?
+A:一种软件包文件格式,通常用于聚合大量的 Java 类文件,相关的元数据和资源文件到一个文件,以便开发 Java 平台应用软件或库
+

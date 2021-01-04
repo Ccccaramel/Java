@@ -1,0 +1,24 @@
+为了在不同机器上流畅操作
+代码依据 IDE 分成了若干部分
+减少因 IDE 造成差异
+
+Q:下载 JDK
+A:https://www.oracle.com/java/technologies/javase-jdk15-downloads.html
+
+Q: VSCode 配置 JDK
+A:复制 JDK 的 bin 路径
+   Ctrl+<, 打开 Settings > 输入 javahome > 进入 Edit in settings.json > 粘贴进 java.home 即可
+
+Q:连接 Oralce
+A:下载插件 Oracle Developer Tools for VS Code ,安装完成后 VSCode 左侧会添加一个新图标 
+  点击 VSCode 左侧的 Oracle Explorer ,展开 DATABASE 点击 + 加号,会打一个 Oracle Connection 窗口
+  只填必填即可( Eclipse 配置 Oracle 的文件是 build.properties ? jdbc:oracle:thin:@[Database host name]:[Port number]:[Service name] )
+
+Q:安装 Oracle
+A:...
+
+Q:如何在 VSCode 中执行 SQL 语句?
+A:选中已连接的数据库 > 右键 Open New SQL File/Open Existing SQL File >Ctrl+E(执行整个 SQL 文件)
+
+Q:如何只执行选中的 SQL 语句?
+A:...

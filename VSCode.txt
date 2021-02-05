@@ -5,6 +5,10 @@
 Q:下载 JDK
 A:https://www.oracle.com/java/technologies/javase-jdk15-downloads.html
 
+☀若要运行项目建议单独打开一个窗口再打开该项目,如不是在 github 的总分支上去运行,更改完之后再通过总分支提交
+  否则会有警告
+    java is a non-project file, only syntax errors are reported
+
 Q: VSCode 配置 JDK
 A:复制 JDK 的 bin 路径
    Ctrl+<, 打开 Settings > 输入 javahome > 进入 Edit in settings.json > 粘贴进 java.home 即可

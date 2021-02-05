@@ -1,5 +1,13 @@
-Q: VSCode 如何运行 Java 代码?
-A:
+Q: JDK 配置
+A:打开 控制面板 > 系统安全 > 系统 > 高级系统设置 > 环境变量 > 系统变量
+  点击 新建(W)... 
+    变量名(N): JAVA_HOME
+    变量值(V): [ JDK 的 bin 目录所在的绝对路径]
+  双击 Path 变量进行编辑,点击 新建(N) 添加如下信息
+  %JAVA_HOME%\bin
+  %JAVA_HOME%\jre\bin
+  验证配置是否成功:
+    Win+R > cmd > java --version
 
 Q:集合 TreeMap 与 TreeSet 的区别?
 A: TreeMap: 
@@ -275,4 +283,5 @@ A:在 java 里面,它们是一样的
   但是,良好的编程习惯,还是写成 null==name 的好
 
 Q: Eclipse 的文件图标字母 J 变成空心怎么回事?如何解决?
-A:
+A: 
+

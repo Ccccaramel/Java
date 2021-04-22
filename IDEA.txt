@@ -1,0 +1,11 @@
+建议使用破解版
+
+关于 IDEA 2021.1 破解
+  IDEA 直接从官网下载
+  选择 试用30天 进入界面
+  破解文件(压缩文件)在百度网盘中
+  下载至本地后无需解压
+  直接将其拖入代码窗口中即可完成
+  或者进入 File > Settings > Plugins > 点击齿轮菜单 > Install Plugin from Disk... > 选择破解文件即可 
+  不要更新 IDEA !
+    打开 IDEA > Settings > Appearance & Behavior > System Settings > Updates 将 Check IDE updates 取消

@@ -43,7 +43,7 @@ IOC 的技术实现
         声明类信息,由 spring 创建和管理
   打开 IDEA > File > New > Project... > Empty Project
   先创建一个空项目,创建/选择一个空文件夹并为项目命名,点击 Finish 进入 Project Structure 界面
-    选中 Modules > 点击旁边的 + 号 > 选择 New Module
+    选中 Modules > 点击旁边的 + 号 > 选择 New Module > 左侧选择 Maven
     选择本地 JDK
     Create from archetype ,译为项目模块(项目骨架)
     (包含初学者常用的 maven-archetype-webapp )

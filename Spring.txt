@@ -1,7 +1,92 @@
-IOC
-  控制反转
+Spring
+  解决企业开发的难度
+  减轻对项目模块之间的管理(类与类之间的管理)
+  帮助开发人员创建对象,管理对象之间的关系
+  核心: IOC AOP
+  实现模块之间以及类之间的解耦合
+  文档:https://spring.io/projects/spring-framework#learn
 
-AOP
+IOC(控制反转)
+  把对象的创建,赋值以及管理工作都交给代码之外的容器实现
+  即把对象的创建由外部资源完成
+  容器:服务器软件/框架(Spring)
+
+Q:为什么使用 IOC ?
+A:目的是减少对代码的改动,并实现不同的功能,实现解耦合
+
+IOC 的体现
+  servlet:
+    1.创建类继承 HttpServlet
+    2.在 web.xml 中注册 servlet
+        <servlet-name>myservlet</servlet-name>
+        <servlet-class>com.xxx.controller.MyServlet</servlet-class>
+    3.没有创建 servlet 对象
+        MyServlet myservlet = new MyServlet();
+  servlet 是 Tomcat 服务器帮你创建的, Tomcat 也称为容器
+  Tomcat 作为容器,里面存放有 servlet 对象, Listener (监听器), Filter (过滤器)
+
+IOC 的技术实现
+  DI 是 IOC 的技术实现
+  DI(Dependency Injection):
+    依赖注入,只需要在程序中提供要使用的对象名称即可
+  而对象在容器中的创建,赋值,查找都由内部实现
+  Spring 是使用 DI 实现了 IOC 的功能, Spring 底层创建对象,使用的是反射机制
+
+创建一个项目
+  实现步骤:
+    1.创建 maven 项目
+    2.加入 maven 的依赖
+        spring 的依赖
+        junit 依赖
+    3.类/接口/对象创建
+    4.创建 spring 需要使用的配置文件
+        声明类信息,由 spring 创建和管理
+  打开 IDEA > File > New > Project... > Empty Project
+  先创建一个空项目,创建/选择一个空文件夹并为项目命名,点击 Finish 进入 Project Structure 界面
+    选中 Modules > 点击旁边的 + 号 > 选择 New Module > 左侧选择 Maven
+    选择本地 JDK
+    Create from archetype ,译为项目模块(项目骨架)
+    (包含初学者常用的 maven-archetype-webapp )
+    上述列表加载不出来没关系,勾选 Create from archetype 后点击 Next 即可
+  进入 New Module 界面创建 module
+    在上述空项目下再创建一个空文件夹, Location 选择该空文件夹即可,建议 module 名与文件夹名同名
+    展开其下部分的 Artifact Coordinates ,与 pom.xml 有关
+    在 GroupId 中按自己需求输入即可,eg:com.ding
+    其它选项默认即可
+  点击 Finish 完成项目创建并自动打开了 pom.xml
+  在左侧 Project 目录窗口中展开你的项目
+    src
+      |- main
+      |   |- java
+      |   |- resources
+      |- test
+      |   |- java
+      |- pom.xml
+      |- [项目名称].iml
+    其中 resources 已被设置为 Resources Root
+    可右键 resources 文件夹 > Mark Directory As > Resources Root 进行设置
+  pom.xml 配置
+    将下述加入到 <project> 即可
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>5.2.5.RELEASE</version>
+      </dependency>
+    </dependencies>
+
+Q:报错 java 不支持发行版本5 ?
+A: IDEA > File > Project Structure... > Project
+  查看 Project SDK 和 Project language level 的选项是否与
+  Modules 中 dependencies > Module SDK 和 Sources > Language level 的选择一样
+  不一样则统一,建议 language level 选择 9-Modules,private methods in interfaces etc.
+  点击 Apply
+  接着打开 IDEA > File > Settings... > Build,Execution,Deployment > Compiler > Java Compiler
+  将 Project bytecode version 和 Per-module bytecode version 中当前项目的 module 的 Target bytecode version 修改为 9 (与 language level 序号一致?)
+
+AOP(面向切面编程)
 
 依赖
+
+
   

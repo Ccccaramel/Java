@@ -785,8 +785,3 @@ A:上传的文件会保存在服务器中,每次重新部署项目 Eclipse 会�
     http://localhost:9090/Muke/homepage/D:/apache-tomcat-9.0.34/webapps/Data/img/2020062423491810006738.jpg
   其实正常情况 src 访问的都是相对路径(除非只是单独写一个静态 HTML 文件)
   所以当去访问 src 的路径时后台会自动添加本项目的父目录
-
-<
-是 Eclipse 辣鸡还是我电脑辣鸡?
-或许是我辣鸡?
->

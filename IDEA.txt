@@ -10,3 +10,15 @@
   打开 Help 发现新增 Eval Reset , 进入并勾选 Auto reset before per restart ,于是每次打开 IDEA 都会重置试用期
   不要更新 IDEA !
     打开 IDEA > Settings > Appearance & Behavior > System Settings > Updates 将 Check IDE updates 取消
+
+maven 项目复制以及导入
+  将项目直接在其当前目录下复制一份并重命名
+  将复制的项目内的 target 文件夹和 MyModule.xml 文件删掉
+  将 pom.xml 的 artifactId 改成与项目名同名
+  打开 IDEA > File > Project Settings > Modules > Alt+Insert / 点击 + 号 > Import Module > 选择复制项目 > ok
+  弹出 Import Module 界面 > 选择 Import module from external model > 选中 Maven > Finish
+  选中项目,将 Sources 中的 Language level 改为第 9 项,并将 Dependencies 的 Module SDK 改为实际需要项
+  ok
+
+快捷键:
+  

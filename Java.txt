@@ -283,5 +283,12 @@ A:在 java 里面,它们是一样的
   但是,良好的编程习惯,还是写成 null==name 的好
 
 Q: Eclipse 的文件图标字母 J 变成空心怎么回事?如何解决?
-A: 
+A:与项目版本有关系,可能该类不属于当前版本,你可能是通过查看历史版本打开这个类文件的
+  复制该类名字重新在项目里找该类
+
+Q: java main() 方法的 String[] args 是什么?
+A: 字符串 args 为开发人员在命令行状态下与程序交互提供了一种手段
+    cmd > javac Test.java
+    cmd > java Test 1 2 3 [...]
+    main 中添加打印语句 sysyout(args[0]+args[1]+[...])
 

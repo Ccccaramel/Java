@@ -67,3 +67,5 @@ A:它们共享同一个编辑器(Plug-in Manifest Editor)
 Q:什么是 JAR 文件?
 A:一种软件包文件格式,通常用于聚合大量的 Java 类文件,相关的元数据和资源文件到一个文件,以便开发 Java 平台应用软件或库
 
+Q:如何设置选中某一变量时,所有该变量高亮显示?
+A: Eclipse > Window > Preferences > > Java > Editor > Mark Occurrences ,勾选所有选项并 Apply

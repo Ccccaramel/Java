@@ -1,0 +1,283 @@
+Spring
+  解决企业开发的难度
+  减轻对项目模块之间的管理(类与类之间的管理)
+  帮助开发人员创建对象,管理对象之间的关系
+  核心: IOC AOP
+  实现模块之间以及类之间的解耦合
+  文档:https://spring.io/projects/spring-framework#learn
+
+IOC(控制反转)
+  把对象的创建,赋值以及管理工作都交给代码之外的容器实现
+  即把对象的创建由外部资源完成
+  容器:服务器软件/框架(Spring)
+
+Q:为什么使用 IOC ?
+A:目的是减少对代码的改动,并实现不同的功能,实现解耦合
+
+IOC 的体现
+  servlet:
+    1.创建类继承 HttpServlet
+    2.在 web.xml 中注册 servlet
+        <servlet-name>myservlet</servlet-name>
+        <servlet-class>com.xxx.controller.MyServlet</servlet-class>
+    3.没有创建 servlet 对象
+        MyServlet myservlet = new MyServlet();
+  servlet 是 Tomcat 服务器帮你创建的, Tomcat 也称为容器
+  Tomcat 作为容器,里面存放有 servlet 对象, Listener (监听器), Filter (过滤器)
+
+IOC 的技术实现
+  DI 是 IOC 的技术实现
+  DI(Dependency Injection):
+    依赖注入,只需要在程序中提供要使用的对象名称即可
+  而对象在容器中的创建,赋值,查找都由内部实现
+  Spring 是使用 DI 实现了 IOC 的功能, Spring 底层创建对象,使用的是反射机制
+
+创建一个项目
+  实现步骤:
+    1.创建 maven 项目
+    2.加入 maven 的依赖
+        spring 的依赖
+        junit 依赖
+    3.类/接口/对象创建
+    4.创建 spring 需要使用的配置文件
+        声明类信息,由 spring 创建和管理
+  打开 IDEA > File > New > Project... > Empty Project
+  先创建一个空项目,创建/选择一个空文件夹并为项目命名,点击 Finish 进入 Project Structure 界面
+    选中 Modules > 点击旁边的 + 号 > 选择 New Module > 左侧选择 Maven
+    选择本地 JDK
+    Create from archetype ,译为项目模块(项目骨架)
+    (包含初学者常用的 maven-archetype-webapp )
+    上述列表加载不出来没关系,勾选 Create from archetype 后点击 Next 即可
+  进入 New Module 界面创建 module
+    在上述空项目下再创建一个空文件夹, Location 选择该空文件夹即可,建议 module 名与文件夹名同名
+    展开其下部分的 Artifact Coordinates ,与 pom.xml 有关
+    在 GroupId 中按自己需求输入即可,eg:com.ding
+    其它选项默认即可
+  点击 Finish 完成项目创建并自动打开了 pom.xml
+  在左侧 Project 目录窗口中展开你的项目
+    src
+      |- main
+      |   |- java
+      |   |- resources
+      |- test
+      |   |- java
+      |- pom.xml
+      |- [项目名称].iml
+    其中 resources 已被设置为 Resources Root
+    可右键 resources 文件夹 > Mark Directory As > Resources Root 进行设置
+  pom.xml 配置
+    将下述加入到 <project> 即可(系统会智能导入)
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>5.2.5.RELEASE</version>
+      </dependency>
+    </dependencies>
+    其中默认包含单元测试依赖
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13</version>
+        <scope>test</scope>
+      </dependency>
+    目的是代替通过 main() 方法测试代码
+    使测试部分功能时更方便
+    在 test/java 目录下测试
+  创建 Spring 配置文件
+    右键项目中的 resources 文件夹 > New > XML Configuration File > Spring Config (社区版没有此项,建议使用破解版)
+    其中 .xsd 是另一种约束文件,和 mybatis 指定 dtd 相同
+    声明 bean
+      告诉 Spring 要创建某个类的对象
+      id:对象的自定义名称,唯一值, Spring 通过这个名称找到对象
+      class:类的全限定名称(不能是接口,因为 Spring 是反射机制创建对象,必须使用类)
+        <bean id="[依据需求自定义命名]" class="[类的包名].[类名]">
+      Spring 至此完成了 Class class = new class(); 的操作
+      并把创建好的对象放入到 map 中, map 是 Spring 框架用于存放对象的变量
+
+Q:报错 java 不支持发行版本5 ?
+A: IDEA > File > Project Structure... > Project
+  查看 Project SDK 和 Project language level 的选项是否与 Modules 中 dependencies > Module SDK 和 Sources > Language level 的选择一样
+  不一样则统一,建议 language level 选择 9-Modules,private methods in interfaces etc.
+  点击 Apply
+  接着打开 IDEA > File > Settings... > Build,Execution,Deployment > Compiler > Java Compiler
+  将 Project bytecode version 和 Per-module bytecode version 中当前项目的 module 的 Target bytecode version 修改为 9 (与JDK版本一致?)
+
+DI(依赖注入)
+  赋值
+    1.配置文件(set 注入,构造注入)
+      使用标签和属性完成
+      基于 XML 的 DI 实现
+    2.注解(自动注入)
+      使用 Spring 中的注解完成属性赋值
+      基于注解的 DI 实现
+  语法
+    通过配置文件实现
+      1. set 注入
+        Spring 调用属性对应的的 set 方法
+          <property name="[]" value="[]"/>
+      2.构造注入
+        Spring 调用类的有参构造方法,创建对象,在构造方法中完成赋值 
+          <constructor-arg name="[]" value="[]"/>
+          <constructor-arg index="[参数位置]" value="[]"/>
+          <constructor-arg value="Mary"/>
+      3.引用类型的自动注入
+        根据规则为引用类型赋值
+          <bean id="[]" class="[]" autowire="[byName/byType]">
+        3.1 byName (按名称注入)
+        3.2 byType (按类型注入)
+          java 类中的应用类型和 Spring 容器中(配置文件) <bean> 的类是同源关系可赋值给引用类型
+          同源:
+            1.引用类型与 <bean> 中 class 一样
+            2.引用类型(子类)与 <bean> 中 class (父类)为父子关系
+            3.引用类型与 <bean> 中 class 值为实现类与接口关系
+    通过注解实现
+      加入 maven 依赖 spring-context(间接加入了 spring-aop 依赖)
+      在 spring 配置文件中加入一个组件扫描器标签以说明注解在你的项目中的位置
+      声明组件扫描器,扫描包中所有类,找到类中的注解,按照注解功能创建对象或给属性赋值
+        <context:component-scan base-package="myClass"/>
+      在类名上方中加 @Compnent("[beanId]") 注解
+      普通属性注解
+        @Value(value="[data]")
+        在属性上方 或 set() 上方, value= 可省略
+      引用类型注解
+        @Autowired
+          默认使用 byType 自动注入,默认 required 为 true(若赋值失败则终止运行,建议使用),可指定为 false(若赋值失败则为 null )
+          使用 byName 则需再添加 @Qualifier(value="[bean 配置中对应的 id]") 标签(value 可省略)
+          在属性上方 或 set() 上方
+        @Resource
+        首先加入依赖
+          <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+          </dependency>
+          来自 JDK 中的注解, Spring 框架提供了对这个注解的功能支持
+          使用自动注入原理,支持 byName(默认) 和 byType 
+          先使用 byName 自动注入,若赋值失败再尝试使用 byType ,若指定只用 byName 则需指定
+            @Resource(byName="[beanId]")
+          在属性上方 或 set() 上方
+    关于赋值的值
+      在 resources 文件夹内新建一个 xxx.properties 文件
+      以
+        [类的属性1名称]=[值]
+        [类的属性2名称]=[值]
+      方式存储
+      在类的属性上方添加
+        @value("${[xxx.properties 中对应的属性名称]}")
+      并在 xxx.xml 配置文件中声明
+        <context:property-placeholder location="xxx.properties"/>
+      即可
+    相关注解
+      @Component:普通对象
+      @Repository:持久层
+      @Service:业务层
+      @Controller:控制层
+      @Value:普通属性
+      @Autowired:引用类型赋值
+      @Resource: JDK 自带,为引用类型赋值
+
+动态代理
+  可以在程序的执行过程中创建代理对象
+  通过代理对象执行方法,给目标类的方法增加额外的功能
+  减少代码重复
+  解耦合
+  专注于业务逻辑代码
+  JDK 动态代理
+    1.创建目标类
+      interface A
+      calss B implements A
+      calss C extends B
+    2.创建 InvocationHandler 接口的实现类,为目标类进行功能增强
+      class MyInvocationHandler implements InvocationHandler
+        private Object target;
+        public MyInvocationHandler(Object target);
+        @Override
+        public Object invoke(Object o, Method method, Object[] objects) throws Throwable
+          before();
+          Object res = method.invoke(target,objects);
+          after();
+          return res;
+    3.使用 JDK 中 Proxy 类创建代理对象,实现创建对象的能力
+      A a = new B();
+      InvocationHandler i = new MyInvocationHandler(a);
+      A a1 = (A) Proxy.newProxyInstance(a.getClass().getClassLoader(), a.getClass().getInterfaces(), i);
+      a1.fun();
+      另一种情况
+      A a = new C();
+      InvocationHandler i = new MyInvocationHandler(a);
+      A a1 = (A) Proxy.newProxyInstance(a.getClass().getSuperclass().getClassLoader(), a.getClass().getSuperclass().getInterfaces(), i);
+      a1.fun();
+    *注意相关包不要导错
+      import java.lang.reflect.InvocationHandler;
+      import java.lang.reflect.Proxy;
+  CGLIB 动态代理
+    第三方工具库,原理是继承,通过继承目标类创建子类,子类即代理对象
+
+AOP(Aspect Orient Programming 面向切面编程-动态代理的规范化)
+  AOP 底层采用即为动态代理
+  可通过运行期动态代理实现程序功能的统一维护
+  将交叉业务(通用且与主业务无关的代码,如安全检查,事务,日志,缓存等)逻辑树封装成切面,利用 AOP 容器的功能将切面植入到主业务逻辑中
+  把动态代理的实现步骤与方法进行定义,让开发人员用一种统一的方式使用动态代理
+  一些术语:
+    1.Aspect:切面,表示增强的功能(非业务功能,如日志,事务,统计信息,参数检查,权限验证)
+    2.JoinPoint:连接点,连接业务方法和切面的位置,即业务方法
+    3.Pointcut:切入点,指多个连接点方法的集合
+    4.目标对象:业务相关的类
+    5.Adivce:通知,切面功能执行的时间
+  Spring
+    Spring 在内部实现了 AOP 规范,可做 AOP 的工作
+    Spring 主要在事务处理时使用 AOP
+    但其比较笨重
+  AspectJ
+    一个开源的专业 AOP 框架
+    Spring 框架中集成了 AspectJ 框架,通过 Spring 即可使用 AspectJ 的功能
+    实现 AOP 的两种方式
+      1.使用 xml 配置文件(事务)
+      2.注解
+        切面的执行时间,在规范中被称为 Adivce
+          1.@Before
+          2.@AfterReturning
+          3.@Around
+          4.@AfterThrowing
+          5.@After
+        切面执行的位置,切入点表达式
+          execution([modifiers-pattern] [ret-type-pattern] [declaring-type-pattern][name-pattern(param-pattern)] [throws-pattern])
+            [modifiers-pattern]:可选,访问权限类型
+            [ret-type-pattern]:返回值类型
+            [declaring-type-pattern]:可选,包名类名
+            [name-pattern(param-pattern)]:方法名(参数类型和参数个数)
+            [throws-pattern]:可选,抛出异常类型
+          execution([访问权限类型] [返回值类型] [包名类名] [方法名(参数类型和参数个数)] [抛出异常类型])
+          execution([返回值类型] [方法名(参数类型和参数个数)])
+        方法名可使用通配符代替
+          *   0个至多个任意字符
+          ..  用在方法参数中,表示任意多个参数,用在包名后,表示当前包及其子包路径
+          +   用在类名后,表示当前类及其子类,用在接口后,表示当前接口及其实现类
+          eg:
+            1.excution(* *..service.*.*(..));
+              指定所有包下的 service 子包下所有类(接口)
+        步骤
+          1.新建 Maven 项目
+          2.加入依赖
+            (1) Spring 依赖
+            (2) aspectJ 依赖
+            (3) junit 单元测试
+          3.创建目标类:接口和它的实现类
+            为类中的方法增加功能且不改变原来的代码
+          4.创建切面类:普通类
+            (1)在类上面加入 @Aspect
+            (2)在类中定义方法,方法即为切面要执行的功能代码
+          5.创建 Spring 的配置文件:声明对象,把对象交给容器统一管理
+            (1)声明目标对象
+            (2)声明切面类对象
+            (3)声明 AspectJ 框架中的自动代理生成器标签(用来完成代理对象的自动创建功能)
+          6.创建测试类
+            从 Spring 容器中获取目标对象(代理对象)
+            通过代理执行方法,实现 AOP 的功能增强
+          
+
+依赖
+
+
+  

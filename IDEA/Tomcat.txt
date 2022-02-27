@@ -1,0 +1,18 @@
+不要用10版本,用9就行
+自从Oracle把Java EE捐给Apache后新版本的JavaEE也就正式的改名为了"Jakarta® EE"
+值得注意的是2020年2月Tomcat发布了第10个版本
+Tomcat 10 m1将JavaEE也换成了Jakarta® EE(Jakarta Servlet 5.0,Jakarta Server Pages 3.0,Jakarta Expression Language 4.0,Jakarta WebSocket 2.0,Jakarta Authentication 2.0 和 Jakarta Annotations 2.0 )
+Jakarta® EE较以前的JavaEE有一个非常非常重要的更新:包名不再是"javax.servlet."而是改成了"jakarta.servlet."
+        ———2022.2.20
+
+下载
+  https://tomcat.apache.org/
+
+Q:乱码
+A: tomcat > conf > 打开 logging.properties 将所有 UTF-8 替换成 GBK
+
+Q:命令行启动与关闭
+A:tomcat > bin > cmd
+  startup.bat
+  shutdown.bat
+  浏览器输入 localhost:8080

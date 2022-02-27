@@ -1,0 +1,224 @@
+1. MVC 设计模式简介 
+  1> MVC 设计不仅限于 Java Web 应用,还包括许多如前端, PHP .NET 等语言
+    之所以这样做的根本原因在于解耦各个模块
+  2> MVC 是 Model , View 和 Controller 的缩写,分别代表 Web 应用程序中的3种职责
+    模型:用于存储数据以及处理用户请求的业务逻辑
+    视图:向控制器提交数据,显示模型中的数据
+    控制器:根据视图提出的请求判断将请求和数据交给哪个模型处理,将处理后的有关结果交给哪个视图更新显示
+  3>基于 Servlet 的 MVC 模式的具体实现如下
+    模型:一个或多个 JavaBean 对象,用于存储数据(实体模型,由 JavaBean 类创建)和处理业务逻辑(业务模型,由 Java 类创建)
+    视图:一个或多个页面,向控制器提交数据和为模型提供数据显示,页面主要使用
+    控制器:
+
+******学习记录******
+1.下载并安装 IDEA (详见 IDEA.txt)
+2.下载 JDK
+3.下载 Maven
+****创建工程****
+1.在磁盘新建一个文件夹(工程),用于存放项目
+2.打开 IDEA > File Open... > 选择上述创建的工程
+3.右键工程 > New > Module... > 选择 Maven > Module SDK 选择本地的 SDK > ... > Finish
+  新建的项目目录如下:
+    [项目名称]
+      |---src
+      |     |---main文件夹
+      |     |     |---java文件夹
+      |     |     |---resources文件夹
+      |     |---test文件夹
+      |           |---java文件夹
+      |---pom.xml
+      |---springMVC.iml
+4.打开 pom.xml
+    <groupId>[标识]</groupId>
+    <artifactId>[项目唯一ID(与工程名保持一致)]</artifactId>
+    <version>1.0-[版本号]</version>
+5.在 project 中添加打包方式
+    <packaging>war</packaging> // 打包为 war 包
+6.在 project 中添加依赖
+    <dependencies>
+        <!-- SpringMVC -->
+        <dependency>
+            <groupId>org.springframework</groupId> <!-- 固定 -->
+            <artifactId>spring-webmvc</artifactId> <!-- maven refresh 以下 -->
+            <version>5.3.15</version> <!-- 可通过联想选择最新版本,maven refresh 以下 -->
+        </dependency>
+        <!-- ServletAPI -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <!-- spring5 和 thymeleaf 整合包 -->
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.12.RELEASE</version>
+        </dependency>
+        <!-- 日志 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-access</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+    </dependencies>
+7.添加 web 模块,在 src/main 下新建 webapp 文件夹
+8.添加 web.xml , File > Project Structure... > 右侧选择 Module
+  展开当前项目有一个 web 项,选中它,可看到 Web Resource Directories 下有一个上述的 web 模块的路径
+  Deployment Descriptors 用来配置项目描述符,即 web.xml ,点击“+”号创建
+  默认设置的路径格式为 [项目绝对路径]\WEB-INF\web.xml
+               改成 [项目绝对路径]\src\main\webapp\WEB-INF\web.xml
+9.配置 web.xml
+  打开 web.xml
+  a.默认配置方式
+    指 springMVC 的配置文件默认位于 WEB-INF 下,且默认名称为 <servlet-name>[项目名称]</servlet-name>
+    添加如下代码
+        <!-- 配置 springMVC 的前端控制器,对浏览器发送的请求进行统一处理 -->
+        <servlet>
+            <servlet-name>SpringMVC</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        </servlet>
+
+        <servlet-mapping>
+            <servlet-name>SpringMVC</servlet-name>
+            <url-pattern>/</url-pattern>
+        </servlet-mapping>
+    / 所匹配的的请求可以是 /login .html .js .css 方式的请求路径
+    但是不匹配 .jsp 请求路径的请求
+    /* 包括 .jsp 的请求
+  b.扩展配置方式
+    不将 web.xml 放在 WEB-INF 下, WEB-INF 只放界面
+    自定义 springMVC 配置文件的位置和名称
+    添加如下代码
+        <!-- 配置 springMVC 的前端控制器,对浏览器发送的请求进行统一处理 -->
+        <servlet>
+            <servlet-name>SpringMVC</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <!-- 配置 SpringMVC 配置文件的位置和名称 -->
+            <init-param>
+                <param-name>contextConfigLocation</param-name> <!-- 上下文配置路径 -->
+                <param-value>classpath:springMVC.xml</param-value> <!-- 名称 -->
+            </init-param>
+            <load-on-startup>1</load-on-startup> <!-- 将 springMVC 前端控制器 DispatcherServlet 初始化时间提前到服务器启动时,提高访问速度 -->
+        </servlet>
+
+        <servlet-mapping>
+            <servlet-name>SpringMVC</servlet-name>
+            <url-pattern>/</url-pattern>
+        </servlet-mapping>
+    右键 resource > New > XML Configuration File > Spring Config > 填入 springMVC.xml (文件名称自定义,不固定)
+10.创建控制器
+  右键 src\main\java > New > Java Class > [自定义命名, xxx.controller.xxxController ]
+  a.注解+扫描配置控制器
+    在 xxx.java 添加如下两行代码
+        import org.springframework.stereotype.Controller;
+        @Controller
+        class xxx{...} <!-- 必须在类名上一行 -->
+    springMVC 配置文件
+    添加如下代码
+        <context:component-scan base-package="com.springmvc.controller"></context:component-scan>
+11.配置 springMVC 配置文件
+  打开 springMVC.xml 添加如下代码
+    <!-- 配置 Thymeleaf 视图解析器 -->
+    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="order" value="1"/> <!-- 设置视图解析器的优先级 -->
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="templateEngine">
+            <bean class="org.thymeleaf.spring5.SpringTemplateEngine">
+                <property name="templateResolver">
+                    <bean class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+                        <property name="prefix" value="/WEB-INF/templates/"/> <!-- 视图前缀 -->
+                        <property name="suffix" value=".html"/> <!-- 视图后缀 -->
+                        <property name="templateMode" value="HTML5"/> <!-- 模板模型 -->
+                        <property name="characterEncoding" value="UTF-8"/> <!-- 字符编码 -->
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+12.由上配置所述,需在 WEB-INF 下新建 templates 文件夹并创建 index.html
+13.关于index.html 里的 thymeleaf 命名空间
+  想要在页面使用 thymeleaf 语法需要在 html 标签里加上如下代码
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+  也可通过配置 IDEA 设置, File > Settings > Editor > File and Code Templates > 选择 HTML File 在模板中加入如下代码即可
+    xmlns:th="http://www.thymeleaf.org"
+14.添加控制器方法
+    class xxx{
+        // @RequestMapping("/") 与下等价
+        @RequestMapping(value = "/")
+        public String index(){
+            return "index";
+        }
+    }
+15.配置 tomcat
+  Run > Edit Configurations... > 点击"+"号新增配置 > Tomcat Server > Local
+  Application server 项初次创建一般没有可选项,点击右侧的 Configure... 按钮进行新增
+  Tomcat home 选择本地 tomcat 所在位置即可
+  切换至 Deployment 菜单,点击"+"号 > Artifact... > 选 war exploded
+  Application context 默认生成,可以修改简单点
+  切换至 Server 菜单
+  On 'Update' action: 项选择 Redeploy
+  On frame deactivation: 项选择 Update classes and resources
+  点击 Apply > OK > Run
+Q:报错 java 不支持发行版本5 ?
+A: IDEA > File > Project Structure... > Project
+  查看 Project SDK 和 Project language level 的选项是否与 Modules 中 dependencies > Module SDK 和 Sources > Language level 的选择一样
+  不一样则统一,建议 language level 选择 9-Modules,private methods in interfaces etc. (与 SDK 版本一致)
+  点击 Apply
+  接着打开 IDEA > File > Settings... > Build,Execution,Deployment > Compiler > Java Compiler
+  将 Project bytecode version 和 Per-module bytecode version 中当前项目的 module 的 Target bytecode version 修改为 9 (与 tomcat 版本一致)
+16.超链接
+  在 index.html 中添加如下代码,通过 thmeleaf 语法,获取上下文路径
+    <a th:href="@{/target}">link</a>
+  在 templates 下新建 target.html
+  在 hiController.java 中添加一个新方法
+    @RequestMapping("/target")
+    public String toTarget(){
+        return "target";
+    }
+  重启 Tomcat Server 即可
+17.再创建一个控制器 RequestMappingController.java 与 index.java 控制器包含同样的控制器方法
+    @Controller
+    public class RequestMappingController {
+
+        @RequestMapping("/")
+        public String index(){
+            return "index";
+        }
+    }
+  启动 Tomcat Server 时会报错,提示已存在
+  所以 @RequestMapping 注解设置映射请求路径不可重复
+18.@RequestMapping 注解的位置
+  标识一个类:设置映射请求的请求路径的初始信息
+  标识一个方法:设置映射请求的请求路径的具体信息
+    @RequestMapping("/[标识a]")
+    public class XXX{
+        @RequestMapping("/[标识b]")
+        public String fun(){
+            return "[页面名称]";
+        }
+    }
+  此时请求映射所映射的请求的路径为 /[标识a]/[标识b]
+    <a th:href="@{/[标识a]/[标识b]}">link</a>
+  value 属性可设置多个值
+    @RequestMapping(value={"[标识a]","[标识b]",...})
+19.@RequestMapping 注解的 method 属性
+  通过请求的请求方式匹配请求映射
+  该请求映射能够匹配多种请求方式的请求,如果不满足 method 属性则浏览器报错405
+
+
+

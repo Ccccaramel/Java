@@ -16,3 +16,14 @@ A:tomcat > bin > cmd
   startup.bat
   shutdown.bat
   浏览器输入 localhost:8080
+
+Q:启动 Tomcat 报错"java: 错误: 不支持发行版本 5"?
+A: 
+  打开 IDEA > File > Settings... > Build,Execution,Deployment > Compiler > Java Compiler
+  将 Project bytecode version 和 Per-module bytecode version 中当前项目的 module 的 Target bytecode version 修改为 9 (与 tomcat 版本一致)
+  /**
+      IDEA > File > Project Structure... > Project
+      查看 Project SDK 和 Project language level 的选项是否与 Modules 中 dependencies > Module SDK 和 Sources > Language level 的选择一样
+      不一样则统一,建议 language level 选择 9-Modules,private methods in interfaces etc. (与 SDK 版本一致)
+      点击 Apply
+  **/

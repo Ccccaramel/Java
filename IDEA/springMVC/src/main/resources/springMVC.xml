@@ -2,9 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="com.springmvc.controller"></context:component-scan>
+    <!-- 扫描组件 -->
+    <context:component-scan base-package="com.springmvc.controller,com.springmvc.dao,com.springmvc.interceptors"></context:component-scan>
 
     <!-- 配置 Thymeleaf 视图解析器 -->
     <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
@@ -22,6 +24,46 @@
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- 视图控制器 -->
+    <mvc:view-controller path="/" view-name="index"></mvc:view-controller>
+    <!-- 开启 MVC 的注解驱动 -->
+    <mvc:annotation-driven />
+    <!-- 开放对静态资源的访问 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 配置文件上传解析器,将上传的文件封装为 MultipartFile -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+<!--        方式1-->
+<!--         <bean class="com.springmvc.interceptors.FirstInterceptor"></bean>  -->
+<!--        方式2-->
+<!--        <ref bean="firstInterceptor"></ref>-->
+<!--        方式3-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/> <!-- /* 表示拦截一层; /* 表示匹配多层,即拦截所有请求 -->
+            <mvc:exclude-mapping path="/"/> <!-- 排除主页 -->
+            <ref bean="firstInterceptor"></ref>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/> <!-- /* 表示拦截一层; /* 表示匹配多层,即拦截所有请求 -->
+            <mvc:exclude-mapping path="/"/> <!-- 排除主页 -->
+            <ref bean="secondInterceptor"></ref>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.ArithmeticException">error</prop>
+            </props>
+        </property>
+        <!-- 设置将异常信息共享在请求域中的键 -->
+        <property name="exceptionAttribute" value="ex"></property>
     </bean>
 
 </beans>

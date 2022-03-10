@@ -1,0 +1,95 @@
+*** 输出"hello word" ***
+1.创建一个 Maven 工程
+2.打开 Maven 所在目录并找到 conf 下的 seeting.xml 文件添加如下配置
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+    </parent>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>2.4.1</version>
+    </dependency>
+2.在项目的 java 新建一个 java 类
+    @SpringBootApplication
+    public class start {
+        public static void main(String[] args){
+            SpringApplication.run(start.class,args);
+        }
+    }
+  在 java 目录下创建 controller 目录并新建一个控制器
+    @RestController
+    public class hiController {
+
+        @RequestMapping("/hi")
+        public String hi(){
+            return "hi!springBoot!";
+        }
+    }
+3.运行,点击 main 方法 左侧的"run"按钮启动服务
+4.在浏览器输入 localhost:8080/hi 即可访问页面
+
+springBoot 官方文档
+  https://spring.io/projects/spring-boot#learn
+
+修改配置文件
+  在 resources 文件夹下新建 application.properties 文件,添加配置信息
+    server.port=8080
+
+部署
+  springBoot 可以创建一个可执行的 jar 包
+  只需引用 springBoot 提供的插件
+  该 jar 包自带整套运行环境,该 jar 包被称为"fat jars"
+  在 pom.xml 内添加如下配置
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.6.4</version>
+            </plugin>
+        </plugins>
+    </build>
+  点击 IDEA 右侧的 MAven 栏选中展开当前项目的 Lifecycle 目录
+  选中 clean 和 package 并点击运行
+  打开当前项目的 target 目录 cmd 进入
+  启动项目
+    java -jar [项目的 jar 包]
+
+Q:查看依赖配置
+A:打开 pom.xml > Ctrl+单击"spring-boot-starter-parent" > Ctrl+单击"spring-boot-dependencies"
+  即可查看到所有开发中常用的依赖的版本号
+
+Q:修改默认依赖配置?
+A:maven 依赖就近原则,所以需要将自定义的依赖配置写在 starter 前面
+  例如修改 mysql 版本,当前版本为
+    <mysql.version>8.0.28</mysql.version>
+
+查找 maven 驱动
+  https://mvnrepository.com/
+
+导入 mysql 依赖
+  在 dependencies 内添加如下配置
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+  在 dependencies 之前添加
+    <properties>
+        <mysql.version>8.0.16</mysql.version>
+    </properties>
+
+Q:改变扫描路径
+A:修改主程序的注解 @SpringBootApplication(scanBasePacksges="*.*")
+  或直接指定,将 @SpringBootApplication 替换为
+    @SpringBootConfiguration
+    @EnableAutoConfiguration
+    @ComponentScan("*.*")
+
+配置绑定
+  读取 properties 并封装到 javaBean 中
+  1.@ConfigurationProperties
+  2.@EnableConfigurationProperties+@ConfigurationProperties
+  3.@Component+@ConfigurationProperties

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/Req")
 public class RequestMappingController {
 
-    @RequestMapping("/testHtml")
+    @RequestMapping("/test1")
     public String test(){
-        return "test";
+        return "test1";
     }
 
 }

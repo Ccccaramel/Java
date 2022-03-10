@@ -7,6 +7,174 @@
 <body>
 <a th:href="@{/target1}" methods="post">link1</a>
 <br>
-<a th:href="@{/Req/testHtml}">link1</a>
+<a th:href="@{/target1}" methods="post">"/target1","/target2"</a>
+<br>
+<a th:href="@{/target2}" methods="post">"/target1","/target2"</a>
+<br>
+<a th:href="@{/Req/test1}">"/test1"</a>
+<form th:action="@{/test}" method="post">
+    <input type="submit" value="提交">
+</form>
+<form th:action="@{/getTest}" method="get">
+    <input type="submit" value="get提交(get)">
+</form>
+<form th:action="@{/getTest}" method="post">
+    <input type="submit" value="post提交(get)">
+</form>
+<form th:action="@{/postTest}" method="get">
+    <input type="submit" value="get提交(post)">
+</form>
+<form th:action="@{/postTest}" method="post">
+    <input type="submit" value="post提交(post)">
+</form>
+<a th:href="@{/paramsTest?admin='root'&pw=123}">params?admin='root'&pw=123</a>
+<br>
+<a th:href="@{/paramsTest(admin='rot',pw=123)}">params(admin='rot',pw=123)</a>
+<br>
+<a th:href="@{/paramsTest(admin='root',pw=123)}">params(admin='root',pw=123)</a> <!-- 建议使用此方式 -->
+<br>
+
+<a th:href="@{/paramsTest2}">params2</a>
+<br>
+<a th:href="@{/paramsTest2(admin='rot')}">params2(admin='rot')</a>
+<br>
+<a th:href="@{/paramsTest2(admin='root',pw=123)}">params2(admin='root',pw=123)</a> <!-- 建议使用此方式 -->
+<br>
+<a th:href="@{/headerTest1}">请求头header(Host=localhost:8081)</a> <!-- 建议使用此方式 -->
+<br>
+<a th:href="@{/headerTest2}">请求头header(Host=localhost:8080)</a> <!-- 建议使用此方式 -->
+<br>
+<a th:href="@{/abc/antTest}">ant风格*</a>
+<br>
+<a th:href="@{/a1c/antTest}">ant风格a**a</a>
+<br>
+<a th:href="@{/a/b/c/antTest}">ant风格/**/</a>
+<br>
+<a th:href="@{/pathTest/23/Tom}">占位符</a>
+<br>
+<h3>获取参数</h3>
+<a th:href="@{/servletAPI(name='Tom',password=123)}">原生servletAPI</a>
+<br>
+<a th:href="@{/testParam1(name='Tom',password=123)}">testParam1</a>
+<br>
+<form th:action="@{/testParam2}" method="get">
+    姓名:<input type="text" name="name"><br>
+    密码:<input type="text" name="pw"><br>
+    爱好:<input type="checkbox" name="hobby" value="a">a
+    <input type="checkbox" name="hobby" value="b">b
+    <input type="checkbox" name="hobby" value="c">c<br>
+    <input type="submit" value="提交">
+</form>
+<h3>通过实体类型的形参获取请求参数</h3>
+<form th:action="@{/testBean1}" method="post">
+    姓名:<input type="text" name="name"><br>
+    密码:<input type="text" name="password"><br>
+    :<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br>
+    爱好:<input type="checkbox" name="hobby" value="a">a
+    <input type="checkbox" name="hobby" value="b">b
+    <input type="checkbox" name="hobby" value="c">c<br>
+    邮箱:<input type="text" name="email"><br>
+    年龄:<input type="text" name="age"><br>
+    <input type="submit" value="通过实体类型的形参获取请求参数">
+</form>
+<a th:href="@{/testRequestByServletAPI}">testRequestByServletAPI</a><br>
+<a th:href="@{/testModelAndView}">testModelAndView</a><br>
+<a th:href="@{/testMode}">testMode</a><br>
+<a th:href="@{/testMap}">testMap</a><br>
+<a th:href="@{/testModeMap}">testModeMap</a><br>
+<a th:href="@{/testSession}">testSession</a><br>
+<a th:href="@{/testApplication}">testApplication</a><br>
+<a th:href="@{/testForward}">testForward</a><br>
+<a th:href="@{/testRedirect}">testRedirect</a><br>
+<a th:href="@{/testRESTFulUser/1}">testRESTFulGetUser,查询用户信息</a><br>
+<form th:action="@{/testRESTFulUser}" method="post">
+    <input type="hidden" name="_method" value="POST">
+    姓名:<input type="text" name="name"><br>
+    密码:<input type="text" name="password"><br>
+    :<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br>
+    爱好:<input type="checkbox" name="hobby" value="a">a
+    <input type="checkbox" name="hobby" value="b">b
+    <input type="checkbox" name="hobby" value="c">c<br>
+    邮箱:<input type="text" name="email"><br>
+    年龄:<input type="text" name="age"><br>
+    <input type="submit" value="新增用户信息">
+</form>
+<form th:action="@{/testRESTFulUser}" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    姓名:<input type="text" name="name"><br>
+    密码:<input type="text" name="password"><br>
+    性别:<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br>
+    爱好:<input type="checkbox" name="hobby" value="a">a
+    <input type="checkbox" name="hobby" value="b">b
+    <input type="checkbox" name="hobby" value="c">c<br>
+    邮箱:<input type="text" name="email"><br>
+    年龄:<input type="text" name="age"><br>
+    <input type="submit" value="更新用户信息">
+</form>
+<!--<a th:href="@{/testRESTFulUser/1}">删除用户信息</a>-->
+<a th:href="@{/user}">查看用户信息</a>
+<hr/>
+<form th:action="@{/addUser}" method="post">
+    <input type="hidden" name="_method" value="post">
+    姓名:<input  type="text" name="name"><br>
+    密码:<input type="text" name="password"><br>
+    邮箱:<input type="text" name="email"><br>
+    性别:<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br>
+    年龄:<input type="text" name="age"><br>
+    爱好:<input type="checkbox" name="hobby" value="排球">排球<br>
+    <input type="checkbox" name="hobby" value="足球">足球<br>
+    <input type="checkbox" name="hobby" value="篮球">篮球<br>
+    <input type="submit" value="新增用户">
+</form>
+<hr/>
+<form th:action="@{/testRequestBody}" method="post">
+    <input type="text" name="name">
+    <input type="text" name="age">
+    <input type="submit" value="获取请求体信息">
+</form>
+<hr/>
+<form th:action="@{/testRequestEntity}" method="post">
+    <input type="text" name="name">
+    <input type="text" name="age">
+    <input type="submit" value="testRequestEntity">
+</form>
+<hr/>
+<a th:href="@{/testResponse}">testResponse</a><hr/>
+<a th:href="@{/testResponseBody}">testResponseBody</a><hr/>
+<a th:href="@{/testResponseBodyUser}">testResponseBodyUser</a><hr/>
+
+<div id="app">
+    <a @click="testAjax" th:href="@{/testAjax}">springMVC处理ajax</a>
+</div>
+<script type="text/javascript" th:src="@{/static/js/axios.min.js}"></script><!-- 下载依赖 -->
+<script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+<script type="text/javascript">
+    new Vue({
+        el:"#app",
+        methods:{
+            testAjax:function (event){
+                axios({
+                    method:"post",
+                    url:event.target.href,
+                    params:{
+                        name:"nnn",
+                        password:"123"
+                    }
+                }).then(function(response){
+                    alert(response.data);
+                });
+                event.preventDefault();
+            }
+        }
+    });
+</script>
+<a th:href="@{/testDownFile}">下载</a>
+<form th:action="@{/testUpFile}" method="post" enctype="multipart/form-data">
+    图片:<input type="file" name="photo"><br>
+    <input type="submit" value="上传">
+</form>
+<hr>
+<a th:href="@{/testInterceptor}">测试拦截器</a>
+<a th:href="@{/testExceptionHandler}">测试除0异常</a>
 </body>
 </html>

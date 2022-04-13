@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>课程管理-学思网</title>
+    <link rel="icon" href="../../static/img/favicon.ico">
+    <link rel="stylesheet" href="../../static/bootstrap-4.1.3-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.1.3-dist/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.1.3-dist/css/bootstrap-reboot.css">
+
+    <script src="../../static/bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+    <script src="../../static/bootstrap-4.1.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="../../static/jQuery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+		var pathArray = window.location.pathname.split('/');
+   		var secondLevelLocation = pathArray[1];
+   		var ServerUrl = window.location.protocol + "//" + window.location.host
+   				+ "/" + secondLevelLocation;  
+    
+        /**
+         * 判断用户是如何进入此页面
+         * 1.登录后通过【教师中心】合法进入
+         * 2.直接输入url进入---首先无法获取课程列表，提交时后台无法正常运行
+         * 3.用户进入后修改url进入---会将其他教师的测试卷更改为自己的测试卷
+         * 解决方法
+         * 1.检查session，确认教师身份
+         * 2.获取教师id，检查此testid是否属于此教师
+         * 检查通过后才能继续操作
+         * 否则关闭当前页面
+         **/
+        function check_identitl(courseId) {
+            $.ajax({
+                url: ServerUrl+'/editCourseIdentitlCheck',
+                type: 'post',
+                dataType: 'json',
+                data: {'courseId': courseId},
+                success: function (json) {
+                    console.log(json);
+                    if(json.state==false){
+                        alert(json.state+"非法进入!");
+                        window.open("home.html","_self").close();
+                    }else {
+                        // alert("???");
+                    }
+                },
+                error: function () {
+                    alert("账号检测错误");
+                }
+            });
+        }
+
+
+        /**
+         * 进入此页面有两种情况:
+         * 1.教师想要添加一个新的课程，不需要传递参数
+         * 2.教师想要修改或编辑一个已存在的课程，需要编辑的课程的id
+         */
+
+            //存储课程id
+        var courseId = "";
+
+        $(function () {
+            //加载课程类型信息
+
+            //获取URL
+            var url = document.URL;
+            //分割URL,获取搜索框内的关键词
+            courseId = url.split("?courseId=")[1];
+
+
+            /**
+             * 课程类型
+             * 默认值为1
+             * 若教师在编辑课程，此值将会改变
+             */
+            var courseClass = 0;
+
+            //如果有传进来课程id，则将该课程原有的所有相关信息填入表格，供教师修改、编辑
+            if (courseId != undefined) {
+
+                check_identitl(courseId);
+                alert(courseId);
+
+                $("#edit").attr("value", "true");
+                $("#courseId").attr("value", courseId);
+
+                $.ajax({
+                    url: ServerUrl+'/getCourseIntroduction',
+                    type: 'post',
+                    dataType: 'json',
+                    async: false,
+                    data: {'courseId': courseId},
+                    success: function (json) {
+                    	alert(json);
+                        console.log(json);
+
+                        var course = json.course;
+                        //获取course数组，取出课程名、课程封面名、课程类型
+                        /**$.each(course, function (index, array) {
+                            $("#courseName").val(array['courseName']);
+                            $("#courseImg-label").html(array['courseImgName']);
+                            courseClass = array['courseClass'];
+                        });**/
+                        $("#courseName").val(course['courseName']);
+                        $("#courseImg-label").html(course['courseImgName']);
+                        courseClass = course['courseClass'];
+                        
+                        //获取数据库返回的数据，与课程简介相关的集合
+                        var abs = json.abstract;
+                        //获取课程简介
+                        /**$.each(abs, function (index, array) {
+                            //将课程简介内容放入对应文本框中
+                            $("#courseAbstract-" + array['courseSection']).val(array['courseIntroduce']);
+                        });**/
+                        for(no in abs){
+                        	$("#courseAbstract-" + no).val(abs[no]);
+                        }
+
+                        /**
+                         * 将章节以及对应小节的数据放入各元素中，若没有相应元素则立即创建并添入
+                         */
+                            //获取数据库返回的数据，与课程目相关的集合
+                        var str = json.structure;
+                        // 获取课程目录
+                        $.each(str, function (index, array) {
+                            //获取章节集的id
+                            var chapter = "chapter-" + array['chapterId'];
+                            //获取单个小节的id
+                            var section = "chapter-" + array['chapterId'] + "-section-" + array['sectionId'];
+                            //将章名添入
+                            //
+                            // alert(array['chapterName']);
+
+                            //判断该章节元素是否存在
+                            if ($("#" + chapter).length > 0) {
+                                //章节div存在
+                                // $("#"+chapter+"-name").val(array['chapterName']);
+                                // alert(chapter);
+
+                                //判断该小节元素是否存在
+                                if ($("#" + section).length > 0) {
+                                    //该小节元素存在
+                                } else {
+                                    //该小节元素不存在，则立即创建
+                                    var sec = "";
+                                    sec += "<div class=\"input-group mb-3\" id=\"" + section + "\">" +
+                                        "<div class=\"input-group-prepend\">" +
+                                        "<span class=\"input-group-text\">第" + array['sectionId'] + "节</span>" +
+                                        "</div>" +
+                                        "<input type=\"text\" class=\"form-control\" id=\"" + section + "-name\" name=\"" + section + "-name\" placeholder=\"小节名\">" +
+                                        "<div class=\"input-group-prepend\">" +
+                                        "<span class=\"input-group-text\">教学视频</span>" +
+                                        "</div>" +
+                                        "<div class=\"custom-file\">" +
+                                        "<input type=\"file\" class=\"new-input custom-file-input\" name=\"" + section + "-video\" id=\"" + section + "-video\" accept=\"video/*\">" +
+                                        "<label class=\"custom-file-label\" for=\"" + section + "-video\" id=\"" + section + "-video-label\">Choose file</label>" +
+                                        "</div>" +
+                                        "</div>";
+
+                                    $("#chapter-" + array['chapterId'] + "-section").append(sec);
+
+
+                                }
+
+                            } else {
+                                //若不存在则创建
+                                //获取已有章节数
+                                var len = $("#chapter").children().length;
+
+                                var data = "";
+                                /**
+                                 * 若不存在该章节id，立即创建该元素
+                                 * @type {string}
+                                 */
+                                //章节div
+                                data += "<div id=\"chapter-" + (len + 1) + "\">" +
+                                    "<div class=\"input-group mb-3\">" +
+                                    "<div class=\"input-group-prepend\">" +
+                                    "<span class=\"input-group-text\">第" + (len + 1) + "章</span>" +
+                                    "</div>" +
+                                    "<input type=\"text\" class=\"form-control\" name=\"chapter-" + (len + 1) + "-name\" id=\"chapter-" + (len + 1) + "-name\" placeholder=\"章名\">" +
+                                    "</div>" +
+                                    "<div id=\"chapter-" + (len + 1) + "-section\">" +
+                                    "<div class=\"input-group mb-3\" id=\"chapter-" + (len + 1) + "-section-1\">" +
+                                    "<div class=\"input-group-prepend\">" +
+                                    "<span class=\"input-group-text\">第1节</span>" +
+                                    "</div>" +
+                                    "<input type=\"text\" class=\"form-control\" name=\"chapter-" + (len + 1) + "-section-1-name\" id=\"chapter-" + (len + 1) + "-section-1-name\" placeholder=\"小节名\">" +
+                                    "<div class=\"input-group-prepend\">" +
+                                    "<span class=\"input-group-text\">教学视频</span>" +
+                                    "</div>" +
+                                    "<div class=\"custom-file\">" +
+                                    "<input type=\"file\" class=\"new-input custom-file-input\" name=\"chapter-" + (len + 1) + "-section-1-video\" id=\"chapter-" + (len + 1) + "-section-1-video\" accept=\"video/*\">" +
+                                    "<label class=\"custom-file-label\" for=\"chapter-" + (len + 1) + "-section-1-video\" id=\"chapter-" + (len + 1) + "-section-1-video-label\">choose file</label>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    // "<hr>" +
+                                    //小节添加按钮
+                                    "<button type=\"button\" class=\"btn btn-outline-info\" style=\"margin-right: 4px\" onclick=\"add_section(this);\">添加新小节</button>" +
+                                    //小节移除按钮
+                                    "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"del_section(this);\">移除小节</button>" +
+                                    "<hr>" +
+                                    "</div>";
+
+                                $("#chapter").append(data);
+                            }
+
+                            //将章名、小节名、视频名添入
+                            $("#" + chapter + "-name").val(array['chapterName']);
+                            $("#" + section + "-name").val(array['sectionName']);
+                            $("#" + section + "-video-label").html(array['mvAdd']);
+                        });
+                    },
+                    error: function () {
+                        alert("加载课程错误");
+                    }
+                });
+            }else{
+                courseId=-1;
+                check_identitl(courseId);
+            }
+
+            //由于只有type为file的input元素在确定文件后输入框内不显示文件名，所以只需处理此类元素即可
+            $("input[type='file']").on("change", function () {
+                var file = this.value;
+                var name = this.name;
+                var fileName = file.split("\\").pop();
+                fileName = fileName.substring(0, fileName.lastIndexOf("."));
+                fileExt = file.substr(file.indexOf("."));
+                $("#" + name + "-label").html(fileName + fileExt);
+            });
+            //通过jQuery添加的元素无法触发上个事件，再次绑定事件使新添加的元素也触发事件
+            $("body").on("change", ".new-input", function () {
+                var file = this.value;
+                var name = this.name;
+                // alert(file);
+                // alert(name);
+                var fileName = file.split("\\").pop();
+                fileName = fileName.substring(0, fileName.lastIndexOf("."));
+                fileExt = file.substr(file.indexOf("."));
+                $("#" + name + "-label").html(fileName + fileExt);
+            });
+
+            // setTimeout(1000);
+
+            //将课程类别从数据库中调出
+
+            $.ajax({
+                url: ServerUrl+'/teacherGetCourseType',
+                type: 'post',
+                dataType: 'json',
+                async: false,
+                success: function (json) {
+                    // alert("123");
+                    var opt = "";
+                    var list = json.courseTypeList;
+                    // alert(courseClass);
+                    $.each(list, function (index, array) {
+                        /**
+                         * 如果courseClass=0，则表示教师正在添加一个新的课程，默认选中第一个选项，最后将courseClass置为-1，使接下来的循环中不满足该条件从而只执行else内的语句
+                         * 如果courseClass!=0，则表示教师正在编辑一个已存在的课程，查找对应的typeValue并将其选中，
+                         */
+                        if (courseClass == 0 || array['typeValue'] == courseClass) {
+                            opt += "<option selected value=" + array['typeValue'] + " name=" + array['typeValue'] + " selected='selected'>" + array['typeName'] + "</option>";
+                            courseClass = -1;
+                        } else {
+                            opt += "<option value=" + array['typeValue'] + " name=" + array['typeValue'] + ">" + array['typeName'] + "</option>";
+                        }
+
+                    });
+                    // alert(opt);
+                    $("#courseType").append(opt);
+                },
+                error: function () {
+                    alert("错误");
+                }
+            });
+
+
+        });
+
+
+        //添加段落
+        function add_paragraph() {
+            var parentNode = document.getElementById("parentNode-paragraph");
+            var chileNode = document.getElementById("childNode-paragraph");
+
+            var cloneNode = chileNode.cloneNode(true);
+            parentNode.appendChild(cloneNode.parentNode);
+        }
+
+        //增添小节
+        function add_section(str) {
+            alert($(str).parent().attr("id"));
+            // 获取父级包含元素个数
+            // alert($(str).parent().children().length);
+            //获取章节id
+            var par = $(str).parent().attr("id");
+            //将非数字字符替换成空，结果即为章节序号
+            var num = par.replace(/[^0-9]/ig, "");
+            // alert("这是第" + num + "章");
+            var cha;
+            //获取本章节的小节数量
+            var sec = $("#chapter-" + num + "-section").children().length;
+            // alert("本章已创建有" + sec + "小节");
+
+            var data = "<div class=\"input-group mb-3\" name=\"chapter-" + num + "-section-" + (sec + 1) + "\" id=\"chapter-" + num + "-section-" + (sec + 1) + "\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<span class=\"input-group-text\">第" + (sec + 1) + "节</span>" +
+                "</div>" +
+                "<input type=\"text\" class=\"form-control\" name=\"chapter-" + num + "-section-" + (sec + 1) + "-name\" id=\"chapter-" + num + "-section-" + (sec + 1) + "-name\" placeholder=\"小节名\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<span class=\"input-group-text\">教学视频</span>" +
+                "</div>" +
+                "<div class=\"custom-file\">" +
+                "<input type=\"file\" class=\"new-input custom-file-input\" name=\"chapter-" + num + "-section-" + (sec + 1) + "-video\" id=\"chapter-" + num + "-section-" + (sec + 1) + "-video\" accept=\"video/*\">" +
+                "<label class=\"custom-file-label\" for=\"chapter-" + num + "-section-" + (sec + 1) + "-video\" id=\"chapter-" + num + "-section-" + (sec + 1) + "-video-label\">Choose file</label>" +
+                "</div>" +
+                "</div>";
+            // alert(data);
+            $("#" + "chapter-" + num + "-section").append(data);
+
+        }
+
+        //增添章节
+        function add_chapter(str) {
+            //父级元素id
+            // alert($(str).parent().attr("id"));
+            // 获取父级包含元素个数
+            // alert($(str).parent().children().length);
+            //获取已有章节数
+            var len = $("#chapter").children().length;
+            alert("已有" + len + "章");
+
+            var data = "<div id=\"chapter-" + (len + 1) + "\">" +
+                "<div class=\"input-group mb-3\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<span class=\"input-group-text\">第" + (len + 1) + "章</span>" +
+                "</div>" +
+                "<input type=\"text\" class=\"form-control\" name=\"chapter-" + (len + 1) + "-name\" id=\"chapter-" + (len + 1) + "-name\" placeholder=\"章名\">" +
+                "</div>" +
+                "<div id=\"chapter-" + (len + 1) + "-section\">" +
+                "<div class=\"input-group mb-3\" id=\"chapter-" + (len + 1) + "-section-1\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<span class=\"input-group-text\">第1节</span>" +
+                "</div>" +
+                "<input type=\"text\" class=\"form-control\" name=\"chapter-" + (len + 1) + "-section-1-name\" id=\"chapter-" + (len + 1) + "-section-1-name\" placeholder=\"小节名\">" +
+                "<div class=\"input-group-prepend\">" +
+                "<span class=\"input-group-text\">教学视频</span>" +
+                "</div>" +
+                "<div class=\"custom-file\">" +
+                "<input type=\"file\" class=\"new-input custom-file-input\" name=\"chapter-" + (len + 1) + "-section-1-video\" id=\"chapter-" + (len + 1) + "-section-1-video\" accept=\"video/*\">" +
+                "<label class=\"custom-file-label\" for=\"chapter-" + (len + 1) + "-section-1-video\" id=\"chapter-" + (len + 1) + "-section-1-video-label\">Choose file</label>" +
+                "</div>" +
+                "</div>" +
+                "</div>" +
+                "<button type=\"button\" class=\"btn btn-outline-info\" style=\"margin-right: 4px\" onclick=\"add_section(this);\">添加新小节</button>" +
+                "<button type=\"button\" class=\"btn btn-outline-danger\" onclick=\"del_section(this);\">移除小节</button>" +
+                "<hr>" +
+                "</div>";
+            // alert(data);
+            $("#chapter").append(data);
+
+        }
+
+        //移除小节
+        function del_section(str) {
+            //获取章节id
+            var par = $(str).parent().attr("id");
+            //将非数字字符替换成空，结果即为章节序号
+            var num = par.replace(/[^0-9]/ig, "");
+            var cha;
+            //获取本章节的小节数量
+            var sec = $("#chapter-" + num + "-section").children().length;
+            // alert(num);
+            // alert(sec);
+            //每章必须有一小节，否则不允许删除
+            if (sec <= 1) {
+                alert("每章必须有一节！");
+            } else {
+                $("#" + "chapter-" + num + "-section-" + sec).remove();
+            }
+        }
+
+        //移除章节
+        function del_chapter(str) {
+            //获取已有章节数
+            //减3的两个标签：<hr>和<button>*2
+            var len = $("#chapter").children().length;
+            alert("已有" + len + "章");
+
+            //每章必须有一小节，否则不允许删除
+            if (len <= 1) {
+                alert("课程必须有一章！");
+            } else {
+                $("#" + "chapter-" + len).remove();
+            }
+        }
+
+        //阿拉伯数字转中文
+        function digital_conversion(num) {
+            var len = num.length;
+        }
+
+        //保存课程
+        function save_course() {
+            /**
+             * 检查课程结构是否规范
+             * 无课程名、课程封面
+             * 无课程简介或者【第三段课程简介】有内容而【第二段课程简介】却没有内容
+             * 例如创建了小节或章节却没有内容(章节名、小节名、视频资源)
+             **/
+            if(!check_course_structure()){
+                return ;
+            }
+
+
+            // alert($("#edit").val());
+
+            //获取课程名
+            var courseName = $("#courseName").val();
+            // alert(courseName);
+            //获取课程封面名
+            var file = $("#courseImg").val();
+            //获取图片文件名
+            var fileName = file.split("\\").pop();
+            //为文件重新命名
+            var newName = "";
+            //提取图片名
+            fileName = fileName.substring(0, fileName.lastIndexOf("."));
+            //提取图片后缀
+            fileExt = file.substr(file.indexOf("."));
+            $("#courseImgLabel").html(fileName);
+
+            /**
+             * 编辑课程时，课程资源的编辑不同于其他编辑，当一个旧资源被(删除或被替代)并保存编辑后，后台不知道是哪个旧资源被删除
+             * 获取课程资源数据并整理成数组
+             */
+                //资源id(编辑课程)或特殊标识(-1:新添资源,编辑课程或新加课程)
+            var sign = new Array();
+            //资源状态(0:   1:   2:已被删除   3:无变化)
+            var state = new Array();
+
+            //表单提交
+            var form = document.getElementById("add_course");
+            var fd = new FormData(form);
+            console.log("edit:"+edit+",fd:"+fd);
+            $.ajax({
+                url: ServerUrl+"/saveCourse",
+                type: 'POST',
+                data: fd, edit,
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+                success: function (response) {
+                    alert("保存成功!");
+                    // alert(response);
+                    console.log(response);
+                    var json = $.parseJSON(response);
+                    console.log(json);
+                    var result = "";
+
+                    //章节序号
+                    var cha_num = 1;
+                    var chapter = "chapter-" + cha_num + "-name";
+                    //小节序号
+                    var sec_num = 1;
+                    var section = "chapter-" + cha_num + "-section-" + sec_num;
+                },
+                error: function () {
+                    alert("上传失败!");
+                }
+            });
+            return false;
+        }
+
+        //获取json数组长度
+        function json_length(json) {
+            var jsonLength = 0;
+            for (var i in json) {
+                jsonLength++;
+            }
+            return jsonLength;
+        }
+
+        function check_course_structure() {
+            /**
+             * 返回true:检查通过，将课程信息保存
+             * 返回false:检查不通过，提示教师检查课程内容
+             */
+
+            //判断课程名称是否为空
+            if ($("#courseName").val() == "") {
+                alert("课程名称不可为空！")
+                return false;
+            }
+
+            // alert($("#courseImg-label").html());
+            //判断课程名称是否为空
+            if ($("#courseImg-label").html() == ""||$("#courseImg-label").html() == "Choose File") {
+                alert("课程封面不可为空！")
+                return false;
+            }
+
+            //判断课程简介是否为空
+            if ($("#courseAbstract-1").val() == "") {
+                alert("课程简介第一段不可为空！")
+                return false;
+            }
+            if ($("#courseAbstract-3").val() != "" && $("#courseAbstract-2").val() == "") {
+                alert("课程简介第二段不可为空！")
+                return false;
+            }
+
+            for (var cha = 1; $("#chapter-" + cha + "-name").length > 0; cha++) {
+                if ($("#chapter-" + cha + "-name").val() == "") {
+                    alert("第" + cha + "章章名不可为空!");
+                    return false;
+                }
+                for (var sec = 1; $("#chapter-" + cha + "-section-" + sec + "-name").length > 0; sec++) {
+                    if ($("#chapter-" + cha + "-section-" + sec + "-name").val() == "") {
+                        alert("第" + cha + "章第"+sec+"小节名不可为空!");
+                        return false;
+                    }
+                    if ($("#chapter-" + cha + "-section-" + sec + "-video-label").html() == ""||$("#chapter-" + cha + "-section-" + sec + "-video-label").html() == "Choose file") {
+                        alert("第" + cha + "章第"+sec+"小节视频资源不可为空!");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <!--课程表单-->
+    <!--onsubmit="return false"  防止表单自动提交-->
+    <!--<form method="post" action="D:\app\xampp\htdocs\PHPProject\xuesi\UserBackEnd\Save_Course.php" onsubmit="return false" class="was-validated" id="add_course"-->
+    <!--enctype="multipart/form-data" novalidate>-->
+    <form name="add_course" id="add_course">
+        <div class="alert alert-dark" role="alert" style="width:100%;margin-bottom: 16px;elevation: deg;font-weight: bold">
+            <span>学思网-添加课程</span>
+        </div>
+
+        <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+            课程基本信息
+        </div>
+
+        <!--课程名称-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">课程名称</span>
+            </div>
+            <input type="text" class="form-control" name="courseName" id="courseName" placeholder="课程名称">
+        </div>
+        <!--课程封面-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="courseCover">课程封面</span>
+            </div>
+            <div class="custom-file">
+                <!--accept="image/*" 设置文件类型仅为图片，允许所有图片格式-->
+                <input type="file" class="custom-file-input" id="courseImg" name="courseImg" accept="image/*">
+                <label class="custom-file-label" for="courseImg" id="courseImg-label">Choose File</label>
+            </div>
+        </div>
+
+        <!--课程类型-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="courseType">课程类型</label>
+            </div>
+            <select class="custom-select" id="courseType" name="courseType">
+                <!--<option selected value="1000">其它</option>-->
+            </select>
+        </div>
+
+        <!--课程简介-->
+        <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+            课程简介
+        </div>
+        <div class="input-group mb-3" id="childNode-paragraph1">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">课程简介(段落1)</span>
+                </div>
+                <textarea class="form-control" id="courseAbstract-1" name="courseAbstract-1"
+                          placeholder="必须有一段课程介绍"></textarea>
+            </div>
+        </div>
+        <div class="input-group mb-3" id="childNode-paragraph2">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">课程简介(段落2)</span>
+                </div>
+                <textarea class="form-control" id="courseAbstract-2" name="courseAbstract-2"
+                          placeholder="(选填)"></textarea>
+            </div>
+        </div>
+        <div class="input-group mb-3" id="childNode-paragraph3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">课程简介(段落3)</span>
+                </div>
+                <textarea class="form-control" id="courseAbstract-3" name="courseAbstract-3"
+                          placeholder="(选填)"></textarea>
+            </div>
+        </div>
+
+        <!--添加章节-->
+        <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px;font-weight: bold">
+            章节内容
+        </div>
+
+        <div id="chapter">
+            <!--第一章-->
+            <div id="chapter-1">
+                <!--章节标题-->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">第1章</span>
+                    </div>
+                    <input type="text" class="form-control" name="chapter-1-name" id="chapter-1-name" placeholder="章名">
+                </div>
+                <!--小节内容-->
+                <div id="chapter-1-section">
+                    <div class="input-group mb-3" id="chapter-1-section-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">第1节</span>
+                        </div>
+                        <input type="text" class="form-control" id="chapter-1-section-1-name"
+                               name="chapter-1-section-1-name" placeholder="小节名">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">教学视频</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="chapter-1-section-1-video"
+                                   id="chapter-1-section-1-video" accept="video/*">
+                            <label class="custom-file-label" for="chapter-1-section-1-video"
+                                   id="chapter-1-section-1-video-label">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+                <!--小节添加按钮-->
+                <button type="button" class="btn btn-outline-info" onclick="add_section(this);">添加新小节</button>
+                <!--小节移除按钮-->
+                <button type="button" class="btn btn-outline-danger" onclick="del_section(this);">移除小节</button>
+
+                <hr>
+            </div>
+        </div>
+
+        <!--<hr>-->
+
+        <!--章节添加按钮-->
+        <button type="button" class="btn btn-info" onclick="add_chapter();">添加新章节</button>
+        <!--章节移除按钮-->
+        <button type="button" class="btn btn-danger" onclick="del_chapter();">移除章节</button>
+
+        <hr>
+
+        <!--课程与课件资源各自为一个体系,分开管理-->
+        <!--添加此课程相关资源，例如word、ppt等文件供学生下载或在线浏览-->
+        <!--<div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 0px">-->
+        <!--课程相关资源-->
+        <!--</div>-->
+        <!--<div id="resource">-->
+        <!--</div>-->
+        <!--上传组件添加按钮-->
+        <!--<button type="button" class="btn btn-outline-info" onclick="add_resource();">添加</button>-->
+        <!--上传组件移除按钮-->
+        <!--<button type="button" class="btn btn-outline-info" onclick="del_resource();">移除</button>-->
+
+        <!--隐藏域:告诉后台本次保存是添加新课程还是修改已存在的课程-->
+        <!--操作类别-->
+        <!--true:修改已有课程-->
+        <!--false:添加新课程-->
+        <input type="hidden" id="edit" name="edit" value="false">
+        <input type="hidden" id="courseId" name="courseId" value="">
+
+        <hr>
+        <input class="btn btn-primary" type="button" onclick="save_course();" value="保存">
+
+
+    </form>
+</div>
+<div id="result"></div>
+</body>
+</html>

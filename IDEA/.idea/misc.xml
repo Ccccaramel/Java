@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/ding" />
     <file type="web" url="file://$PROJECT_DIR$/springMVC" />
     <file type="web" url="file://$PROJECT_DIR$/springMVC-annotation" />
-    <file type="web" url="file://$PROJECT_DIR$/SpringMVC01" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
+        <option value="$PROJECT_DIR$/springBoot/pom.xml" />
         <option value="$PROJECT_DIR$/springMVC/pom.xml" />
         <option value="$PROJECT_DIR$/springMVC-annotation/pom.xml" />
-        <option value="$PROJECT_DIR$/springBoot/pom.xml" />
+        <option value="$PROJECT_DIR$/onlineEdu/pom.xml" />
       </list>
     </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/springMVC/SpringMVC/pom.xml" />
-      </set>
-    </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="15 (2)" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" default="true" project-jdk-name="15" project-jdk-type="JavaSDK" />
 </project>

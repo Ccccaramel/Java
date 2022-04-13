@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.CourseDao">
+    <resultMap id="courseMap" type="com.muke.onlineedu.admin.entity.Course">
+        <id column="courseId" property="courseId"/>
+        <id column="courseName" property="courseName"/>
+        <id column="courseImgName" property="courseImgName"/>
+        <id column="teacherId" property="teacherId"/>
+        <id column="heat" property="heat"/>
+        <association property="courseType" select="com.muke.onlineedu.common.dao.CourseTypeDao.findBy" column="courseClass"/>
+        <association property="accountStatus" select="com.muke.onlineedu.common.dao.AccountStatusDao.findBy" column="courseStatus"/>
+        <association property="teacher" select="com.muke.onlineedu.admin.dao.TeacherDao.getTeacherMessage" column="teacherId"/>
+        <association property="courseFirstAbstract" column="courseId" select="com.muke.onlineedu.admin.dao.CourseAbstractDao.findFirstBy"/>
+        <association property="courseAbstracts" column="courseId" select="com.muke.onlineedu.admin.dao.CourseAbstractDao.findBy"/>
+        <association property="courseStructures" column="courseId" select="com.muke.onlineedu.admin.dao.CourseStructureDao.findBy"/>
+    </resultMap>
+    <insert id="addCourse" parameterType="com.muke.onlineedu.admin.entity.Course" useGeneratedKeys="true" keyProperty="courseId">
+        insert into course(courseName,courseImgName,courseClass,teacherId)
+        VALUES(#{course.courseName},#{course.courseImgName},#{course.courseClass},#{course.teacherId});
+    </insert>
+    <update id="updateCourseStatus">
+        update course set courseStatus=#{sign} where courseId=#{id};
+    </update>
+    <update id="setAsDefault">
+        update course set courseClass=1010 where courseId=#{id};
+    </update>
+    <update id="changeCourse">
+        update course set courseName=#{courseName},
+          <if test="courseImg!='' and courseImg!=null " >
+              courseImgName=#{courseImg},
+          </if>
+        courseClass=#{courseType} where courseId=#{courseId};
+    </update>
+    <update id="heatsUp">
+        update course set heat=heat+1
+        where courseId=#{courseId};
+    </update>
+    <select id="getCourse" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course where courseId=#{courseId} and teacherId=#{teacherId};
+    </select>
+    <select id="getCourseInfo" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course where courseId=#{courseId};
+    </select>
+    <select id="getAppointCourseMessage" resultMap="courseMap">
+        select * from course where courseId=#{courseId} and courseStatus=1;
+    </select>
+    <select id="getAllCourse" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course;
+    </select>
+    <select id="getTeacherAllCourse" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+        where courseStatus!=3 and teacherId=#{teacherId};
+    </select>
+    <select id="getCourseMessage" resultMap="courseMap">
+        select * from course
+        where teacherId=#{teacherId}
+          and courseStatus!=3
+          limit #{startPage},#{pageSize};
+    </select>
+    <select id="getAllCourseMessage" resultMap="courseMap">
+        select * from course c
+            left join teacher_basic_information t
+                on c.teacherId=t.teacherId
+        where c.courseId like "%${key}%" or
+              c.courseName like "%${key}%" or
+			  c.teacherId like "%${key}%" or
+              t.teacherName like "%${key}%" or
+              c.courseClass like "%${key}%" or
+              c.courseStatus like "%${key}%"
+              limit #{startPage},#{pageSize};
+    </select>
+    <select id="getPartCourseMessage" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+		where courseName like "%${key}%"
+		and courseStatus=1
+        limit #{startPage},#{pageSize};
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course where courseStatus=1 and courseId=#{courseId};
+    </select>
+    <select id="getPopularCourses" resultMap="courseMap">
+        select * from course
+        where courseStatus=1
+        order by heat
+        limit #{amount};
+    </select>
+    <select id="getNewCourses" resultMap="courseMap">
+        select * from course
+        where courseStatus=1
+        order by courseId
+            limit #{amount};
+    </select>
+    <select id="getAppointCourses" resultMap="courseMap">
+        select * from course
+        where courseStatus=1
+        and courseClass = #{conurseType}
+        order by courseId
+            limit #{amount};
+    </select>
+
+</mapper>

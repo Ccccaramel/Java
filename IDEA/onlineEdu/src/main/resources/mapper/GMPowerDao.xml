@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.common.dao.GMPowerDao">
+<!--    <select id="getString" resultType="com.muke.onlineedu.common.entity.GMPower">-->
+<!--        SELECT powerClass from gm_power WHERE powerNumber=#{powerNumber};-->
+<!--    </select>-->
+    <select id="getBy" parameterType="int" resultType="java.lang.String">
+        SELECT powerClass from gm_power WHERE powerNumber=#{powerNumber};
+    </select>
+    <select id="findByPowerNumber" parameterType="int" resultType="java.lang.String">
+        SELECT powerClass from gm_power WHERE powerNumber=#{powerNumber};
+    </select>
+    <select id="getGMPowerMessage" parameterType="int" resultType="com.muke.onlineedu.common.entity.GMPower">
+        SELECT * from gm_power WHERE powerNumber &lt; #{powerNumber};
+    </select>
+</mapper>

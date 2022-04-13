@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.common.dao.CourseTypeDao">
+    <insert id="addNewCourseType">
+        insert into course_type(typeName) values(#{courseType});
+    </insert>
+    <delete id="delCourseType">
+        delete from course_type where typeValue=#{id};
+    </delete>
+    <select id="findByPowerNumber" parameterType="int">
+        SELECT powerClass from course_type WHERE powerNumber=#{powerNumber};
+    </select>
+    <select id="getCourseType" resultType="com.muke.onlineedu.common.entity.CourseType">
+        select * from course_type limit #{startPage},#{pageSize};
+    </select>
+    <select id="getAllCourseType" resultType="com.muke.onlineedu.common.entity.CourseType">
+        select * from course_type;
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.common.entity.CourseType">
+        select * from course_type where typeValue=#{typeValue};
+    </select>
+    <select id="homeGetCourseType" resultType="com.muke.onlineedu.common.entity.CourseType">
+        select * from course_type limit 0,#{amount};
+    </select>
+</mapper>

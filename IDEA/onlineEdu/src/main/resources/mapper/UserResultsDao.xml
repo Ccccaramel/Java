@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.UserResultsDao">
+    <insert id="saveAnswerSheet">
+        insert into user_results(answerSheetId,userId,questionId,userKey,userScore)
+        VALUES(#{answerSheetId},#{userId},#{problemId},#{userKey},#{score});
+    </insert>
+    <select id="findUserKeyBy" resultType="java.lang.String">
+        SELECT userKey from user_results
+		WHERE answerSheetId=#{answerSheetId} AND questionId=#{questionId};
+    </select>
+</mapper>

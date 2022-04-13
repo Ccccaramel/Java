@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.CourseAbstractDao">
+    <insert id="saveCourseAbstract">
+        insert into course_abstract(courseId,courseSection,courseIntroduce)
+        VALUES(#{courseId},#{i},#{courseIntroduce})
+        ON DUPLICATE KEY UPDATE courseIntroduce=#{courseIntroduce};
+    </insert>
+    <delete id="delCourseAbstract">
+        delete accountClass from course_abstract WHERE courseSection=#{i} and courseId=#{courseId};
+    </delete>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.CourseAbstract">
+        select * from course_abstract where courseId=#{courseId} order by courseSection;
+    </select>
+    <select id="findFirstBy" resultType="java.lang.String">
+        select courseIntroduce from course_abstract where courseId=#{courseId} and courseSection=1;
+    </select>
+</mapper>

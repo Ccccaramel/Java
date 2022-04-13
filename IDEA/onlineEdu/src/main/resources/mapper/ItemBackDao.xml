@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.ItemBackDao">
+    <resultMap id="resultMap1" type="com.muke.onlineedu.admin.entity.ItemBack">
+        <id column="testId" property="testId"/>
+        <id column="testName" property="testName"/>
+        <id column="courseId" property="courseId"/>
+        <id column="totalScore" property="totalScore"/>
+        <id column="passLine" property="passLine"/>
+        <association property="accountStatus" column="testStatus" select="com.muke.onlineedu.common.dao.AccountStatusDao.findBy"></association>
+    </resultMap>
+    <insert id="addItemBack" parameterType="com.muke.onlineedu.admin.entity.ItemBack" useGeneratedKeys="true" keyProperty="testId">
+        insert into item_back(courseId,testName,totalScore,passLine,teacherId)
+        VALUES(#{itemBack.courseId},#{itemBack.testName},#{itemBack.totalScore},#{itemBack.passLine},#{itemBack.teacherId});
+    </insert>
+    <update id="updateItemBack">
+        update item_back
+        set courseId=#{courseId},testName=#{testName},totalScore=#{totalScore},passLine=#{passLine}
+        where testId=#{testId};
+    </update>
+    <update id="updateTestState">
+        update item_back set testStatus=#{sign} where testId=#{testId};
+    </update>
+    <select id="getTeacherAllTest" resultType="com.muke.onlineedu.admin.entity.ItemBack">
+        select * from item_back where teacherId=#{teacherId} and testStatus!=3;
+    </select>
+    <select id="getTeacherTestMessage" resultMap="resultMap1">
+        select * from item_back where teacherId=#{teacherId} and testStatus!=3 limit #{startPage},#{pageSize};
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.ItemBack">
+        select * from item_back where testId=#{testId};
+    </select>
+    <select id="getTeachersTest" resultType="com.muke.onlineedu.admin.entity.ItemBack">
+        select * from item_back where teacherId=#{teacherId} and testId=#{testId};
+    </select>
+    <select id="getPartTestMessage" resultMap="resultMap1">
+        select * from item_back
+        where testId like "%${key}%"
+           or courseId like "%${key}%"
+           or testName like "%${key}%"
+           limit #{startPage},#{pageSize};
+    </select>
+    <select id="getAllTest" resultType="com.muke.onlineedu.admin.entity.ItemBack">
+        select * from item_back
+        where testId like "%${key}%"
+           or courseId like "%${key}%"
+           or testName like "%${key}%";
+    </select>
+    <select id="getAppointTestInformation" resultType="com.muke.onlineedu.admin.entity.ItemBack">
+        select * from item_back
+        where courseId=#{courseId};
+    </select>
+</mapper>

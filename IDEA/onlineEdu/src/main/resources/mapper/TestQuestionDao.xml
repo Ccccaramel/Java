@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.TestQuestionDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.TestQuestion">
+        <id property="questionId" column="questionId"/>
+        <id property="questionNumber" column="questionNumber"/>
+        <id property="questionContent" column="questionContent"/>
+        <id property="rightKey" column="rightKey"/>
+        <id property="analysis" column="analysis"/>
+        <id property="score" column="score"/>
+        <association property="testOptions" column="questionId" select="com.muke.onlineedu.admin.dao.TestOptionsDao.getTestOption"/>
+<!--        <association property="userKey" column="{answerSheetId=answerSheetId,questionId=questionId}" select="com.muke.onlineedu.admin.dao.UserResultsDao.findUserKeyBy"/>-->
+    </resultMap>
+    <insert id="addTestQuestion">
+        insert into test_question(testId,questionNumber,questionContent,rightKey,analysis,score)
+        VALUES(#{testId},#{questionNumber},#{questionContent},#{rightKey},#{analysis},#{score})
+        ON DUPLICATE KEY UPDATE questionContent=#{questionContent},rightKey=#{rightKey},analysis=#{analysis},score=#{score};
+    </insert>
+    <delete id="delTestQuestion">
+        delete from test_question
+        where testId=#{testId} and questionNumber>=#{questionNumber};
+    </delete>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.TestQuestion">
+        select * from test_question where testId=#{testId} and questionNumber=#{questionNumber};
+    </select>
+    <select id="findAfterBy" resultType="com.muke.onlineedu.admin.entity.TestQuestion">
+        select questionId from test_question where testId=#{testId} and questionNumber>=#{questionNumber};
+    </select>
+    <select id="getTestQuestion" resultMap="map1">
+        select * from test_question where testId=#{testId};
+    </select>
+    <select id="revise" resultType="com.muke.onlineedu.admin.entity.TestQuestion">
+        select * from test_question where questionId=#{problemId} and rightKey=#{userKey};
+    </select>
+    <select id="getTestQuestionInfo" resultMap="map1">
+        select * from test_question where testId=#{testId}
+        order by questionNumber;
+    </select>
+</mapper>

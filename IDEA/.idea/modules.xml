@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/IDEA.iml" filepath="$PROJECT_DIR$/.idea/IDEA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onlineEdu/onlineEdu.iml" filepath="$PROJECT_DIR$/onlineEdu/onlineEdu.iml" />
       <module fileurl="file://$PROJECT_DIR$/springBoot/springBoot.iml" filepath="$PROJECT_DIR$/springBoot/springBoot.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC/springMVC.iml" filepath="$PROJECT_DIR$/springMVC/springMVC.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC-annotation/springMVC-annotation.iml" filepath="$PROJECT_DIR$/springMVC-annotation/springMVC-annotation.iml" />

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>个人中心-学思网</title>
+    <link rel="icon" href="../../static/img/favicon.ico">
+	<link href="../../static/bootstrap-4.1.3-dist/css/bootstrap.css" rel="stylesheet"/>
+	<script type="text/javascript" src="../../static/jQuery/jquery-3.1.1.min.js"></script>
+	<script src="../../static/bootstrap-4.1.3-dist/js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+		var pathArray = window.location.pathname.split('/');
+		var secondLevelLocation = pathArray[1];
+		var url = window.location.protocol + "//" + window.location.host
+				+ "/" + secondLevelLocation;
+
+        //获取数据
+        var curPage = 1; //当前页码
+        var total, pageSize, totalPage;//总记录数，每页记录数，总页数
+
+        //个人信息修改
+        function save_changes() {
+            $.ajax({
+            	url: url+'/changeUserInformation',
+                type: 'POST',
+                data:{"userName":$("#userName").val(),
+                	"userEmail":$("#userEmail").val(),
+                	"userTel":$("#userTel").val(),
+                	"userSex":$('input[name="customRadioInline1"]:checked').val(),
+                	"userBirth":$("#userBirth").val()
+                	},
+                dataType:'json',
+                success: function (response) {
+                	if(response.result){
+                		alert("修改成功!");
+                	}
+                },
+                error:function(xhr,status,error){
+                    alert("修改失败!");
+                  }
+            });
+        }
+        //密码检查(php的写在后端)
+        function checkPassword(oldPassword,newPassword,newPasswordR){
+        	if(oldPassword==newPassword){
+        		alert("新密码不可与原密码相同!");
+        		return false;
+        	}
+        	if(newPassword!=newPasswordR){
+        		alert("两次密码不一致!");
+        		return false;
+        	}
+        	var ps=/^[0-9a-zA-Z]{6,12}$/;
+        	if(ps.test(newPassword)){
+        		return true;
+        	}else{
+        		alert("两次新密码不符合规范,请使用数字或字母且长度在6-12之间!");
+        		return false;
+        	}
+        	
+        }
+        //密码修改
+        function save_change_password() {
+            var userOldPassword = $("#userOldPassword").val();
+            var userNewPassword = $("#userNewPassword").val();
+            var userNewPasswordR = $("#userNewPasswordR").val();
+            if(checkPassword(userOldPassword,userNewPassword,userNewPasswordR)){
+            	$.ajax({
+            	url: url+'/changePassword',
+                type: 'POST',
+                data:{"oldPassword":$("#userOldPassword").val(),
+                	"newPassword":$("#userNewPassword").val(),
+                	},
+                dataType:'json',
+                success: function (response) {
+                	if(response.state){
+                		alert(response.message);
+                	}
+                },
+                error:function(xhr,status,error){
+                    alert("修改失败!");
+                  }
+            });
+            }
+        }
+
+
+        //获取该用户的收藏课程
+        function my_course_collection() {
+            loading_my_course_collection(1);
+            $("#my-course-collection-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_my_course_collection(rel);
+                }
+            });
+        }
+
+        //获取该用户发布的资源
+        function my_resource() {
+            loading_my_resource(1);
+            $("#my_resource-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_my_resource(rel);
+                }
+            });
+        }
+
+        //获取该用户的成绩
+        function my_achievement() {
+            loading_my_achievement(1);
+            $("#my-achievement-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_my_achievement(rel);
+                }
+            });
+        }
+
+
+        //加载我的考试成绩信息
+        function loading_my_achievement(page) {
+        	alert("page:"+page);
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAppointUserAchievementInformation',
+                data: {'pageNum': page - 1},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#my-achievement-list").append("加载中...");
+                },
+                success: function (json) {
+                    $("#my-achievement-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.list;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['testName'] + "</th>" +
+                            "<td>" + array['courseName'] + "</td>" +
+                            "<td>" + array['userAchievement'] + "</td>" +
+                            "<td>" + array['totalScore'] + "</td>" +
+                            "<td>" + array['pass'] + "</td>" +
+                            "<td>" + array['submitTestDate'] + "</td>";
+                        if (array['effectiveness'] == 1) {
+                            li += "<td style=\"text-align: center\"><a class=\"badge badge-light\" style='cursor:pointer' onclick=\"answer_details(" + array['testId'] + ",\'" + array['answerSheetId'] + "\')\">详情\t&rsaquo;\t&rsaquo;</a></td></tr>";
+                        } else {
+                            li += "<td style=\"text-align: center\">测试卷已失效</td></tr>";
+                        }
+                    });
+                    $("#my-achievement-list").append(li);
+                },
+                complete: function () {
+                    $("#my-achievement-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //加载我的课程收藏
+        function loading_my_course_collection(page) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/getUserCourseCollection',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'pageNum': page - 1},
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#my-course-collection-list").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#my-course-collection-list").empty();
+                    //获取本页总数据的数量
+                    total = json.total;
+                    //获取每页容纳数据数量的最大值
+                    pageSize = json.pageSize;
+                    //获取当前页数
+                    curPage = page;
+                    //获取总页数
+                    totalPage = json.totalPage;
+                    //获取本页的数据数量(最后一页可能不为pageSize)
+                    count = json.count;
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.list;
+                    //记录每次输出的是本页的第几条数据
+                    var cou = 0;
+                    //获取数据
+                    $.each(list, function (index, array) {
+
+                        // alert(array['courseImgName']);
+                        li += "<div class=\"card col-3\" style=\"width: 18rem;cursor:pointer\">" +
+                            "<img class=\"card-img-top\" src=\"../../Data/img/" + array['courseImgName'] + "\" alt=\"Card image cap\">" +
+                            "<div class=\"card-body\">" +
+                            "<span class=\"card-title\" id=\"" + array['courseId'] + "\" onclick=\"introduce(this);\">" + array['courseName'] + "</span>" +
+                            "</div>" +
+                            "</div>";
+                        //判断是否为每行最后一条数据
+                        // if (cou % 5 == 0 || cou == count) {
+                        //     li += "</div>";
+                        // }
+                    });
+                    $("#my-course-collection-list").append(li);
+                },
+                complete: function () {
+                    $("#my-course-collection-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+
+        //加载我发布的资源
+        function loading_my_resource(page) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/getCourseResource',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'pageNum': page - 1},
+                //返回数据类型
+                dataType: 'json',
+                //数据完成加载前提示文字(一般很快看不到)
+                beforeSend: function () {
+                    $("#my-resource-list").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+                    /**
+                     * 清空元素内的所有内容
+                     * 跳转到另外一页时原有的数据清除，为新数据腾出空间
+                     **/
+                    $("#my-resource-list").empty();
+                    //获取本页总数据的数量
+                    total = json.total;
+                    //获取每页容纳数据数量的最大值
+                    pageSize = json.pageSize;
+                    //获取当前页数
+                    curPage = page;
+                    //获取总页数
+                    totalPage = json.totalPage;
+                    //获取本页的数据数量(最后一页可能不为pageSize)
+                    //count = json.count;
+                    //html语句，向里面添加代码
+                    var li = "";
+                    //获取数据库返回的数据
+                    var list = json.courseResouceList;
+                    //记录每次输出的是本页的第几条数据
+                    var cou = 0;
+                    //获取数据
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['resourceId'] + "</th>" +
+                            "<td>" + array['resourceName'] + "</td>" +
+                            "<td>" + array['courseId'] + "</td>" +
+                            "<td id=\"" + array['resourceId'] + "\">" + array['resourceAccountStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"resource_operation(" + array['resourceId'] + ",3,7);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"resource_operation(" + array['resourceId'] + ",2,7);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"resource_operation(" + array['resourceId'] + ",1,7);\">恢复</span></td>" +
+                            "</tr>";
+                    });
+                    $("#my-resource-list").append(li);
+                },
+                complete: function () {
+                    $("#my-resource-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //用户对自己的课程资源状态更改
+        function resource_operation(resourceId, sign,category) {
+            // alert("你确定要对"+id+"执行"+sign+"操作吗?");
+            $.ajax({
+                type: 'POST',
+                url: url+'/accountManagement',
+                data: {'id': resourceId, 'sign': sign,'category':category},
+                dataType: 'json',
+                success: function (json) {
+                    if(sign==3){
+                        //如果是删除则更新列表
+                        my_resource();
+                    }else{
+                        $("#my-resource-list #" + resourceId).html(json.result);
+                    }
+                    // $("#resource-list #" + resourceId).html(json.state);
+                },
+                error: function () {
+                    alert("操作失败");
+                }
+            });
+        }
+
+        //运行此函数将携带答题卡id进入test页面，并将答卷以及正确答案和解析重现给用户
+        function answer_details(testId, answerSheetId) {
+            // alert(answerSheetId);
+            window.open("test.html?testId=" + testId + "?answerSheetId=" + answerSheetId);
+
+        }
+
+
+        //获取分页条(通用)
+        function getPageBar() {
+            //页码大于最大页数
+            if (curPage > totalPage) {
+                curPage = totalPage;
+            }
+            //页码小于1
+            if (curPage < 1) {
+                curPage = 1;
+            }
+
+            pageStr = "<span>共" + total + "条</span>&nbsp;&nbsp;<span>" + curPage + "/" + totalPage + "</span>&nbsp;&nbsp;";
+
+            // pageStr="";
+
+            //如果是第一页
+            if (curPage == 1) {
+                pageStr += "<span>首页</span>&nbsp;&nbsp;<span>上一页</span>&nbsp;&nbsp;";
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='1'>首页</a>&nbsp;</span>" +
+                    "<span>&nbsp;&nbsp;<a href='javascript:void(0)' rel='" + (curPage - 1) + "'>上一页</a> </span>&nbsp;&nbsp;";
+            }
+
+            //如果不是最后一页
+            // if(!curPage!=totalPage){
+            //     pageStr+="<span class='pageBtn'><a href='javascript:loading_suggestions("+(parseInt(curPage)+1)+")'>>></a></span>";
+            //     pageStr += "<span class='pageBtn'><a href='javascript:loading_suggestions("+totalPage+")'>尾页</a></span>";
+            // }
+
+            // alert("下一页:"+(parseInt(curPage)+1)+"尾页:"+totalPage);
+
+            //如果是最后一页
+            if (curPage >= totalPage) {
+                pageStr += "<span>下一页</span>&nbsp;&nbsp;<span>尾页</span>"
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='" + (parseInt(curPage) + 1) + "'>下一页</a></span>&nbsp;&nbsp;" +
+                    "<span><a href='javascript:void(0)' rel='" + totalPage + "'>尾页</a> </span>";
+            }
+
+            return pageStr;
+            // $("#pagecount").html(pageStr);
+        }
+
+        //点击课程名获取课程名称，跳转到课程介绍页面
+        function introduce(str) {
+            //获取课程id
+            var courseId = $(str).attr("id");
+            heats_up(courseId);
+
+        }
+
+        //课程热度增长
+        function heats_up(courseId) {
+            $.ajax({
+                //数据提交方式
+                type: 'POST',
+                //后端URL
+                url: url+'/heatsUp',
+                /**
+                 * 向后端传递的数据
+                 * 搜索的关键字以及当前页码
+                 **/
+                data: {'courseId': courseId},
+                // dataType: 'json',
+                success: function () {
+                    location.href = "course.html?courseId=" + courseId;
+                },
+
+                error: function () {
+                    alert("热度增长失败");
+                }
+            });
+        }
+
+        //账号退出
+        function user_exit_xuesi() {
+            $.ajax({
+                type: 'POST',
+                url: url+'/exit',
+                success: function (json) {
+                	location.href = 'home.html';
+                },
+                error: function () {
+                    alert("操作失败");
+                }
+            });
+        }
+
+        //数据返回后端处理结果反馈给用户，便于指导用户正确操作
+        //100-199:状态相关(登陆/注册成功)
+        //200-299：账号相关(Id/邮箱/电话号码检测)
+        //300-399：密码相关(密码检测)
+        //400-499:个人信息相关(信息修改)
+        function statHandler() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                var msg = xmlHttp.responseText;
+                if (msg == 901) {
+                    alert("账号密码不可为空！");
+                } else if (msg == 902) {
+                    alert("请检查你的账号是否正确!");
+                } else if (msg == 903) {
+                    alert("登录失败，请检查密码是否正确!");
+                } else if (msg == 904) {
+                    alert("登陆成功!");
+                    location.href = 'ManagementSystem.html';
+                } else if (msg == 905) {
+                    alert("非法访问!");
+                    location.href = 'home.html';
+                } else if (msg == 906) {
+                    alert("已安全退出!");
+                    location.href = 'home.html';
+                } else if (msg == 907) {
+                    //验证合格
+                    // location.href='GMLogin.html';
+                } else if (msg == 908) {
+                    alert("已成功修改！");
+                } else if (msg == 909) {
+                    alert("密码不可为空！");
+                } else if (msg == 910) {
+                    alert("新密码不一致！");
+                } else if (msg == 911) {
+                    alert("密码不符合要求！");
+                } else if (msg == 912) {
+                    alert("不可以与原密码相同！");
+                } else if (msg == 913) {
+                    alert("新密码不可以使用曾今使用过的密码！");
+                } else if (msg == 914) {
+                    alert("密码修改失败！");
+                } else if (msg == 915) {
+                    alert("密码修改成功！");
+                    //清空密码框
+                    $("#userOldPassword").val('');
+                    $("#userNewPassword").val('');
+                    $("#userNewPasswordR").val('');
+                } else if (msg == 916) {
+                    alert("空！");
+                } else if (msg == 103) {
+                    alert("账号已退出!");
+                    location.href = 'home.html';
+                } else if (msg == 917) {
+                    alert("原密码错误!");
+                } else if (msg == 918) {
+                    alert("信息修改成功!");
+                } else {
+
+                }
+            }
+        }
+
+    </script>
+
+
+</head>
+<body>
+<!--顶部导航栏-->
+<div id="top"></div>
+<script>
+    $("#top").load("top.html");
+</script>
+<!--主体部分-->
+<div class="container" style="padding-left:0px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 16px;font-weight: bold">
+        <span>个人中心</span>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <!--<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">-->
+            <!--<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"-->
+            <!--aria-controls="v-pills-home" aria-selected="true">我的信息</a>-->
+            <!--<a class="nav-link" id="v-pills-change-password-tab" data-toggle="pill" href="#v-pills-change-password" role="tab"-->
+            <!--aria-controls="v-pills-change-password" aria-selected="false">修改密码</a>-->
+            <!--<a class="nav-link" id="v-pills-collection-tab" data-toggle="pill" href="#v-pills-collection" role="tab"-->
+            <!--aria-controls="v-pills-collection" aria-selected="false">课程收藏</a>-->
+            <!--<a class="nav-link" id="v-pills-watching-history-tab" data-toggle="pill" href="#v-pills-watching-history" role="tab"-->
+            <!--aria-controls="v-pills-watching-history" aria-selected="false">观看历史</a>-->
+            <!--<a class="nav-link" id="v-pills-achievement-tab" data-toggle="pill" href="#v-pills-achievement" role="tab"-->
+            <!--aria-controls="v-pills-achievement" aria-selected="false">我的成绩</a>-->
+            <!--</div>-->
+            <div class="list-group" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="list-group-item list-group-item-action active" id="v-pills-home-tab" data-toggle="pill"
+                   href="#v-pills-home" role="tab"
+                   aria-controls="v-pills-home" aria-selected="true" style="border: 0px">我的信息</a>
+                <a class="list-group-item list-group-item-action" id="v-pills-change-password-tab" data-toggle="pill"
+                   href="#v-pills-change-password" role="tab"
+                   aria-controls="v-pills-change-password" aria-selected="false" style="border: 0px">修改密码</a>
+                <a class="list-group-item list-group-item-action" id="v-pills-collection-tab" data-toggle="pill"
+                   href="#v-pills-collection" role="tab"
+                   aria-controls="v-pills-collection" aria-selected="false" style="border: 0px"
+                   onclick="my_course_collection()">课程收藏</a>
+
+                <a class="list-group-item list-group-item-action" id="v-pills-my-resource-tab" data-toggle="pill"
+                   href="#v-pills-my-resource" role="tab"
+                   aria-controls="v-pills-my-resource" aria-selected="false" style="border: 0px"
+                   onclick="my_resource()">我的资源</a>
+
+                <a class="list-group-item list-group-item-action" id="v-pills-achievement-tab" data-toggle="pill"
+                   href="#v-pills-achievement" role="tab"
+                   aria-controls="v-pills-achievement" aria-selected="false" style="border: 0px"
+                   onclick="my_achievement()">我的成绩</a>
+            </div>
+            <hr>
+            <a class="btn list-group-item list-group-item-action" aria-selected="false" style="border: 0px"
+               onclick="user_exit_xuesi()">安全退出</a>
+        </div>
+        <div class="col-10">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!--我的信息-->
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <form method="post" id="SUser">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="userName" id="userName"
+                                       placeholder="给自己起一个昵称吧" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Id</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="userId"
+                                       placeholder="你还未登录！">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="userEmail" id="userEmail"
+                                       placeholder="email@example.com" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">电话号码</label>
+                            <div class="col-sm-10">
+
+                                <input type="tel" class="form-control" name="userTel" id="userTel"
+                                       placeholder="请补充你的电话号码" style="border: 0px;padding-left: 0px">
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">性别</label>
+                            <div class="col-sm-10 form-control" style="border: 0px">
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" name="customRadioInline1"
+                                           class="custom-control-input" value="男">
+                                    <label class="custom-control-label" for="customRadioInline1">男</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1"
+                                           class="custom-control-input" value="女">
+                                    <label class="custom-control-label" for="customRadioInline2">女</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">出生日期</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="userBirth" name="userBirth"
+                                       placeholder="2018-12-08" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <hr>
+                        <input class="btn btn-primary" type="button" onclick="save_changes();" value="保存修改">
+                    </form>
+                </div>
+                <!--密码修改-->
+                <div class="tab-pane fade" id="v-pills-change-password" role="tabpanel"
+                     aria-labelledby="v-pills-change-password-tab">
+                    <form method="post" id="change_password_form">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">原密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="userOldPassword" id="userOldPassword"
+                                       placeholder="输入你的密码" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">新密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="userNewPassword" id="userNewPassword"
+                                       placeholder="你的新密码" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">确认新密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="userNewPasswordR"
+                                       id="userNewPasswordR" placeholder="请再输入一次新密码"
+                                       style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <hr>
+                        <input class="btn btn-primary" type="button" onclick="save_change_password();" value="保存修改">
+                    </form>
+                </div>
+                <!--课程收藏-->
+                <div class="tab-pane fade" id="v-pills-collection" role="tabpanel"
+                     aria-labelledby="v-pills-collection-tab" style="padding: 15px">
+                    <!--card-->
+                    <div id="my-course-collection-list" class="row">
+
+                        <!---->
+                        <!--课程收藏显示部分-->
+                        <!---->
+
+                    </div>
+                    <hr>
+                    <!--页码-->
+                    <div id="my-course-collection-pagecount"></div>
+                </div>
+                <!--我的资源-->
+                <div class="tab-pane fade" id="v-pills-my-resource" role="tabpanel"
+                     aria-labelledby="v-pills-my-resource-tab">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">资源id</th>
+                            <th scope="col">资源名称</th>
+                            <th scope="col">课程id</th>
+                            <th scope="col">资源状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="my-resource-list">
+
+                        </tbody>
+                    </table>
+                    <!--<div id="resource-pagecount"></div>-->
+                    <!---->
+                    <!--资源显示部分-->
+                    <!---->
+                    <!--页码-->
+                    <hr>
+                    <div id="my-resource-pagecount"></div>
+                </div>
+                <!--我的成绩-->
+                <div class="tab-pane fade" id="v-pills-achievement" role="tabpanel"
+                     aria-labelledby="v-pills-achievement-tab">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">测试卷名</th>
+                            <th scope="col">所属课程</th>
+                            <th scope="col">得分</th>
+                            <th scope="col">总分</th>
+                            <th scope="col">测试评价</th>
+                            <th scope="col">测试日期</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="my-achievement-list">
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="my-achievement-pagecount"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部-->
+<div id="botton"></div>
+<script>
+$("#botton").load("botton.html");
+</script>
+</body>
+<script type="text/javascript">
+	var pathArray = window.location.pathname.split('/');
+	var secondLevelLocation = pathArray[1];
+	var url = window.location.protocol + "//" + window.location.host
+			+ "/" + secondLevelLocation;
+    // 页面加载完后立即自动执行
+    // 判断是否已登录
+    $(function () {
+        $.ajax({
+            url: url+'/getUserMessage',
+            type: 'post',
+            dataType: 'json',
+            success: function (response) {
+                if(!response.state){
+                    alert("非法访问!");
+                    window.open("home.html","_self").close();
+                }
+
+                $("#userName").val(response.userName);
+                $("#userId").val(response.userId);
+                $("#userEmail").val(response.userEmail);
+                $("#userTel").val(response.userTel);
+  
+                if (response.userSex == "男") {
+                    $("#customRadioInline1").prop("checked", true);
+                    $("#customRadioInline2").prop("checked", false);
+                } else if (response.userSex == "女") {
+                    $("#customRadioInline1").prop("checked", false);
+                    $("#customRadioInline2").prop("checked", true);
+                }
+                $("#userBirth").val(response.userBirth);
+            },
+            error: function (err) {
+                alert("错误");
+            }
+        });
+    });
+</script>
+</html>

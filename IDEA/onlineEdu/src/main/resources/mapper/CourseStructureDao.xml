@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.CourseStructureDao">
+    <insert id="saveCourseChapterNoMV">
+        insert into course_structure(courseId,chapterId,chapterName,sectionId,sectionName)
+        VALUES(#{courseId}, #{chapterId}, #{chapterName}, #{sectionId}, #{sectionName})
+        ON DUPLICATE KEY UPDATE chapterName=#{chapterName},sectionName=#{sectionName};
+    </insert>
+    <insert id="saveCourseChapter">
+        insert into course_structure(courseId,chapterId,chapterName,sectionId,sectionName, mvAdd)
+        VALUES(#{courseId}, #{chapterId}, #{chapterName}, #{sectionId}, #{sectionName},#{mvAdd})
+            ON DUPLICATE KEY UPDATE chapterName=#{chapterName},sectionName=#{sectionName}
+                <if test="#{mvAdd}!=''">
+                    ,mvAdd=#{mvAdd}
+                </if>
+                ;
+    </insert>
+    <delete id="delCourseSection">
+        delete from course_structure
+        where courseId=#{courseId} and chapterId=#{chapterId} and sectionId>=#{sectionId};
+    </delete>
+    <delete id="delCourseChapter">
+        delete from course_structure
+        where courseId=#{courseId} and chapterId=#{chapterId};
+    </delete>
+    <select id="getSectionMVName" resultType="java.lang.String">
+        select mvAdd from course_structure
+        where courseId=#{courseId} and chapterId=#{chapterId} and sectionId>=#{sectionId};
+    </select>
+    <select id="getAllChapterMVName" resultType="java.lang.String">
+        select mvAdd from course_structure
+        where courseId=#{courseId} and chapterId=#{chapterId};
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.CourseStructure">
+        select * from course_structure
+        where courseId=#{courseId}
+        order by chapterId,sectionId;
+    </select>
+    <select id="getSectionInfo" resultType="com.muke.onlineedu.admin.entity.CourseStructure">
+        select * from course_structure
+        where courseId=#{courseId}
+        and chapterId=#{chapterId}
+        and sectionId=#{sectionId};
+    </select>
+    <select id="getChapterInfo" resultType="com.muke.onlineedu.admin.entity.CourseStructure">
+        select * from course_structure
+        where courseId=#{courseId}
+          and chapterId=#{chapterId};
+    </select>
+</mapper>

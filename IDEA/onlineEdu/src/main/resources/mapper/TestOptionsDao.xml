@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.TestOptionsDao">
+    <insert id="saveTestOption">
+        insert into test_options(questionId,questionOption,optionContent)
+        VALUES(#{questionNumber},#{optionNumber},#{optionContent})
+        ON DUPLICATE KEY UPDATE questionId=#{questionNumber},questionOption=#{optionNumber},optionContent=#{optionContent}
+    </insert>
+    <delete id="delTestOption">
+        delete from test_options where questionId=#{questionId};
+    </delete>
+    <select id="getTestOption" resultType="com.muke.onlineedu.admin.entity.TestOptions">
+        select * from test_options where questionId=#{questionId};
+    </select>
+</mapper>

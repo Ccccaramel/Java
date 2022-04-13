@@ -479,3 +479,6 @@ A: IDEA > File > Project Structure... > Project
       再判断是否配置了 mvc:default-servlet-handler
       如果没配置,则控制台报映射查找不到,客户端显示 404 错误
       如果有配置,则访问目标资源(一般为静态资源, js css html ),若找不到客户端显示 404 错误
+
+Q:左侧项目栏里文件夹上的蓝色方块没了,而且添加 server 时,在 Deployment菜单里没有 Artifact 项
+A:展开 IDEA 右侧的 Maven 栏,点击"+"号,将项目添加即可

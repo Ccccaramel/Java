@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+    <title>管理员-Muke</title>
+    <link rel="icon" th:href="@{/img/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/bootstrap-4.1.3-dist/css/bootstrap.css}">
+    <script th:src="@{/jQuery/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/bootstrap-4.1.3-dist/js/bootstrap.js}"></script>
+    <script type="text/javascript">
+   		var pathArray = window.location.pathname.split('/');
+   		var secondLevelLocation = pathArray[1];
+   		var url = window.location.protocol + "//" + window.location.host
+   				+ "/" + secondLevelLocation;    
+        
+        setInterval("loginCheck()", "100000");  // 每秒进行一次账号状态检查
+        function loginCheck() {
+    		$.ajax({
+    			type : 'POST',
+    			url : url + "/loginCheck",
+    			dataType : 'json',
+    			success : function(json) {
+    				GMStatHandler(json);
+    			},
+    			error : function(xhr, status, error) {
+    				console.log("状态码:" + xhr.status + ",状态:" + xhr.readyState
+    						+ ",错误信息:" + xhr.statusText + ",请求状态:" + status
+    						+ ",error:" + error);
+    			}
+    		});
+        }
+        
+        $(function(){  // 获取管理员的基本信息
+        	$.ajax({
+                url: url + '/getGMMessage',
+                type: 'post',
+                dataType: 'json',
+                success: function (response) {
+                	if(response.state){
+	                    $("#GMId").val(response.gmId);
+	                    $("#GMEmail").val(response.gmEmail);
+	                    $("#GMTel").val(response.gmTel);
+	                    $("#GMPower").val(response.gmPower);
+	                    console.log("response.gmPower-"+response.gmPower);
+	                    add_fun(response.gmPowerNo);               		
+                	}else{
+                		alert.log("信息获取失败");
+                		location.href="GMLogin.html";
+                	}
+
+                },
+                error: function (err) {
+                    alert("错误");
+                }
+        	});
+        });
+        
+        // 判断是否已登录并获取登录信息
+        $(function () {
+    		$.ajax({
+    			type : 'POST',
+    			url : url + "/loginCheck",
+    			dataType : 'json',
+    			success : function(json) {
+    				console.log("result:" + json);
+    				GMStatHandler(json);
+    			},
+    			error : function(xhr, status, error) {
+    				console.log("状态码:" + xhr.status + ",状态:" + xhr.readyState
+    						+ ",错误信息:" + xhr.statusText + ",请求状态:" + status
+    						+ ",error:" + error);
+    			}
+    		});
+        });
+
+
+
+        //管理员个人信息修改
+        function save_GMchanges() {
+    		$.ajax({
+    			type : 'POST',
+    			url : url + "/saveGMChanges",
+    			data : {
+    				//'GMId' : $("#GMId").val(),
+    				'GMEmail' : $("#GMEmail").val(),
+    				'GMTel': $("#GMTel").val()
+    			},
+    			dataType : 'json',
+    			success : function(response) {
+    				if(response.result){
+    					console.log("更新成功");
+                        $("#GMEmail").val(response.gmEmail);
+                        $("#GMTel").val(response.gmTel);
+    				}else{
+    					console.log("更新失败"+response.result);
+    				}
+    			},
+    			error : function(xhr, status, error) {
+    				console.log("saveGMChanges error");
+    			}
+    		});
+        }
+
+        //密码修改
+        function save_GM_change_password() {
+            var GMopw = $("#GMOldPassword").val();
+            var GMnpw = $("#GMNewPassword").val();
+            var GMnpwr = $("#GMNewPasswordR").val();
+        	if(GMopw==GMnpw){
+        		alert("新密码不可与旧密码相同");
+        	}else if(GMnpw!=GMnpwr){
+        		alert("新密码与确认新密码不一致");
+        	}else{
+	    		$.ajax({
+	    			type : 'POST',
+	    			url : url + "/changeGMPassword",
+	    			data : {
+	    				'GMOldPassword' : GMopw,
+	    				'GMNewPassword': GMnpw
+	    			},
+	    			dataType : 'json',
+	    			success : function(response) {
+	    				if(response.result){
+	    					console.log("密码更新成功");
+	    				}else{
+	    					console.log("密码更新失败"+response.result);
+	    				}
+	    			},
+	    			error : function(xhr, status, error) {
+	    				console.log("saveGMChanges error");
+	    			}
+	    		});        		
+        	}
+        }
+
+        //获取数据
+        var curPage = 1; //当前页码
+        var total, pageSize, totalPage;//总记录数，每页记录数，总页数
+        //意见箱
+        function suggestions() {
+
+            loading_suggestions(1);
+            $("#pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_suggestions(rel);
+                }
+            });
+        }
+
+        //用户管理
+        function user(sign) {
+            key = "";
+            if (sign == 1) {
+                key = $("#userKey").val();
+            }
+
+            loading_user(1, key);
+            $("#user-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_user(rel, key);
+                }
+            });
+        }
+
+        //教师管理
+        function teacher(sign) {
+            key = "";
+            if (sign == 1) {
+                key = $("#teacherKey").val();
+            }
+
+            loading_teacher(1, key);
+            $("#teacher-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_teacher(rel, key);
+                }
+            });
+        }
+
+        //管理员账号管理,点击界面"管理员账号管理"时触发,该元素是进入界面时自动生成且添加了 onclick 以及参数
+        function gm(gmPower, sign) {  //权限等级(数字),标记(0:所有数据,1:模糊搜索)
+            key = "";  //用于模糊匹配,当使用默认值去 select 匹配时相当获得所有匹配数据
+            if (sign == 1) {  //模糊搜索时 key 不可为空
+                key = $("#gmKey").val();
+                if (key == "") {
+                    alert("不可为空!");
+                    return;
+                } else {
+                    alert(key);
+                }
+            }
+            loading_gm(gmPower, 1, key);  //请求数据(用户权限等级,第几页,匹配项) 
+            $("#gm-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_gm(gmPower, rel, key);
+                }
+            });
+        }
+
+        //测试卷管理
+        function test(sign) {
+
+            key = "";
+            if (sign == 1) {
+                key = $("#testKey").val();
+            }
+
+            loading_test(1, key);
+            $("#test-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_test(rel, key);
+                }
+            });
+        }
+
+        //课程管理
+        function course(sign) {
+            key = "";
+            if (sign == 1) {
+                key = $("#courseKey").val();
+            }
+
+            loading_course(1, key);
+            $("#course-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_course(rel, key);
+                }
+            });
+        }
+
+        //课程资源管理
+        function course_resource(sign) {
+            key = "";
+            if (sign == 1) {
+                key = $("#resourceKey").val();
+            }
+            loading_course_resource(1, key);
+            $("#course-resource-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_course_resource(rel, key);
+                }
+            });
+        }
+
+        //课程类型管理
+        function course_type() {
+            loading_course_type(1);
+            $("#course-type-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_course_type(rel);
+                }
+            });
+        }
+
+        //课程推广管理
+        function course_promotion() {
+
+            loading_course_promotion(1);
+            $("#course-promotion-pagecount").on("click", "a", function () {
+                var rel = $(this).attr("rel");
+                if (rel) {
+                    loading_course_promotion(rel);
+                }
+            });
+        }
+
+        //加载课程信息
+        function loading_course(page, key) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getCourseMessage',
+                data: {'pageNum': page - 1, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#course-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+                    $("#course-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.courseList;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['courseId'] + "</th>" +
+                            "<td>" + array['courseName'] + "</td>" +
+                            "<td>" + array['teacherId'] + "</td>" +
+                            "<td>" + array['teacherName'] + "</td>" +
+                            "<td>" + array['courseClassStr'] + "</td>" +
+                            "<td id=\"" + array['courseId'] + "\">" + array['courseStatusStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['courseId'] + ",3,3);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"operation(" + array['courseId'] + ",2,3);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"operation(" + array['courseId'] + ",1,3);\">恢复</span></td>" +
+                            "</tr>";
+                    });
+                    $("#course-list").append(li);
+                },
+                complete: function () {
+                    $("#course-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //加载课程资源信息
+        function loading_course_resource(page, key) {
+
+            $.ajax({
+                type: 'POST',
+                url: url+'/getCourseResourceMessage',
+                data: {'pageNum': page - 1, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#course-resource-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+                    $("#course-resource-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.courseResouceList;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['resourceId'] + "</th>" +
+                            "<td>" + array['resourceName'] + "</td>" +
+                            "<td>" + array['courseId'] + "</td>" +
+                            "<td>" + array['courseName'] + "</td>" +
+                            "<td>" + array['userId'] + "</td>" +
+                            "<td>" + array['userName'] + "</td>" +
+                            "<td>" + array['userTypeStr'] + "</td>" +
+                            "<td id=\"" + array['resourceId'] + "\">" + array['resourceAccountStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['resourceId'] + ",3,7);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"operation(" + array['resourceId'] + ",2,7);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"operation(" + array['resourceId'] + ",1,7);\">恢复</span></td>" +
+                            "</tr>";
+                    });
+                    $("#course-resource-list").append(li);
+                },
+                complete: function () {
+                    $("#course-resource-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //资源搜索
+        function resource_search() {
+            key = $("#resourceKey").val();
+        }
+
+        //加载课程类别信息
+        function loading_course_type(page) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getCourseType',
+                data: {'pageNum': page - 1},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#course-type-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json,page);
+                    $("#course-type-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.courseTypeList;
+                    $.each(list, function (index, array) {
+                        li += "<tr id=\"course-type-list-" + array['typeValue'] + "\">" +
+                            "<th scope=\"row\">" + array['typeValue'] + "</th>" +
+                            "<td>" + array['typeName'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['typeValue'] + ",3,4);\">删除</span></td>" +
+                            "</tr>";
+                    });
+                    $("#course-type-list").append(li);
+                },
+                complete: function () {
+                    $("#course-type-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //加载测试卷信息
+        function loading_test(page, key) {
+
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAllTestMessage',
+                data: {'pageNum': page - 1, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#test-list").append("加载中...");
+                },
+                success: function (json) {
+                    $("#test-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.testList;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['testId'] + "</th>" +
+                            "<td>" + array['testName'] + "</td>" +
+                            "<td>" + array['courseId'] + "</td>" +
+                            "<td id=\"" + array['testId'] + "\">" + array['testStatusStr'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['testId'] + ",3,5);\">删除</span><span class=\"btn badge badge-light\" style=\"margin-left: 6px;margin-right: 6px\" onclick=\"operation(" + array['testId'] + ",2,5);\">冻结</span><span class=\"btn badge badge-success\" onclick=\"operation(" + array['testId'] + ",1,5);\">恢复</span></td>" +
+                            "</tr>";
+                    });
+                    $("#test-list").append(li);
+                },
+                complete: function () {
+                    $("#test-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //题库搜索
+        function test_search() {
+            key = $("#testKey").val();
+        }
+
+        //加载建议
+        function loading_suggestions(page) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getSuggestions',
+                data: {'pageNum': page - 1},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#list").append("加载中...");
+                },
+                success: function (json) {
+                    $("#list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+
+                    if (total == 0) {
+                        alert("暂无留言");
+                    } else {
+                        var list = json.suggestionsList;
+                        $.each(list, function (index, array) {
+                            li += "<tr>" +
+                                "<th scope=\"row\">" + array['ideaId'] + "</th>";
+                            if (array['userId'] == -1) {
+                                li += "<td>游客</td>";
+                            } else {
+                                li += "<td>" + array['userId'] + "</td>";
+                            }
+                            li += "<td>" + array['ideaContent'] + "</td>" +
+                                "<td>" + array['sendingDate'] + "</td>" +
+                                "</tr>";
+                        });
+                        $("#list").append(li);
+                    }
+                },
+                complete: function () {
+                    // getPageBar();
+                    $("#pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //加载用户信息
+        function loading_user(page, key) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getAllUserMessage',
+                data: {'pageNum': page - 1, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#user-list").append("加载中...");
+                },
+                success: function (json) {
+                    $("#user-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.studentList;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['userId'] + "</th>" +
+                            "<td>" + array['userName'] + "</td>" +
+                            "<td>" + array['userEmail'] + "</td>" +
+                            "<td>" + array['userTel'] + "</td>" +
+                            "<td>" + array['userSex'] + "</td>" +
+                            "<td>" + array['userBirth'] + "</td>" +
+                            "<td id=" + array['userId'] + ">" + array['accountClass'] + "</td>" +
+                            "<td style='text-align: center'><span class=\"btn badge badge-danger\" onclick='operation(" + array['userId'] + ",3,0);'>注销</span><span class=\"badge badge-light\" style='margin-left: 6px;margin-right: 6px' onclick='operation(" + array['userId'] + ",2,0);'>冻结</span><span class=\"badge badge-success\" onclick='operation(" + array['userId'] + ",1,0);'>恢复</span></td>" +
+                            "</tr>";
+                    });
+                    $("#user-list").append(li);
+                },
+                complete: function () {
+                    $("#user-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //普通用户/学生搜索
+        function user_search() {
+            key = $("#userKey").val();
+        }
+
+        //加载教师信息
+        function loading_teacher(page, key) {
+            $.ajax({
+                type: 'POST',
+                url: url +'/getAllTeacher',
+                data: {'pageNum': page - 1, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#teacher-list").append("加载中...");
+                },
+                success: function (json) {
+                    $("#teacher-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.teacherList;
+                    console.log(json.total);
+                    console.log(json.list);
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['teacherId'] + "</th>" +
+                            "<td>" + array['teacherName'] + "</td>" +
+                            "<td>" + array['teacherTel'] + "</td>" +
+                            "<td>" + array['teacherEmail'] + "</td>" +
+                            "<td>" + array['teacherIDcard'] + "</td>" +
+                            "<td>" + array['teacherQualification'] + "</td>" +
+                            "<td>" + array['teachersSchool'] + "</td>" +
+                            "<td>" + array['teachersSchoolEmail'] + "</td>" +
+                            "<td id=" + array['teacherId'] + ">" + array['teacherAccountStatusStr'] + "</td>" +
+                            "<td style='text-align: center'><span class=\"btn badge badge-danger\" onclick='operation(" + array['teacherId'] + ",3,1);'>注销</span><span class=\"btn badge badge-light\" style='margin-left: 6px;margin-right: 6px' onclick='operation(" + array['teacherId'] + ",2,1);'>冻结</span><span class=\"btn badge badge-success\" onclick='operation(" + array['teacherId'] + ",1,1);'>恢复/通过</span></td>" +
+                            "</tr>";
+                    });
+                    console.log(li);
+                    $("#teacher-list").append(li);
+                },
+                complete: function () {
+                    $("#teacher-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //教师搜索
+        function teacher_search() {
+            key = $("#teacherKey").val();
+        }
+
+        //加载管理员信息
+        function loading_gm(gmPower, page, key) {
+            $.ajax({
+                type: 'POST',
+                url: url + '/getAppointTypeGMMessage',
+                data: {'pageNum': page - 1, 'gmPower': gmPower, 'key': key},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#gm-list").append("加载中...");
+                },
+                success: function (json) {
+                    console.log(json);
+                    $("#gm-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.userList;
+                    $.each(list, function (index, array) {
+                        li += "<tr>" +
+                            "<th scope=\"row\">" + array['gmId'] + "</th>" +
+                            "<td>" + array['gmEmail'] + "</td>" +
+                            "<td>" + array['gmTel'] + "</td>" +
+                            "<td>" + array['powerClass'] + "</td>" +
+                            "<td id=" + array['gmId'] + ">" + array['accountStatusStr'] + "</td>";
+                        if (gmPower > array['gmPower']) {
+                            li += "<td style='text-align: center'><span class=\"btn badge badge-danger\" onclick='operation(" + array['gmId'] + ",3,2);'>注销</span><span class=\"btn badge badge-light\" style='margin-left: 6px;margin-right: 6px' onclick='operation(" + array['gmId'] + ",2,2);'>冻结</span><span class=\"btn badge badge-success\" onclick='operation(" + array['gmId'] + ",1,2);'>恢复</span></td>";
+                        } else {
+                            li += "<td style='text-align: center'>同级别不可操作</td>";
+                        }
+                        li += "</tr>";
+                    });
+                    $("#gm-list").append(li);
+                },
+                complete: function () {
+                    $("#gm-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //管理员搜索
+        function gm_search() {
+            key = $("#gmKey").val();
+            alert(key);
+        }
+
+        //加载课程推广信息
+        function loading_course_promotion(page) {
+            $.ajax({
+                type: 'POST',
+                url: url+'/getCoursePromotion',
+                data: {'pageNum': page - 1},
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#course-promotion-list").append("加载中...");
+                },
+                success: function (json) {
+
+                    console.log(json);
+
+                    $("#course-promotion-list").empty();
+                    total = json.total;
+                    pageSize = json.pageSize;
+                    curPage = page;
+                    totalPage = json.totalPage;
+                    var li = "";
+                    var list = json.coursePromotionList;
+                    $.each(list, function (index, array) {
+                        li += "<tr id=\"course-type-list-" + array['courseId'] + "\">" +
+                            "<td>" + array['courseId'] + "</td>" +
+                            "<td>" + array['courseName'] + "</td>" +
+                            "<td style=\"text-align: center\"><span class=\"btn badge badge-danger\" onclick=\"operation(" + array['courseId'] + ",3,6);\">删除</span></td>" +
+                            "</tr>";
+                    });
+                    $("#course-promotion-list").append(li);
+                },
+                complete: function () {
+                    $("#course-promotion-pagecount").html(getPageBar());
+                },
+                error: function () {
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //获取分页条(通用)
+        function getPageBar() {
+            //页码大于最大页数
+            if (curPage > totalPage) {
+                curPage = totalPage;
+            }
+            //页码小于1
+            if (curPage < 1) {
+                curPage = 1;
+            }
+
+            pageStr = "<span>共" + total + "条</span>&nbsp;&nbsp;<span>" + curPage + "/" + totalPage + "</span>&nbsp;&nbsp;";
+
+            //如果是第一页
+            if (curPage == 1) {
+                pageStr += "<span>首页</span>&nbsp;&nbsp;<span>上一页</span>&nbsp;&nbsp;";
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='1'>首页</a>&nbsp;</span>" +
+                    "<span>&nbsp;&nbsp;<a href='javascript:void(0)' rel='" + (curPage - 1) + "'>上一页</a> </span>&nbsp;&nbsp;";
+            }
+
+            //如果是最后一页
+            if (curPage >= totalPage) {
+                pageStr += "<span>下一页</span>&nbsp;&nbsp;<span>尾页</span>"
+            } else {
+                pageStr += "<span><a href='javascript:void(0)' rel='" + (parseInt(curPage) + 1) + "'>下一页</a></span>&nbsp;&nbsp;" +
+                    "<span><a href='javascript:void(0)' rel='" + totalPage + "'>尾页</a> </span>";
+            }
+            
+            return pageStr;
+        }
+
+        /**
+         * 账号操作
+         * id：对象id
+         * sign:操作指令代号
+         *    0：待审核
+         *    1：正常
+         *    2：冻结
+         *    3：注销/删除
+         * category:执行功能代号
+         *    0：对普通用户账号状态编辑
+         *    1：对教师用户账号状态编辑
+         *    2：对管理员用户账号状态编辑
+         *    3：对所有课程状态编辑
+         *    4：删除指定课程类型
+         *    5：对测试卷状态编辑
+         *    6：对课程推广状态编辑
+         *    7：对课程资源状态编辑
+         **/
+        function operation(id, sign, category) {
+            $.ajax({
+                type: 'POST',
+                url: url + "/accountManagement",
+                data: {'id': id, 'sign': sign, 'category': category},
+                dataType: 'json',
+                success: function (json) {
+                    alert(json.result);
+                    if (category == 0) {
+                        $("#user-list #" + id).html(json.result);
+                    } else if (category == 1) {
+                        $("#teacher-list #" + id).html(json.result);
+                    } else if (category == 2) {
+                        $("#gm-list #" + id).html(json.result);
+                    } else if (category == 3) {
+                        $("#course-list #" + id).html(json.result);
+                    } else if (category == 4) {
+                        $("#v-pills-course-type-tab").click();
+                    } else if (category == 5) {
+                        $("#test-list #" + id).html(json.result);
+                    } else if (category == 6) {
+                        $("#v-pills-course-promotion-tab").click();
+                    } else if (category == 7) {
+                        $("#course-resource-list #" + id).html(json.result);
+                    } else {
+                        alert("操作错误！");
+                    }
+                },
+                error: function () {
+                    alert("操作失败");
+                }
+            });
+        }
+
+        //添加新课程类型
+        function add_course_type() {
+            var NewType = $("#NewType").val();
+            // htmlspecialchars
+            alert(NewType);
+            if (NewType.length == 0) {
+                alert("不可为空！");
+            } else {
+                $.ajax({
+                    url: url + "/addCourseType",
+                    type: 'post',
+                    dataType: 'json',
+                    data: {"NewType": NewType},
+                    success: function (json) {
+                        if (json.result) {
+                            alert("新课程添加成功"+json.result);
+                            $("#v-pills-course-type-tab").click();
+                        } else {
+                            alert("新课程添加失败");
+                        }
+                    },
+                    error: function (err) {
+                        alert("新课程添加错误！");
+                    }
+                });
+            }
+
+        }
+
+        //添加课程推广
+        function add_course_promotion() {
+            var newPromotion = $("#NewPromotion").val();
+            alert("courseId:"+newPromotion);
+            if (NewPromotion.length == 0) {
+                alert("不可为空！");
+            } else {
+                $.ajax({
+                    url: url + "/addCoursePromotion",
+                    data:{"newPromotion":newPromotion},
+                    type: 'post',
+                    dataType:'json',
+                    success: function (json) {
+                    	if(json.state){
+	                    	alert(json.message);
+	                    	$("#v-pills-course-promotion-tab").click();                    		
+                    	}else{
+                    		alert(json.message);
+                    	}
+
+                    },
+                    error: function (err) {
+                        alert("添加推广错误!");
+                    }
+                });
+            }
+        }
+
+        //管理员退出
+        function GM_exit_xuesi() {
+            $.ajax({
+                url: url + "/gmExit",
+                type: 'post',
+                success: function (json) {
+                	alert("成功退出!");
+                	location.href = 'GMLogin.html';
+                },
+                error: function (err) {
+                    alert("退出错误!");
+                }
+            });
+        }
+
+        //数据返回后端处理结果反馈给用户，便于指导用户正确操作
+        //100-199:状态相关(登陆/注册成功)
+        //200-299：账号相关(Id/邮箱/电话号码检测)
+        //300-399：密码相关(密码检测)
+        //400-499:个人信息相关(信息修改)
+        function GMStatHandler(msg) {
+	        if (msg == 901) {
+	            alert("账号密码不可为空！");
+	        } else if (msg == 902) {
+	            alert("请检查你的账号是否正确!");
+	        } else if (msg == 903) {
+	            alert("登录失败，请检查密码是否正确!");
+	        } else if (msg == 904) {
+	            alert("登陆成功!");
+	            location.href = 'ManagementSystem.html';
+	        } else if (msg == 905) {
+	            alert("非法访问!");
+	            location.href = 'GMLogin.html';
+	        } else if (msg == 906) {
+	            alert("已安全退出!");
+	            location.href = 'GMLogin.html';
+	        } else if (msg == 908) {
+	            alert("已成功修改！");
+	        } else if (msg == 909) {
+	            alert("密码不可为空！");
+	        } else if (msg == 910) {
+	            alert("新密码不一致！");
+	        } else if (msg == 911) {
+	            alert("密码不符合要求！");
+	        } else if (msg == 912) {
+	            alert("不可以与原密码相同！");
+	        } else if (msg == 913) {
+	            alert("新密码不可以使用曾今使用过的密码！");
+	        } else if (msg == 914) {
+	            alert("密码修改失败！");
+	        } else if (msg == 915) {
+	            alert("密码修改成功！");
+	            $("#GMOldPassword").val('');
+	            $("#GMNewPassword").val('');
+	            $("#GMNewPasswordR").val('');
+	        } else if (msg == 916) {
+	            alert("空！");
+	        } else if (msg == 917) {
+	            alert("新类型添加成功!");
+	        } else if (msg == 918) {
+	            alert("不存在该课程，请检查后重新输入!");
+	        } else if (msg == 919) {
+	            alert("该课程正在推广中!");
+	        } else if (msg == 920) {
+	            $("#v-pills-course-promotion-tab").click();
+	            alert("添入成功!");
+	        }else if (msg == 1) {
+	        	// 账号正常 无需其它操作
+	        } else if (msg == 2) {
+	            alert("此号已被冻结!");
+	            GM_exit_xuesi();//清除账号session信息
+	        } else if (msg == 3) {
+	            alert("此号已被权限更高的管理员注销!");
+	            GM_exit_xuesi();//清除账号session信息
+	        }else {
+	            alert("失败！" + msg);
+	        }
+        }
+
+        function suggestionsStatHandler() {
+            if (gmXmlHttp.readyState == 4 && gmXmlHttp.status == 200) {
+                document.getElementById("v-pills-suggestion").innerHTML = gmXmlHttp.responseText;
+            } else {
+                alert("加载失败!");
+            }
+
+        }
+
+        /**
+         * 扩展不同级别管理员的功能
+         * 所有不同级别管理员共有的基础管理功能---网站维护、用户账号管理、课程管理、资源管理
+         * 0:基层管理员---只含基础功能
+         * 1:中层管理员---对基层管理员的账号管理
+         * 2:高层管理员---对基层、中层管理员的账号管理、可查看后台管理员操作记录、管理员账号批量生成
+         */
+        function add_fun(gmPower) {
+            if (gmPower == 0) {
+                alert("你是基层管理员");
+            } else if (gmPower == 1) {
+                alert("你是中层管理员");
+                administrator_account_management(gmPower);
+            } else if (gmPower == 2) {
+                alert("你是高层管理员");
+                administrator_account_management(gmPower);
+            } else {
+                alert("系统错误，请联系网站维护人员");
+            }
+        }
+
+        //添加对管理员账号管理功能
+        function administrator_account_management(gmPower) {
+            //扩展菜单栏
+            var data1 = "";
+            data1 += "<hr>" +
+                "<a class=\"list-group-item list-group-item-action\" data-toggle=\"pill\" href=\"#v-pills-gm-account-management\" role=\"tab\" aria-controls=\"collapseExample\" aria-selected=\"false\" style=\"border: 0px\" onclick=\"gm(" + gmPower + ",0)\">管理员账号管理</a>";
+            $("#gm-tab").append(data1);
+
+            //扩展对应div
+            var data2 = "";
+            data2 += "<div class=\"tab-pane fade\" id=\"v-pills-gm-account-management\" role=\"tabpanel\" aria-labelledby=\"v-pills-messages-tab\">" +
+                "<div class=\"input-group mb-3 container\">" +
+                "<input type=\"text\" class=\"form-control\" placeholder=\"输入关键字\" id=\"gmKey\" aria-label=\"Recipient's username\" aria-describedby=\"button-addon2\">" +
+                "<div class=\"input-group-append\">" +
+                "<button class=\"btn btn-outline-secondary\" type=\"button\" id=\"button-user\" onclick=\"gm(" + gmPower + ",1)\">搜索</button>" +
+                "</div>";
+
+            if (gmPower == 2) {
+                data2 += "<div class=\"input-group-append\">" +
+                    "<button type=\"button\" onclick=\"add_gm();\" class=\"btn btn-success\">管理员账号生成</button>" +
+                    "</div>";
+            }
+
+            data2 += "</div>" +
+                "<br>" +
+                "<table class=\"table\">" +
+                "<thead>" +
+                "<tr>" +
+                "<th scope=\"col\">管理员Id</th>" +
+                "<th scope=\"col\">邮箱</th>" +
+                "<th scope=\"col\">联系电话</th>" +
+                "<th scope=\"col\">权限级别</th>" +
+                "<th scope=\"col\">账号状态</th>" +
+                "<th scope=\"col\" style=\"text-align: center\">操作</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody id=\"gm-list\">" +
+                "</tbody>" +
+                "</table>" +
+                "<hr>" +
+                "<div id=\"gm-pagecount\"></div>" +
+                "</div>";
+            $("#v-pills-tabContent").append(data2);
+
+        }
+
+        //添加管理员
+        function add_gm() {
+            window.open('AddGM.html');
+        }
+
+        //触发账号检查事件
+        function click() {
+            check();
+        }
+    </script>
+</head>
+<body>
+
+<!--主体部分-->
+<div class="container" style="padding-left:0px;max-width:1800px;padding-right:0px;margin-bottom: 16px">
+    <div class="alert alert-info" role="alert" style="width:100%;margin-bottom: 16px;elevation: deg;font-weight: bold">
+        <span>学思网-后台管理中心</span>
+    </div>
+    <div class="row">
+        <div class="col-1">
+            <div class="list-group" id="gm-tab" role="tablist" aria-orientation="vertical">
+                <a class="list-group-item list-group-item-action active" id="v-pills-home-tab" data-toggle="pill"
+                   href="#v-pills-home" role="tab"
+                   aria-controls="v-pills-home" aria-selected="true" style="border: 0px">管理员信息</a>
+                <a class="list-group-item list-group-item-action" id="v-pills-changePassword-tab" data-toggle="pill"
+                   href="#v-pills-changePassword"
+                   role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false" style="border: 0px">修改密码</a>
+                <hr>
+
+                <!--课程管理-->
+                <a class="list-group-item list-group-item-action" id="v-pills-course-tab" data-toggle="pill"
+                   href="#v-pills-course" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px"
+                   onclick="course(0);">课程管理</a>
+                <!--课程资源管理-->
+                <a class="list-group-item list-group-item-action" id="v-pills-course-tab" data-toggle="pill"
+                   href="#v-pills-course-resource" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px"
+                   onclick="course_resource(0);">课程资源管理</a>
+                <!--课程类别管理-->
+                <a class="list-group-item list-group-item-action" id="v-pills-course-type-tab" data-toggle="pill"
+                   href="#v-pills-course_type" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px" onclick="course_type();">课程类别管理</a>
+                <!--题库管理-->
+                <a class="list-group-item list-group-item-action" id="v-pills-test-tab" data-toggle="pill"
+                   href="#v-pills-test" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px" onclick="test(0);">题库管理</a>
+
+                <hr>
+
+                <a class="list-group-item list-group-item-action" id="v-pills-suggestion-tab" data-toggle="pill"
+                   href="#v-pills-suggestion" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px" onclick="suggestions();">意见箱</a>
+
+                <a class="list-group-item list-group-item-action" id="v-pills-userManagement-tab" data-toggle="pill"
+                   href="#v-pills-userManagement" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px" onclick="user(0);">用户管理</a>
+
+                <a class="list-group-item list-group-item-action" id="v-pills-teacherManagement-tab" data-toggle="pill"
+                   href="#v-pills-teacherManagement" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px"
+                   onclick="teacher(0);">教师管理</a>
+                <a class="list-group-item list-group-item-action" id="v-pills-course-promotion-tab" data-toggle="pill"
+                   href="#v-pills-homePage" role="tab"
+                   aria-controls="collapseExample" aria-selected="false" style="border: 0px"
+                   onclick="course_promotion();">首页管理</a>
+
+            </div>
+            <div class="list-group" role="tablist" aria-orientation="vertical">
+                <hr>
+                <a class="list-group-item list-group-item-action" data-toggle="pill" role="tab"
+                   href="#" aria-controls="collapseExample" aria-selected="false" style="border: 0px"
+                   onclick="GM_exit_xuesi()">安全退出</a>
+            </div>
+        </div>
+        <div class="col-11">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!--个人信息-->
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <form method="post" id="GM_message">
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Id</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="GMId" name="GMId"
+                                       placeholder="你还未登录！">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="GMEmail" id="GMEmail"
+                                       placeholder="email@example.com" style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">电话号码</label>
+                            <div class="col-sm-10">
+
+                                <input type="tel" class="form-control" name="GMTel" id="GMTel"
+                                       placeholder="请补充你的电话号码"
+                                       style="border: 0px;padding-left: 0px">
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">管理员级别</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="GMPower"
+                                       placeholder="未知">
+                            </div>
+                        </div>
+
+                        <hr>
+                        <input class="btn btn-primary" type="button" onclick="save_GMchanges();" value="保存修改">
+                    </form>
+                </div>
+                <!--密码修改-->
+                <div class="tab-pane fade" id="v-pills-changePassword" role="tabpanel"
+                     aria-labelledby="v-pills-profile-tab">
+                    <form method="post" id="change_password_form">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">原密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="GMOldPassword" id="GMOldPassword"
+                                       placeholder="输入你的密码"
+                                       style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">新密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="GMNewPassword" id="GMNewPassword"
+                                       placeholder="6-12位的字母或数字"
+                                       style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">确认新密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="GMNewPasswordR" id="GMNewPasswordR"
+                                       placeholder="请再输入一次新密码"
+                                       style="border: 0px;padding-left: 0px">
+                            </div>
+                        </div>
+                        <hr>
+                        <input class="btn btn-primary" type="button" onclick="save_GM_change_password();" value="保存修改">
+                    </form>
+                </div>
+
+                <!--课程管理-->
+                <div class="tab-pane fade" id="v-pills-course" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    <div class="container">
+
+                        <div class="input-group mb-3 align-self-center">
+
+                            <input type="text" class="form-control" placeholder="输入关键字" id="courseKey"
+                                   aria-label="Recipient's username" aria-describedby="button-addon2">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" id="button-teacher"
+                                        onclick="course(1);">搜索
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">课程名</th>
+                            <th scope="col">作者id</th>
+                            <th scope="col">作者姓名</th>
+                            <th scope="col">课程类别</th>
+                            <th scope="col">课程状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="course-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="course-pagecount"></div>
+                </div>
+                <!--课程资源管理-->
+                <div class="tab-pane fade" id="v-pills-course-resource" role="tabpanel"
+                     aria-labelledby="v-pills-messages-tab">
+                    <div class="container">
+
+                        <div class="input-group mb-3 align-self-center">
+
+                            <input type="text" class="form-control" placeholder="输入关键字" id="resourceKey"
+                                   aria-label="Recipient's username"
+                                   aria-describedby="button-addon2">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" id="button-teacher"
+                                        onclick="course_resource(1);">搜索
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">资源Id</th>
+                            <th scope="col">资源名称</th>
+                            <th scope="col">所属课程Id</th>
+                            <th scope="col">课程名称</th>
+                            <th scope="col">作者id</th>
+                            <th scope="col">作者姓名</th>
+                            <th scope="col">用户类型</th>
+                            <th scope="col">资源状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="course-resource-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="course-resource-pagecount"></div>
+                </div>
+                <!--课程类型管理-->
+                <div class="tab-pane fade" id="v-pills-course_type" role="tabpanel"
+                     aria-labelledby="v-pills-messages-tab">
+                    <!--添加栏-->
+                    <div class="input-group mb-3 ">
+                        <form method="post" id="add_course_type" class="container" style="max-width: 400px">
+                            <div class="input-group-append">
+                                <input type="text" class="form-control" placeholder="添加新课程类型"
+                                       aria-label="Recipient's username" aria-describedby="button-addon2" id="NewType">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                        onclick="add_course_type();">添加
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <!--显示列表-->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">课程类型</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="course-type-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="course-type-pagecount"></div>
+                </div>
+
+                <!--题库管理-->
+                <div class="tab-pane fade" id="v-pills-test" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    <div class="container">
+
+                        <div class="input-group mb-3 align-self-center">
+
+                            <input type="text" class="form-control" placeholder="输入关键字" id="testKey"
+                                   aria-label="Recipient's username"
+                                   aria-describedby="button-addon2">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" id="button-test" onclick="test(1);">搜索
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">测试卷id</th>
+                            <th scope="col">测试卷名称</th>
+                            <th scope="col">课程id</th>
+                            <th scope="col">测试卷状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="test-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="test-pagecount"></div>
+                </div>
+
+                <!--意见箱-->
+                <div class="tab-pane fade" id="v-pills-suggestion" role="tabpanel"
+                     aria-labelledby="v-pills-messages-tab">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">用户Id</th>
+                            <th scope="col">意见内容</th>
+                            <th scope="col">发送日期</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list">
+                        <!--意见内容将加载在此处-->
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="pagecount"></div>
+                </div>
+                <!--用户管理-->
+                <div class="tab-pane fade" id="v-pills-userManagement" role="tabpanel"
+                     aria-labelledby="v-pills-messages-tab">
+                    <div class="input-group mb-3 container">
+                        <input type="text" class="form-control" placeholder="输入关键字" id="userKey"
+                               aria-label="Recipient's username"
+                               aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-user" onclick="user(1);">
+                                搜索
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">用户Id</th>
+                            <th scope="col">用户昵称</th>
+                            <th scope="col">用户邮箱</th>
+                            <th scope="col">联系电话</th>
+                            <th scope="col">性别</th>
+                            <th scope="col">出生日期</th>
+                            <th scope="col">状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="user-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="user-pagecount"></div>
+                </div>
+                <!--教师管理-->
+                <div class="tab-pane fade" id="v-pills-teacherManagement" role="tabpanel"
+                     aria-labelledby="v-pills-messages-tab">
+                    <div class="input-group mb-3 container">
+                        <input type="text" class="form-control" placeholder="输入关键字" id="teacherKey"
+                               aria-label="Recipient's username"
+                               aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-teacher"
+                                    onclick="teacher(1);">搜索
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">教师姓名</th>
+                            <th scope="col">联系电话</th>
+                            <th scope="col">教师邮箱</th>
+                            <th scope="col">身份证</th>
+                            <th scope="col">资格证号</th>
+                            <th scope="col">所属院校</th>
+                            <th scope="col">院校邮箱</th>
+                            <th scope="col">账号状态</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="teacher-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="teacher-pagecount"></div>
+                </div>
+                <!--首页管理-->
+                <div class="tab-pane fade" id="v-pills-homePage" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    <!--添加栏-->
+                    <div class="input-group mb-3 ">
+                        <form method="post" id="add_course_type" class="container" style="max-width: 400px">
+                            <div class="input-group-append">
+                                <input type="text" class="form-control" placeholder="填写需要推广的课程id"
+                                       aria-label="Recipient's username" aria-describedby="button-addon3"
+                                       id="NewPromotion">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon3"
+                                        onclick="add_course_promotion();">添加
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
+                    <!--显示列表-->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">课程Id</th>
+                            <th scope="col">课程名称</th>
+                            <th scope="col" style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="course-promotion-list">
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div id="course-promotion-pagecount"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

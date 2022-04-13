@@ -21,4 +21,32 @@ maven 项目复制以及导入
   ok
 
 快捷键:
-  
+
+Q:一打开 IDEA 就慢慢卡死?
+A:删除 .idea 文件并重启
+
+Q:自定义类存在,但其它类却无法导入/找不到?
+A:IDEA > File > Invalidate Caches...
+
+Q:application.properties 中文乱码问题解决
+A:File -> Settings -> Editor -> File Encodings
+  将 Properties Files (*.properties) 下的 Default encoding for properties files设置为 UTF-8
+  将 Transparent native-to-ascii conversion 前的勾选上
+  配置完成后,一定要重新重新重新新建一个 application.properties
+
+调式
+  外接键盘
+    下一步: F8
+    放开执行: F9
+  笔记本键盘
+    下一步: fn+F8
+    放开执行: fn+F9
+
+单元测试
+  Ctrl+Shift+T
+
+查看类的继承关系
+  Ctrl+H
+
+查看一个方法的实现处
+  Ctrl+Alt+单击

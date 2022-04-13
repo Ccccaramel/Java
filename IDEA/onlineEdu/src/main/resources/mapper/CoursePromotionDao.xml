@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.CoursePromotionDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.CoursePromotion">
+        <id column="courseId" property="courseId"/>
+        <association property="course" column="courseId" select="com.muke.onlineedu.admin.dao.CourseDao.getCourseInfo"/>
+    </resultMap>
+    <insert id="addCoursePromotion">
+        insert into course_promotion(courseId) values(#{courseId});
+    </insert>
+    <delete id="delCoursePromotion">
+        delete from course_promotion where courseId=#{courseId};
+    </delete>
+    <select id="getAll" resultType="com.muke.onlineedu.admin.entity.CoursePromotion">
+        SELECT * from course_promotion;
+    </select>
+    <select id="getPartCoursePromotionMessage" resultMap="map1">
+        SELECT * from course_promotion
+            limit #{startPage},#{pageSize};
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.CoursePromotion">
+        SELECT * from course_promotion
+        where courseId=#{courseId};
+    </select>
+    <select id="getAllCoursePromotionMessage" resultMap="map1">
+        SELECT * from course_promotion;
+    </select>
+</mapper>

@@ -1,0 +1,4 @@
+1.创建第一个微服务-商品服务
+  IDEA > File > Spring Initializr 按要求配置
+  Next > 勾选 Web 下的 Spring Web 以及 Spring Cloud Routing 下的 OpenFeign > Next 即可
+  

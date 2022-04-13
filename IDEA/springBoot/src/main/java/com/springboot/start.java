@@ -1,6 +1,5 @@
 package com.springboot;
 
-import com.springboot.bean.Teacher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

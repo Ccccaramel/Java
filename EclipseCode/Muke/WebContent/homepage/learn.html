@@ -111,16 +111,6 @@
             }
         };
 
-        //加载课堂笔记
-        function note() {
-            loading_note(1);
-            $("#note-pagecount").on("click", "a", function () {
-                var rel = $(this).attr("rel");
-                if (rel) {
-                    loading_note(rel);
-                }
-            });
-        }
 
         //提交课程笔记
         function send_note() {

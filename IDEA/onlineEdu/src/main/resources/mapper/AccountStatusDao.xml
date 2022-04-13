@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.common.dao.AccountStatusDao">
+    <!--    <select id="getString" resultType="com.muke.onlineedu.common.entity.GMPower">-->
+    <!--        SELECT powerClass from gm_power WHERE powerNumber=#{powerNumber};-->
+    <!--    </select>-->
+    <select id="findBy" parameterType="int" resultType="com.muke.onlineedu.common.entity.AccountStatus">
+        SELECT * from account_status WHERE accountNumber=#{accountNumber};
+    </select>
+
+</mapper>

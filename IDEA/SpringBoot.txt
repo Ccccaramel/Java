@@ -93,3 +93,236 @@ A:修改主程序的注解 @SpringBootApplication(scanBasePacksges="*.*")
   1.@ConfigurationProperties
   2.@EnableConfigurationProperties+@ConfigurationProperties
   3.@Component+@ConfigurationProperties
+
+Q:application.properties 中文乱码问题解决
+A:File -> Settings -> Editor -> File Encodings
+  将 Properties Files (*.properties) 下的 Default encoding for properties files设置为 UTF-8
+  将 Transparent native-to-ascii conversion 前的勾选上
+  配置完成后,一定要重新重新重新新建一个 application.properties
+
+Lombok 简化开发
+  去除 bean 中的 get()/set() , toString() 以及 构造方法
+
+日志
+  在控制器类上添加 @slf4j 注解
+  在相应的方法内添加
+    log.info("[相关信息]")
+
+热更新
+  添加依赖
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+    </dependency>
+
+Q:SpringBoot启动类没有启动按钮 java 文件变为灰色的解决办法
+A:你可能是删了 .idea 文件,右键 pom.xml > Add as Maven Project 即可
+
+Spring Initailizr
+  项目初始化向导
+
+properties
+  配置文件
+
+yaml
+  以数据为中心的配置文件
+  字面量:单个且不可再分的值,date,boolean,string,number,null
+    k: v
+  对象:键值对的集合,map,hash,set,object
+    k: {k1:v1,k2:v2,k3:v3}
+    k:
+      k1: v1
+      k2: v2
+      k3: v3
+  数组:一组按次序排列的值,array,list,queue
+    k: [v1,v2,v3]
+    k:
+      - v1
+      - v2
+      - v3
+  "":不转义
+  '':转义
+
+配置提示功能
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+  </dependency>
+
+在打包插件里添加如下配置
+在 springBoot 重新打包时不将配置处理器打包到 jar 包里,没有实际影响,只是会使 jar 变大
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configurationprocessor</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+静态资源
+  在 resources 下创建如下目录
+    static
+    public
+    resources
+    /META-INF/resources
+  都可以通过 项目根路径/+静态资源名 的方式访问
+  静态映射 默认路径(范围) /**
+  请求进来,先去找 Controller 是否能处理,不能处理再交给静态资源处理器
+  自定义前缀
+    与过滤器有关,可在 yaml 中配置
+      spring:
+        mvc:
+          static-path-pattern=/[自定义前缀]/**
+    访问方式
+      项目根路径/+[自定义前缀]+静态资源名
+  改变静态资源路径
+    只有指定的路径下的资源能被访问到
+      spring:
+        resources:
+          static-locations: classpath:/[指定路径]/
+    也可以是数组形式
+      static-locations: [classpath:/[指定路径]/]
+
+导入 jQuery
+  </略>
+
+欢迎页
+  1.静态资源路径下 index.html
+  2.controller 能处理请求
+  关于网站图标 ico
+    命名格式必须为 favicon.ico 且必须放在静态资源下
+
+配置 mysql
+  配置依赖
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+  资源文件配置(application.properties)
+    spring.datasource.url=localhost:3306
+    spring.datasource.name=root
+    spring.datasource.password=root
+
+添加单元测试
+  Ctrl+Shift+T
+
+Q:当 bean 与数据库中的表名不同时
+A:添加依赖
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>${mybatisplus.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.baomidou</groupId>
+					<artifactId>mybatis-plus-generator</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+  @TableName("tableName")
+
+Q:When allowCredentials is true, allowedOrigins cannot contain the special value "*"since that cannot be set on the "Access-Control-Allow-Origin"
+A:参考别人的项目我也添加了 CorsConfig.java 跨域请求相关的配置
+  原配置
+    config.addAllowedOrigin("*");
+  修改为
+    allowedOriginPatterns("*")
+  即可
+
+Q:BindingException: Invalid bound statement (not found)
+A:1.Mybatis 使用 xml 配置
+    a.有可能你的 yaml 配置错误或遗漏
+        mybatis:
+        # mapper 在 resources 目录下
+        mapper-locations: classpath*:/mapper/*.xml
+        # 实体扫描,多个package用逗号或者分号分隔
+        typeAliasesPackage: com.muke.onlineedu.*.entity
+
+Q:2022-03-21 15:48:12.703 ERROR 16640 --- [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed; nested exception is java.lang.Error: Unresolved compilation problems: 
+	The method setGmAccountStatus(int) is undefined for the type Admin
+	The method getGmPower() is undefined for the type Admin
+	The method getGmAccountStatus() is undefined for the type Admin
+	The method getGmId() is undefined for the type Admin
+] with root cause
+
+java.lang.Error: Unresolved compilation problems: 
+	The method setGmAccountStatus(int) is undefined for the type Admin
+	The method getGmPower() is undefined for the type Admin
+	The method getGmAccountStatus() is undefined for the type Admin
+	The method getGmId() is undefined for the type Admin
+
+	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl.setUserData(AdministratorServiceImpl.java:101) ~[classes/:na]
+	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl.loginById(AdministratorServiceImpl.java:52) ~[classes/:na]
+	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl$$FastClassBySpringCGLIB$$772ad474.invoke(<generated>) ~[classes/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:689) ~[spring-aop-5.3.16.jar:5.3.16]
+	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl$$EnhancerBySpringCGLIB$$1c910231.loginById(<generated>) ~[classes/:na]
+	at com.muke.onlineedu.admin.controller.AdministratorController.loginById(AdministratorController.java:166) ~[classes/:na]
+	at com.muke.onlineedu.admin.controller.AdministratorController.gmLogin(AdministratorController.java:37) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:540) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:359) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:889) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1735) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at java.base/java.lang.Thread.run(Thread.java:832) ~[na:na]
+A:莫名其妙报错,弄了半天,什么也没改,然后又莫名其妙的正常了
+  或许与改动实体类有关,
+
+不要使用 Lombok!

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.StudentDao">
+    <insert id="registered">
+        INSERT INTO user_basic_information(userEmail,userNewPassword)
+        VALUES(#{userEmail}, #{userPassword});
+    </insert>
+
+    <update id="changeUserInformation">
+        update user_basic_information
+        set userName=#{userName},userEmail=#{userEmail},userTel=#{userTel},userSex=#{userSex},userBirth=#{userBirth}
+        where userId=#{userId};
+    </update>
+    <update id="updatePassword">
+        update user_basic_information set userNewPassword=#{newPassword},userOldPassword=#{oldPassword} where userId=#{id};
+    </update>
+    <select id="findByPowerNumber" parameterType="int" resultType="java.lang.String">
+        SELECT powerClass from user_basic_information WHERE powerNumber=#{powerNumber};
+    </select>
+
+    <select id="emailLogin" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information WHERE userNewPassword=#{password} and userEmail=#{account};
+    </select>
+    <select id="telLogin" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information WHERE userNewPassword=#{password} and userTel=#{account};
+    </select>
+    <select id="idLogin" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information WHERE userNewPassword=#{password} and userId=#{account};
+    </select>
+    <select id="checkNewPassword" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information WHERE userOldPassword=#{newPassword} and userId=#{id};
+    </select>
+    <select id="getUserMessage" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information WHERE userId=#{userId};
+    </select>
+    <select id="getStudentTableRow" resultType="com.muke.onlineedu.admin.entity.Student">
+        SELECT * from user_basic_information;
+    </select>
+    <select id="getPartStudent" resultType="com.muke.onlineedu.admin.entity.Student">
+        select u.userId as userId,
+				u.userName as userName,
+				u.userEmail as userEmail,
+				u.userTel as userTel,
+				u.userSex as userSex,
+				u.userBirth as userBirth,
+				u.userAccountStatus as userAccountStatus,
+				a.accountClass as accountClass
+				from user_basic_information u
+				join account_status a
+				on u.userAccountStatus=a.accountNumber
+				where u.userName like "%${key}%"
+				or u.userEmail like "%${key}%"
+				or u.userTel like "%${key}%"
+				or u.userSex like "%${key}%"
+				or u.userBirth like "%${key}%"
+				limit #{startPage},#{pageSize};
+    </select>
+</mapper>

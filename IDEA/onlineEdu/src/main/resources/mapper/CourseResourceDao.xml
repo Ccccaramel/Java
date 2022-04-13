@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.CourseResourceDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.CourseResource">
+        <id column="resourceId" property="resourceId"/>
+        <id column="resourceName" property="resourceName"/>
+        <id column="courseId" property="courseId"/>
+        <id column="linkAdd" property="linkAdd"/>
+        <id column="resourceAccount" property="resourceAccount"/>
+        <id column="teacherId" property="teacherId"/>
+        <id column="userType" property="userType"/>
+        <association property="accountStatus" column="resourceAccount" select="com.muke.onlineedu.common.dao.AccountStatusDao.findBy"/>
+        <association property="userClass" column="userType" select="com.muke.onlineedu.common.dao.UserTypeDao.findBy"/>
+        <association property="teacher" column="teacherId" select="com.muke.onlineedu.admin.dao.TeacherDao.getTeacherMessage"/>
+        <association property="course" column="courseId" select="com.muke.onlineedu.admin.dao.CourseDao.getCourseInfo"/>
+    </resultMap>
+    <insert id="addCourseResource">
+        insert into curriculum_resource(resourceName,courseId,linkAdd,teacherId,userType)
+        VALUES(#{resourceName},#{courseId},#{linkAdd},#{userId},#{userType});
+    </insert>
+    <update id="updateUserCourseResource">
+        update curriculum_resource
+        set resourceAccount=#{resourceAccount}
+        where resourceId=#{resourceId};
+    </update>
+    <select id="getUserAllCourseResource" resultType="com.muke.onlineedu.admin.entity.CourseResource">
+        select * from curriculum_resource
+        where teacherId=#{userId} and userType=#{userType} and resourceAccount!=3;
+    </select>
+    <select id="getAllCourseResource" resultType="com.muke.onlineedu.admin.entity.CourseResource">
+        select * from curriculum_resource
+        where resourceId like "%${key}%"
+           or resourceName like "%${key}%"
+           or courseId like "%${key}%"
+           or teacherId like "%${key}%";
+    </select>
+    <select id="getCourseResource" resultMap="map1">
+        select * from curriculum_resource
+        where teacherId=#{userId} and userType=#{userType} and resourceAccount!=3
+        limit #{startPage},#{pageSize};
+    </select>
+    <select id="getPartCourseResource" resultMap="map1">
+        select * from curriculum_resource
+        where 1=2
+           or cast(resourceId as char) like "%${key}%"
+           or resourceName like "%${key}%"
+           or cast(courseId as char) like "${key}%"
+           or cast(teacherId as char) like "%${key}%"
+           limit #{startPage},#{pageSize};
+    </select>
+    <select id="searchCourseResource" resultMap="map1">
+        select cr.* from curriculum_resource cr
+        join course c on cr.courseId=c.courseId
+        where 1=2
+           or cast(cr.resourceId as char) like "%${key}%"
+           or cr.resourceName like "%${key}%"
+           or c.courseName like "${key}%"
+           or cast(cr.teacherId as char) like "%${key}%";
+    </select>
+    <select id="searchPartCourseResource" resultMap="map1">
+        select cr.* from curriculum_resource cr
+                join course c on cr.courseId=c.courseId
+                where ( cast(cr.resourceId as char) like "%${key}%"
+                        or cr.resourceName like "%${key}%"
+                        or c.courseName like "${key}%" )
+                  and cr.resourceAccount=1
+                  limit #{startPage},#{pageSize};
+    </select>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.CourseResource">
+        select * from curriculum_resource where resourceId=#{resourceId};
+    </select>
+    <select id="getAppointCourseResource" resultType="com.muke.onlineedu.admin.entity.CourseResource">
+        select * from curriculum_resource
+        where courseId=#{courseId} and userType=#{userType} and resourceAccount=1;
+    </select>
+</mapper>

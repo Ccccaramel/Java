@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.FavoriteDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.Favorite">
+        <id column="userId" property="userId"/>
+        <id column="courseId" property="courseId"/>
+        <association property="course" column="courseId" select="com.muke.onlineedu.admin.dao.CourseDao.findBy"/>
+    </resultMap>
+    <insert id="addFavorite">
+        insert into favorite(userId,courseId)VALUES(#{userId},#{courseId}) ON DUPLICATE KEY UPDATE userId=#{userId},courseId=#{courseId};
+    </insert>
+    <delete id="delFavorite">
+        delete from favorite where userId=#{userId} and courseId=#{courseId};
+    </delete>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.Favorite">
+        select * from favorite
+        where userId=#{userId} and courseId=#{courseId};
+    </select>
+    <select id="getFavoriteCourse" resultType="com.muke.onlineedu.admin.entity.Favorite">
+        select f.* from favorite f
+        join course c on c.courseId=f.courseId
+        where userId=#{userId}
+        and courseStatus=1;
+    </select>
+    <select id="getPartFavoriteCourse" resultMap="map1">
+        select f.* from favorite f
+        join course c on c.courseId=f.courseId
+        where userId=#{userId}
+          and courseStatus=1
+        limit #{startPage},#{pageSize};
+    </select>
+</mapper>

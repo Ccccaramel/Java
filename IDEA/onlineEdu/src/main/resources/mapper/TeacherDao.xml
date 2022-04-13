@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.TeacherDao">
+    <insert id="registered">
+        INSERT INTO teacher_basic_information(teacherName,teachersSchool,teacherIDcard,
+                                              teacherTel,teacherEmail,teacherQualification,
+                                              teacherNewPassword,teachersSchoolEmail)
+                                              VALUES(#{teacherName},#{teachersSchool},#{teacherIDcard},
+                                                       #{teacherTel},#{userEmail},#{teacherQualification},
+                                                       #{userPassword},#{teachersSchoolEmail});
+    </insert>
+    <update id="updateTeacherAccountStatus">
+        update teacher_basic_information set teacherAccountStatus=#{sign} where teacherId=#{teacherId};
+    </update>
+    <update id="updateTeacherMessage">
+        update teacher_basic_information
+        set teacherEmail=#{teacherEmail},
+            teachersSchool=#{teachersSchool},
+            teacherTel=#{teacherTel},
+            teachersSchoolEmail=#{teachersSchoolEmail}
+        where teacherId=#{teacherId};
+    </update>
+    <update id="updatePassword">
+        update teacher_basic_information
+        set teacherOldPassword=#{oldPassword},teacherNewPassword=#{newPassword}
+        where teacherId=#{id};
+    </update>
+    <select id="findByPowerNumber" parameterType="int" resultType="java.lang.String">
+        SELECT powerClass from teacher_basic_information WHERE powerNumber=#{powerNumber};
+    </select>
+    <select id="emailLogin" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information WHERE teacherNewPassword=#{password} and teacherEmail=#{account};
+    </select>
+    <select id="telLogin" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information WHERE teacherNewPassword=#{password} and teacherTel=#{account};
+    </select>
+    <select id="idLogin" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information WHERE teacherNewPassword=#{password} and teacherId=#{account};
+    </select>
+    <select id="getTeacherMessage" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information WHERE teacherId=#{teacherId};
+    </select>
+    <select id="getTeacherTableRow" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information;
+    </select>
+    <select id="getPartTeacher" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT *,accountClass from teacher_basic_information
+        JOIN account_status ON teacherAccountStatus=accountNumber
+        WHERE teacherName LIKE "%${key}%"
+           OR teacherId LIKE "%${key}%"
+           OR teachersSchool LIKE "%${key}%"
+           OR teacherIDCard LIKE "%${key}%"
+           OR teacherTel LIKE "%${key}%"
+           OR teacherEmail LIKE "%${key}%"
+           OR teacherQualification LIKE "%${key}%"
+           limit #{startPage},#{pageSize};
+    </select>
+    <select id="checkNewPassword" resultType="com.muke.onlineedu.admin.entity.Teacher">
+        SELECT * from teacher_basic_information where teacherId=#{id} and teacherOldPassword=#{newPassword};
+    </select>
+</mapper>

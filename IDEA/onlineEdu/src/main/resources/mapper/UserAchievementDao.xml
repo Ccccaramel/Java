@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.UserAchievementDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.UserAchievement">
+        <id column="userId" property="userId"/>
+        <id column="answerSheetId" property="answerSheetId"/>
+        <id column="courseId" property="courseId"/>
+        <id column="testId" property="testId"/>
+        <id column="userAchievement" property="userAchievement"/>
+        <id column="submitTestDate" property="submitTestDate"/>
+        <id column="effectiveness" property="effectiveness"/>
+        <id column="totalScore" property="totalScore"/>
+        <id column="pass" property="pass"/>
+        <association property="evaluate" column="pass" select="com.muke.onlineedu.common.dao.EvaluateDao.findBy"/>
+        <association property="course" column="courseId" select="com.muke.onlineedu.admin.dao.CourseDao.getCourseInfo"/>
+        <association property="itemBack" column="testId" select="com.muke.onlineedu.admin.dao.ItemBackDao.findBy"/>
+    </resultMap>
+    <insert id="saveGrades">
+        insert into user_achievement(answerSheetId,userId,courseId,testId,userAchievement,effectiveness,totalScore,pass)
+        VALUES(#{answerSheetId},#{userId},#{courseId},#{testId},#{usertotalScore},1,#{totalScore},#{pass});
+    </insert>
+    <select id="findByUserId" resultType="com.muke.onlineedu.admin.entity.UserAchievement">
+        select * from user_achievement
+        where userId=#{userId};
+    </select>
+    <select id="getPartUserAchievement" resultMap="map1">
+        select * from user_achievement
+		where userId=#{userId}
+		limit #{startPage},#{pageSize};
+    </select>
+</mapper>

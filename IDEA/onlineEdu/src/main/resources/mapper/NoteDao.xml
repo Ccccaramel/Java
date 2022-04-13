@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muke.onlineedu.admin.dao.NoteDao">
+    <resultMap id="map1" type="com.muke.onlineedu.admin.entity.Note">
+        <id column="note" property="note"/>
+        <id column="sendingDate" property="sendingDate"/>
+        <association column="userType" property="userTypeInfo" select="com.muke.onlineedu.common.dao.UserTypeDao.findBy"/>
+        <association column="userId" property="teacher" select="com.muke.onlineedu.admin.dao.TeacherDao.getTeacherMessage"/>
+        <association column="userId" property="student" select="com.muke.onlineedu.admin.dao.StudentDao.getUserMessage"/>
+    </resultMap>
+    <insert id="addNote">
+        insert into note(courseId,userId,userType,note)
+        values(#{courseId},#{userId},#{userType},#{note});
+    </insert>
+    <select id="findBy" resultType="com.muke.onlineedu.admin.entity.Note">
+        select * from note
+        where courseId=#{courseId};
+    </select>
+    <select id="getNote" resultMap="map1">
+        select * from note
+        where courseId=#{courseId}
+        limit #{startPage},#{pageSize};
+    </select>
+</mapper>

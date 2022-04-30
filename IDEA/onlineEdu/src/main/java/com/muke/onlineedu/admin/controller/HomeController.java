@@ -62,6 +62,12 @@ public class HomeController {
         return  serverConfig.getUrl();
     }
 
+    @RequestMapping("/test")
+    public String test(){
+//        return "/homepage/home"; // 要想使用此方法访问页面那么控制器类的注解必须为 @Controller
+        return "/homepage/home";
+    }
+
     // Thymeleaf 视图解析器默认配置的位置:templates,所以你的 html 文件必须放在该文件夹下
     @RequestMapping("/")
     public ModelAndView home(){

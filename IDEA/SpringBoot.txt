@@ -1,17 +1,5 @@
 *** 输出"hello word" ***
-1.创建一个 Maven 工程
-2.打开 Maven 所在目录并找到 conf 下的 seeting.xml 文件添加如下配置
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.3</version>
-    </parent>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>2.4.1</version>
-    </dependency>
-2.在项目的 java 新建一个 java 类
+1.创建一个 Maven 工程,在项目的 java 新建一个 java 类
     @SpringBootApplication
     public class start {
         public static void main(String[] args){
@@ -27,6 +15,9 @@
             return "hi!springBoot!";
         }
     }
+2.修改 Maven 配置
+  IDEA > File > Settings > Build,Execution,Deployment > Maven
+  将 Maven home path , User settings file , Local repository 三项更改为本地 maven
 3.运行,点击 main 方法 左侧的"run"按钮启动服务
 4.在浏览器输入 localhost:8080/hi 即可访问页面
 

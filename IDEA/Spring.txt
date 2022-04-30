@@ -103,6 +103,13 @@ A: IDEA > File > Project Structure... > Project
   接着打开 IDEA > File > Settings... > Build,Execution,Deployment > Compiler > Java Compiler
   将 Project bytecode version 和 Per-module bytecode version 中当前项目的 module 的 Target bytecode version 修改为 9 (与JDK版本一致?)
 
+Q:自动装配
+A:spring 在容器中自动查找并自动给 bean 装配及其关联的属性
+
+Q:依赖注入
+A:把有依赖关系的类放到容器中,解析出这些类的实例
+  目的是实现类的解耦
+
 DI(依赖注入)
   赋值
     1.配置文件(set 注入,构造注入)

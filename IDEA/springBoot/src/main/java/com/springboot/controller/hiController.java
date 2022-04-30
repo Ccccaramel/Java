@@ -18,6 +18,11 @@ public class hiController {
     @Autowired
     Car car;
 
+    @RequestMapping("/")
+    public String index(){
+        return "index!";
+    }
+
     @RequestMapping("/car1")
     public Car car(){
         System.out.println(car.toString());

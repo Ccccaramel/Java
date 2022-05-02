@@ -8,7 +8,7 @@ import com.base.accessModifier.packageA.ClassC;
  * default:是否同包
  * protected:同包||子类
  *
- *            同类        同包(包括成员)  不同包子类     不同包非子类(成员)
+ *            同类        同包(成员/子类) 不同包子类     不同包非子类(成员)
  * private    yes
  * default    yes        yes
  * protected  yes        yes           yes

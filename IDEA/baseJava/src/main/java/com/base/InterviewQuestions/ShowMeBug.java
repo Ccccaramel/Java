@@ -1,4 +1,4 @@
-package com.base.accessModifier.packageB;
+package com.base.InterviewQuestions;
 
 import java.sql.Timestamp;
 import java.text.ParseException;

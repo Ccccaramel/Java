@@ -13,9 +13,15 @@ A: tomcat > conf > 打开 logging.properties 将所有 UTF-8 替换成 GBK
 
 Q:命令行启动与关闭
 A:tomcat > bin > cmd
-  startup.bat
-  shutdown.bat
+  Windows
+    startup.bat
+    shutdown.bat
+  Linux
+    ./startup.sh
+    ./shutdown.sh
   浏览器输入 localhost:8080
+
+
 
 Q:启动 Tomcat 报错"java: 错误: 不支持发行版本 5"?
 A: 

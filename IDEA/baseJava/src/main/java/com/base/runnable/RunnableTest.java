@@ -1,4 +1,4 @@
-package com.base.runnableTest;
+package com.base.runnable;
 
 public class RunnableTest implements Runnable{
     private Thread t;

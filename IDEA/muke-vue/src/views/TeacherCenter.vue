@@ -295,6 +295,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
+import global from './common.vue'
 export default {
   name: "TeacherCenter",
   components: {
@@ -335,7 +336,7 @@ export default {
     saveTeacherChanges() {
       var that=this;
         $.ajax({
-          url: 'http://localhost:8080/changeTeacherInformation',
+          url: global.httpUrl+'/changeTeacherInformation',
           type: 'post',
           data: {
             "teacherEmail" : $("#teacherEmail").val() ,
@@ -384,7 +385,7 @@ export default {
           "oldPassword" : oldPassword,
           "newPassword" : newPassword};
         $.ajax({
-          url: 'http://localhost:8080/changePassword',
+          url: global.httpUrl+'/changePassword',
           type: 'post',
           data: dataStr,
           dataType: 'json',
@@ -408,7 +409,7 @@ export default {
     teacherExitXuesi() {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/exit',
+        url: global.httpUrl+'/exit',
         success: function (json) {
           location.href = '/';
         },
@@ -427,7 +428,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getTeacherCourseMessage',
+        url: global.httpUrl+'/getTeacherCourseMessage',
         data: {'pageNum': page - 1},
         dataType: 'json',
         beforeSend: function () {
@@ -461,7 +462,7 @@ export default {
       // alert("你确定要对"+id+"执行"+sign+"操作吗?");
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/accountManagement',
+        url: global.httpUrl+'/accountManagement',
         data: {'id': courseId, 'sign': sign,'category':category},
         dataType: 'json',
         success: function (json) {
@@ -488,7 +489,7 @@ export default {
     addCourseTest() {
       //在此之前判断该教师是否已发布过课程
       $.ajax({
-        url: 'http://localhost:8080/checkTeacherCourse',
+        url: global.httpUrl+'/checkTeacherCourse',
         type: 'post',
         dataType: 'json',
         success: function (json) {
@@ -517,7 +518,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getTestMessage',
+        url: global.httpUrl+'/getTestMessage',
         data: {'pageNum': page - 1},
         dataType: 'json',
         beforeSend: function () {
@@ -544,7 +545,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/accountManagement',
+        url: global.httpUrl+'/accountManagement',
         data: {'id': testId, 'sign': sign,'category':category},
         dataType: 'json',
         success: function (json) {
@@ -571,7 +572,7 @@ export default {
     addCourseResources() {
       //在此之前判断该教师是否已发布过课程
       $.ajax({
-        url: 'http://localhost:8080/checkTeacherCourse',
+        url: global.httpUrl+'/checkTeacherCourse',
         type: 'post',
         dataType: 'json',
         success: function (json) {
@@ -601,7 +602,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCourseResource',
+        url: global.httpUrl+'/getCourseResource',
         data: {'pageNum': page - 1},
         dataType: 'json',
         beforeSend: function () {
@@ -625,7 +626,7 @@ export default {
       // alert("你确定要对"+id+"执行"+sign+"操作吗?");
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/accountManagement',
+        url: global.httpUrl+'/accountManagement',
         data: {'id': resourceId, 'sign': sign,'category':category},
         dataType: 'json',
         success: function (json) {
@@ -649,7 +650,7 @@ export default {
       // 页面加载完后立即自动执行
       // 判断是否已登录
       $.ajax({
-        url: 'http://localhost:8080/getTeacherMessage',
+        url: global.httpUrl+'/getTeacherMessage',
         type: 'post',
         dataType: 'json',
         success: function (response) {

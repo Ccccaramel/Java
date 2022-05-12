@@ -136,6 +136,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 export default {
   name: "CourseTest",
   data(){
@@ -221,7 +222,7 @@ export default {
       var that=this;
       //将课程id和中文名放入下拉菜单中
       $.ajax({
-        url: 'http://localhost:8080/getCourseIdName',
+        url: global.httpUrl+'/getCourseIdName',
         type: 'post',
         dataType: 'json',
         success: function (json) {
@@ -259,7 +260,7 @@ export default {
       var form = document.getElementById("add_test");
       var fd = new FormData(form);
       $.ajax({
-        url: "http://localhost:8080/saveTest",
+        url: global.httpUrl+"/saveTest",
         type: 'POST',
         data: fd,
         processData: false,  // 告诉jQuery不要去处理发送的数据
@@ -324,7 +325,7 @@ export default {
      **/
     checkIdentitl(testId) {
       $.ajax({
-        url: 'http://localhost:8080/editTestIdentitlCheck',
+        url: global.httpUrl+'/editTestIdentitlCheck',
         type: 'post',
         dataType: 'json',
         data: {'testId': testId},
@@ -343,7 +344,7 @@ export default {
     loadingTest(testId) {
       var that=this;
       $.ajax({
-        url: 'http://localhost:8080/getTestIntroduction',
+        url: global.httpUrl+'/getTestIntroduction',
         type: 'post',
         dataType: 'json',
         data: {'testId': testId},

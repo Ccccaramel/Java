@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 export default {
   name: "CourseResource",
   data(){
@@ -79,7 +80,7 @@ export default {
       var form = document.getElementById("add_course_resource");
       var fd = new FormData(form);
       $.ajax({
-        url: "http://localhost:8080/saveCourseResource",
+        url: global.httpUrl+"/saveCourseResource",
         type: 'POST',
         data: fd,
         processData: false,  // 告诉jQuery不要去处理发送的数据
@@ -109,7 +110,7 @@ export default {
     $(function () {
       //将课程id和中文名放入下拉菜单中
       $.ajax({
-        url: 'http://localhost:8080/getCourseIdName',
+        url: global.httpUrl+'/getCourseIdName',
         type: 'post',
         dataType: 'json',
         success: function (json) {

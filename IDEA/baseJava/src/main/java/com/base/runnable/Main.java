@@ -1,4 +1,4 @@
-package com.base.runnableTest;
+package com.base.runnable;
 
 public class Main {
     public static void main(String[] args){

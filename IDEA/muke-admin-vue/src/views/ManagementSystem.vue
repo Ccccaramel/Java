@@ -650,6 +650,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
@@ -704,7 +705,7 @@ export default {
     saveGMChanges() {
       $.ajax({
         type : 'POST',
-        url : "http://localhost:8080/saveGMChanges",
+        url : global.httpUrl+"/saveGMChanges",
         data : {
           'gmEmail' : $("#GMEmail").val(),
           'gmTel': $("#GMTel").val()
@@ -728,7 +729,7 @@ export default {
     gmLoginCheck() {
       $.ajax({
         type : 'POST',
-        url : "http://localhost:8080/loginCheck",
+        url : global.httpUrl+"/loginCheck",
         dataType : 'json',
         success : function(json) {
           console.log("账号状态检查");
@@ -754,7 +755,7 @@ export default {
       }else{
         $.ajax({
           type : 'POST',
-          url : "http://localhost:8080/changeGMPassword",
+          url : global.httpUrl+"/changeGMPassword",
           data : {
             'oldPassword' : GMopw,
             'newPassword': GMnpw
@@ -818,7 +819,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAppointTypeGMMessage',
+        url: global.httpUrl+'/getAppointTypeGMMessage',
         data: {'pageNum': page - 1, 'gmPower': gmPower, 'key': key},
         dataType: 'json',
         beforeSend: function () {
@@ -848,7 +849,7 @@ export default {
     //管理员退出
     GMExitXuesi() {
       $.ajax({
-        url: "http://localhost:8080/gmExit",
+        url: global.httpUrl+"/gmExit",
         type: 'post',
         success: function () {
           alert("成功退出!");
@@ -868,7 +869,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCoursePromotion',
+        url: global.httpUrl+'/getCoursePromotion',
         data: {'pageNum': page - 1},
         dataType: 'json',
         success: function (json) {
@@ -906,7 +907,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: "http://localhost:8080/accountManagement",
+        url: global.httpUrl+"/accountManagement",
         data: {'id': id, 'sign': sign, 'category': category},
         dataType: 'json',
         success: function (json) {
@@ -956,7 +957,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAllUserMessage',
+        url: global.httpUrl+'/getAllUserMessage',
         data: {'pageNum': page - 1, 'key': key},
         dataType: 'json',
         // beforeSend: function () {
@@ -999,7 +1000,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAllTeacher',
+        url: global.httpUrl+'/getAllTeacher',
         data: {'pageNum': page-1 , 'key': key},
         dataType: 'json',
         beforeSend: function () {
@@ -1028,7 +1029,7 @@ export default {
         alert("不可为空！");
       } else {
         $.ajax({
-          url: "http://localhost:8080/addCourseType",
+          url: global.httpUrl+"/addCourseType",
           type: 'post',
           dataType: 'json',
           data: {"newType": NewType},
@@ -1062,7 +1063,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCourseType',
+        url: global.httpUrl+'/getCourseType',
         data: {'pageNum': page - 1},
         dataType: 'json',
         // beforeSend: function () {
@@ -1102,7 +1103,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCourseResourceMessage',
+        url: global.httpUrl+'/getCourseResourceMessage',
         data: {'pageNum': page - 1, 'key': key},
         dataType: 'json',
         beforeSend: function () {
@@ -1146,7 +1147,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAllTestMessage',
+        url: global.httpUrl+'/getAllTestMessage',
         data: {'pageNum': page - 1, 'key': key},
         dataType: 'json',
         beforeSend: function () {
@@ -1173,7 +1174,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCourseMessage',
+        url: global.httpUrl+'/getCourseMessage',
         data: {'pageNum': page - 1, 'key': key},
         dataType: 'json',
         beforeSend: function () {
@@ -1213,7 +1214,7 @@ export default {
         alert("不可为空！");
       } else {
         $.ajax({
-          url: "http://localhost:8080/addCoursePromotion",
+          url: global.httpUrl+"/addCoursePromotion",
           data:{"newPromotion":newPromotion},
           type: 'post',
           dataType:'json',
@@ -1239,7 +1240,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getSuggestions',
+        url: global.httpUrl+'/getSuggestions',
         data: {'pageNum': page - 1},
         dataType: 'json',
         beforeSend: function () {
@@ -1271,7 +1272,7 @@ export default {
     setInterval(this.gmLoginCheck, "20000");  // 每10秒进行一次账号状态检查
     $(function(){  // 获取管理员的基本信息
       $.ajax({
-        url: 'http://localhost:8080/getGMMessage',
+        url: global.httpUrl+'/getGMMessage',
         type: 'post',
         dataType: 'json',
         success: function (response) {
@@ -1300,7 +1301,7 @@ export default {
 $(function () {
   $.ajax({
     type : 'POST',
-    url : "http://localhost:8080/loginCheck",
+    url : global.httpUrl+"/loginCheck",
     dataType : 'json',
     success : function(json) {
       console.log("loginCheck>result:" + json);

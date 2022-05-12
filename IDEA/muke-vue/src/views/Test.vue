@@ -149,7 +149,7 @@ export default {
       var form = document.getElementById("submits_test");
       var fd = new FormData(form);
       $.ajax({
-        url: 'http://localhost:8080/savePapers',
+        url: global.httpUrl+'/savePapers',
         type: 'post',
         dataType: 'json',
         data: fd, testId, courseId, totalScore,
@@ -172,7 +172,7 @@ export default {
       if (typeof (that.answerSheetId) != 'undefined') {
         that.isTest=false;
         $.ajax({
-          url: 'http://localhost:8080/getUserAppointTestAnswer',
+          url: global.httpUrl+'/getUserAppointTestAnswer',
           type: 'post',
           dataType: 'json',
           data: {'testId': that.testId, 'answerSheetId': that.answerSheetId},
@@ -236,7 +236,7 @@ export default {
     $(function () {
       //testId存有测试卷id，立即获取测试卷所有信息---课程id、课程名、测试卷总分值、测试卷及格线、测试卷的所有小题以及小题相应的选项、分值、正确答案、解析
       $.ajax({
-        url: 'http://localhost:8080/getTest',
+        url: global.httpUrl+'/getTest',
         type: 'post',
         dataType: 'json',
         data: {},

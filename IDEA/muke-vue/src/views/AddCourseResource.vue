@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 export default {
   name: "AddCourseResource",
   data(){
@@ -67,7 +68,7 @@ export default {
       var form = document.getElementById("add_course_resource");
       var fd = new FormData(form);
       $.ajax({
-        url: "http://localhost:8080/userSaveCourseResource",
+        url: global.httpUrl+"/userSaveCourseResource",
         type: 'POST',
         data: fd,
         processData: false,  // 告诉jQuery不要去处理发送的数据
@@ -89,7 +90,7 @@ export default {
       // 获取课程id，此id只有通过已登录的学生账号进入course.html点击【我要上传】并接受检测后才能将课程id存入session
       // 若直接进入将无法获取id，则可判断为非法进入
       $.ajax({
-        url: "http://localhost:8080/getCourseId",
+        url: global.httpUrl+"/getCourseId",
         type: 'POST',
         dataType: 'json',
         success: function (json) {

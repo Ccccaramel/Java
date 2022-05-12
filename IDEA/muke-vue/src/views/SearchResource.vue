@@ -58,7 +58,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-
+import global from './common.vue'
 export default {
   name: "SearchResource",
   components:{
@@ -82,7 +82,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/download',
+        url: global.httpUrl+'/download',
         data: {'resourceId': resourceId},
         //返回数据类型
         dataType: 'json',
@@ -102,7 +102,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/searchResource',
+        url: global.httpUrl+'/searchResource',
         /**
          * 向后端传递的数据
          * 搜索的关键字以及当前页码

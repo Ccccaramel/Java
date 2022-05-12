@@ -140,6 +140,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 export default {
   name: "CourseManagement",
   data(){
@@ -312,7 +313,7 @@ export default {
       var form = document.getElementById("add_course");
       var fd = new FormData(form);
       $.ajax({
-        url: "http://localhost:8080/saveCourse",
+        url: global.httpUrl+"/saveCourse",
         type: 'POST',
         data: fd, edit,
         processData: false,  // 告诉jQuery不要去处理发送的数据
@@ -340,7 +341,7 @@ export default {
     checkIdentitl(courseId) {
       console.log("checkIdentitl"+courseId);
       $.ajax({
-        url: 'http://localhost:8080/editCourseIdentitlCheck',
+        url: global.httpUrl+'/editCourseIdentitlCheck',
         type: 'post',
         dataType: 'json',
         data: {'courseId': courseId},
@@ -380,7 +381,7 @@ export default {
         $("#courseId").attr("value", that.courseId);
         console.log("undefined?");
         $.ajax({
-          url: 'http://localhost:8080/getCourseIntroduction',
+          url: global.httpUrl+'/getCourseIntroduction',
           type: 'post',
           dataType: 'json',
           data: {'courseId': that.courseId},
@@ -497,7 +498,7 @@ export default {
     $(function () {
       //将课程类别从数据库中调出
       $.ajax({
-        url: 'http://localhost:8080/getAllAccounts',
+        url: global.httpUrl+'/getAllAccounts',
         type: 'post',
         dataType: 'json',
         success: function (json) {

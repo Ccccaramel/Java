@@ -30,6 +30,7 @@
 
 <!-- src="../assets/canvas" -->
 <script>
+import global from './common.vue'
 function check() {
   var id = /^[0-9]{4}$/;
   var te = /^[0-9]{11}$/;
@@ -99,7 +100,7 @@ export default {
     submitGMLogin() {
       $.ajax({
         type : 'POST',
-        url : "http://localhost:8080/gmLogin",
+        url : global.httpUrl+"/gmLogin",
         data : {
           'account' : $("#GMAccount").val(),
           'password' : $("#GMPassWord").val(),

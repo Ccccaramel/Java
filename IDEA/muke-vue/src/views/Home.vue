@@ -160,7 +160,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-
+import global from './common.vue'
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
@@ -193,7 +193,7 @@ export default {
         type: 'POST',
         // data: {"amount": 13},
         //后端URL
-        url: 'http://localhost:8080/homeGetCourseType',
+        url: global.httpUrl+'/homeGetCourseType',
         //返回数据类型
         dataType: 'json',
         success: function (json) {
@@ -211,7 +211,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getPromotionCourse',
+        url: global.httpUrl+'/getPromotionCourse',
         //返回数据类型
         dataType: 'json',
         success: function (json) {
@@ -227,7 +227,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getPopularCourses',
+        url: global.httpUrl+'/getPopularCourses',
         //返回数据类型
         dataType: 'json',
         success: function (json) {
@@ -244,7 +244,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getNewCourses',
+        url: global.httpUrl+'/getNewCourses',
         //返回数据类型
         dataType: 'json',
         //数据完成加载前提示文字(一般很快看不到)
@@ -264,7 +264,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getITCourses',
+        url: global.httpUrl+'/getITCourses',
         //返回数据类型
         dataType: 'json',
         //数据完成加载前提示文字(一般很快看不到)
@@ -284,7 +284,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getLiteraryHistoryCourses',
+        url: global.httpUrl+'/getLiteraryHistoryCourses',
         //返回数据类型
         dataType: 'json',
         //数据完成加载前提示文字(一般很快看不到)

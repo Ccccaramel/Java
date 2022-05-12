@@ -134,6 +134,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
+import global from './common.vue'
 export default {
   name: "Course",
   data(){
@@ -179,7 +180,7 @@ export default {
     loadingIntroduction(courseId) {
       var that=this;
       $.ajax({
-        url: 'http://localhost:8080/getAppointCourseIntroduction',
+        url: global.httpUrl+'/getAppointCourseIntroduction',
         type: 'post',
         dataType: 'json',
         data: {"courseId": courseId},
@@ -220,7 +221,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAppointCourseResource',
+        url: global.httpUrl+'/getAppointCourseResource',
         data: {'courseId': courseId, 'userType': 1},
         dataType: 'json',
         success: function (json) {
@@ -239,7 +240,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAppointCourseResource',
+        url: global.httpUrl+'/getAppointCourseResource',
         data: {'courseId': courseId, 'userType': 0},
         dataType: 'json',
         success: function (json) {
@@ -258,7 +259,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAppointTestInformation',
+        url: global.httpUrl+'/getAppointTestInformation',
         data: {'courseId': courseId},
         dataType: 'json',
         beforeSend: function () {
@@ -283,7 +284,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/changeCollectionCourse',
+        url: global.httpUrl+'/changeCollectionCourse',
         data: {'sign': that.pass, "courseId": that.courseId},
         dataType: 'json',
         success: function (json) {
@@ -306,7 +307,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/saveVideoMessage',
+        url: global.httpUrl+'/saveVideoMessage',
         /**
          * 向后端传递的数据
          * 搜索的关键字以及当前页码
@@ -327,7 +328,7 @@ export default {
     userUploadCourseResource() {
       var that=this;
       $.ajax({
-        url: 'http://localhost:8080/saveCourseId',
+        url: global.httpUrl+'/saveCourseId',
         type: 'post',
         dataType: 'json',
         data: {"courseId": that.courseId},
@@ -349,7 +350,7 @@ export default {
     //点击进入测试
     goTest(testId) {
       $.ajax({
-        url: 'http://localhost:8080/accountChecking',
+        url: global.httpUrl+'/accountChecking',
         type: 'post',
         dataType: 'json',
         success: function (json) {

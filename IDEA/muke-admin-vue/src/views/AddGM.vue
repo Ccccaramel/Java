@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import global from './common.vue'
 export default {
   name: "AddGM",
   data(){
@@ -87,7 +88,7 @@ export default {
       console.log(a+"---"+b);
       var that=this;
       $.ajax({
-        url: 'http://localhost:8080/administratorAccountRegistration',
+        url: global.httpUrl+'/administratorAccountRegistration',
         type: 'post',
         dataType: 'json',
         data : {
@@ -110,7 +111,7 @@ export default {
       var that = this;
       //获取与管理员权限相同或低于的权限列表，并填入表单中
       $.ajax({
-        url: 'http://localhost:8080/getGMPowerTabel',
+        url: global.httpUrl+'/getGMPowerTabel',
         type: 'post',
         dataType: 'json',
         success: function (json) {

@@ -50,3 +50,6 @@ A:File -> Settings -> Editor -> File Encodings
 
 查看一个方法的实现处
   Ctrl+Alt+单击
+
+替换
+  Ctrl+r

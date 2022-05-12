@@ -51,6 +51,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
+import global from './common.vue'
 export default {
   name: "SearchCourse",
   data(){
@@ -70,7 +71,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/sourchCourse',
+        url: global.httpUrl+'/sourchCourse',
         data: {'key': that.key, 'pageNum': page - 1},
         //返回数据类型
         dataType: 'json',
@@ -101,7 +102,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/heatsUp',
+        url: global.httpUrl+'/heatsUp',
         data: {'courseId': courseId},
         success: function () {
           location.href = "/Course?courseId=" + courseId;

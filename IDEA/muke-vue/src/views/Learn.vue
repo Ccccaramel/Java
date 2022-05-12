@@ -82,6 +82,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
+import global from './common.vue'
 export default {
   name: "Learn",
   data(){
@@ -122,7 +123,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/learnDataImport',
+        url: global.httpUrl+'/learnDataImport',
         dataType: 'json',
         data: {'courseId': courseId, 'chapterId': chapterId, 'sectionId': sectionId},
         success: function (json) {
@@ -150,7 +151,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getCourseNote',
+        url: global.httpUrl+'/getCourseNote',
         data: {'courseId': that.courseId,'pageNum': page - 1},
         dataType: 'json',
         success: function (json) {
@@ -180,7 +181,7 @@ export default {
       }
       // alert(note);
       $.ajax({
-        url: "http://localhost:8080/saveNote",
+        url: global.httpUrl+"/saveNote",
         type: 'POST',
         data: {"note":note,"courseId":that.courseId},
         dataType: 'json',
@@ -220,7 +221,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getVideoMessage',
+        url: global.httpUrl+'/getVideoMessage',
         dataType: 'json',
         success: function (json) {
           if(json.state==false){

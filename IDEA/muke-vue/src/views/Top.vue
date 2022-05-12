@@ -238,13 +238,13 @@
 </template>
 
 <script>
-
+import global from './common.vue'
 export default {
   name: "Top",
   methods:{
     //注册数据检查
     registeredCheck() {
-      var em = /^[0-9a-zA-Z]{4,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
+      var em = /^[0-9a-zA-Z]{4 ,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
       var te = /^[0-9a-zA-Z]{11}$/;
       if ($("#registeredTeacher")[0].checked) {
         if ($("#rTeacherNmae").val() == "") {
@@ -310,6 +310,8 @@ export default {
     },
     //登录按钮响应
     submitLogin() {
+      console.log(">>>"+global.httpUrl);
+
       //数据检查
       var loginMode = loginCheck();
       var that = this;
@@ -337,7 +339,7 @@ export default {
           withCredentials: true
         },
         crossDomain:true, //设置跨域为true
-        url : "http://localhost:8080/login",
+        url : global.httpUrl+"/login",
         data :post_method,
         dataType : 'json',
         success : function(json) {
@@ -386,7 +388,7 @@ export default {
         }
         console.log("checked:"+$("#registeredTeacher")[0].checked+",post_method:"+post_method);
         $.ajax({
-          url: "http://localhost:8080/registered",
+          url: global.httpUrl+"/registered",
           data:post_method,
           type: 'post',
           dataType:'json',
@@ -415,7 +417,7 @@ export default {
           withCredentials: true
         },
         crossDomain:true, //设置跨域为true
-        url: "http://localhost:8080/cookieExamine",
+        url: global.httpUrl+"/cookieExamine",
         type: 'POST',
         dataType: 'json',
         success: function (json) {
@@ -552,7 +554,7 @@ export default {
       var messageText=$("#message-text").val();
       console.log("messageText:"+messageText);
       $.ajax({
-        url: "http://localhost:8080/saveFeedBack",
+        url: global.httpUrl+"/saveFeedBack",
         type: 'POST',
         data: {'messageText': messageText},
         // processData: false,  // 告诉jQuery不要去处理发送的数据    它会使 注解方式获取数据 失效!
@@ -589,7 +591,7 @@ export default {
 // 判断是否已登录
     $(function () {
       $.ajax({
-        url: 'http://localhost:8080/userState',
+        url: global.httpUrl+'/userState',
         type: 'POST',
         dataType:'json',
         success: function (response) {
@@ -605,7 +607,7 @@ export default {
           }
         },
         error:function(xhr,status,error){
-          alert("判断是否已登录校验失败!");
+          alert("判断是否已登录校验失败!"+global.httpUrl);
         }
       });
     });

@@ -252,6 +252,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
+import global from './common.vue'
 export default {
   name: "StudentCenter",
   data(){
@@ -269,7 +270,7 @@ export default {
     //个人信息修改
     saveChanges() {
       $.ajax({
-        url: 'http://localhost:8080/changeUserInformation',
+        url: global.httpUrl+'/changeUserInformation',
         type: 'POST',
         data:{"userName":$("#userName").val(),
           "userEmail":$("#userEmail").val(),
@@ -292,7 +293,7 @@ export default {
     userExitXuesi() {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/exit',
+        url: global.httpUrl+'/exit',
         success: function (json) {
           location.href = '/';
         },
@@ -309,7 +310,7 @@ export default {
       var userNewPasswordR = $("#userNewPasswordR").val();
       if(this.checkPassword(userOldPassword,userNewPassword,userNewPasswordR)){
         $.ajax({
-          url: 'http://localhost:8080/changePassword',
+          url: global.httpUrl+'/changePassword',
           type: 'POST',
           data:{"oldPassword":$("#userOldPassword").val(),
             "newPassword":$("#userNewPassword").val(),
@@ -358,7 +359,7 @@ export default {
         //数据提交方式
         type: 'POST',
         //后端URL
-        url: 'http://localhost:8080/getUserCourseCollection',
+        url: global.httpUrl+'/getUserCourseCollection',
         /**
          * 向后端传递的数据
          * 搜索的关键字以及当前页码
@@ -397,7 +398,7 @@ export default {
       $.ajax({
         //数据提交方式
         type: 'POST',
-        url: 'http://localhost:8080/getCourseResource',
+        url: global.httpUrl+'/getCourseResource',
         data: {'pageNum': page - 1},
         //返回数据类型
         dataType: 'json',
@@ -423,7 +424,7 @@ export default {
       var that=this;
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/accountManagement',
+        url: global.httpUrl+'/accountManagement',
         data: {'id': resourceId, 'sign': sign,'category':category},
         dataType: 'json',
         success: function (json) {
@@ -444,7 +445,7 @@ export default {
       alert("page:"+page);
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/getAppointUserAchievementInformation',
+        url: global.httpUrl+'/getAppointUserAchievementInformation',
         data: {'pageNum': page - 1},
         dataType: 'json',
         beforeSend: function () {
@@ -466,7 +467,7 @@ export default {
     answerDetails(testId, answerSheetId) {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/saveAnswerSheetId',
+        url: global.httpUrl+'/saveAnswerSheetId',
         data: {'testId': testId,'answerSheetId':answerSheetId},
         dataType: 'json',
         success: function () {
@@ -487,7 +488,7 @@ export default {
     // 判断是否已登录
     $(function () {
       $.ajax({
-        url: 'http://localhost:8080/getUserMessage',
+        url: global.httpUrl+'/getUserMessage',
         type: 'post',
         dataType: 'json',
         success: function (response) {

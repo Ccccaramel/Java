@@ -23,6 +23,8 @@
         where courseId=#{courseId};
     </select>
     <select id="getAllCoursePromotionMessage" resultMap="map1">
-        SELECT * from course_promotion;
+        SELECT * from course_promotion c1
+        join course c2 on c1.courseId=c2.courseId
+        where c2.courseStatus=1;
     </select>
 </mapper>

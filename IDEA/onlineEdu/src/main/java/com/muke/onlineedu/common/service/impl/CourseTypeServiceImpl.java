@@ -1,6 +1,7 @@
 package com.muke.onlineedu.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.muke.onlineedu.admin.entity.Course;
 import com.muke.onlineedu.common.dao.CourseTypeDao;
 import com.muke.onlineedu.common.entity.CourseType;
 import com.muke.onlineedu.common.service.CourseTypeService;

@@ -31,18 +31,19 @@
       </div>
       <hr>
       <!--页码-->
-      <div id="pagecount"></div>
-      <nav aria-label="Page navigation ">
-        <ul class="pagination">
-          <li class="page-item active"><span class="page-link">结果总数:{{total}}</span></li>
-          <li class="page-item active"><span class="page-link">总页数:{{totalPage}}</span></li>
-          <li class="page-item"><a class="page-link" href="#" @click="loadingCourse(1)">Previous</a></li>
-          <li class="page-item" aria-current="page" v-for="i in totalPage">
-            <a class="page-link" href="#" v-if="page+3>i && page-3<i" @click="loadingCourse(i)">{{i}}</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#" @click="loadingCourse(totalPage)">Last</a></li>
-        </ul>
-      </nav>
+      <div id="pagecount">
+        <nav aria-label="Page navigation ">
+          <ul class="pagination">
+            <li class="page-item active"><span class="page-link">结果总数:{{total}}</span></li>
+            <li class="page-item active"><span class="page-link">总页数:{{totalPage}}</span></li>
+            <li class="page-item"><a class="page-link" href="#" @click="loadingCourse(1)">Previous</a></li>
+            <li class="page-item" aria-current="page" v-for="i in totalPage">
+              <a class="page-link" href="#" v-if="page+3>i && page-3<i" @click="loadingCourse(i)">{{i}}</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#" @click="loadingCourse(totalPage)">Last</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
     <Botton></Botton>
   </div>
@@ -51,7 +52,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "SearchCourse",
   data(){
@@ -98,6 +99,7 @@ export default {
 
     //点击课程名获取课程名称，跳转到课程介绍页面
     introduce(courseId) {
+      var that=this;
       $.ajax({
         //数据提交方式
         type: 'POST',
@@ -105,7 +107,8 @@ export default {
         url: global.httpUrl+'/heatsUp',
         data: {'courseId': courseId},
         success: function () {
-          location.href = "/Course?courseId=" + courseId;
+          // location.href = "/Course?courseId=" + courseId;
+          that.$router.push("/Course?courseId=" + courseId);
         },
         error: function () {
           alert("数据加载失败");
@@ -130,7 +133,11 @@ export default {
       that.key = decodeURI(keyStr);
       if(typeof (that.key)==="undefined"){
         alert("非法访问!");
-        window.open("/","_self").close();
+        // window.open("/","_self").close();
+        const { href } = that.$router.resolve({
+          path: "/",
+        });
+        window.open(href, '_self').close();
       }
       //此页面第一次加载将会显示第一页的搜索结果
       that.loadingCourse(1);

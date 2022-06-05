@@ -3,7 +3,7 @@ package com.muke.onlineedu.admin.controller;
 import com.google.gson.Gson;
 import com.muke.onlineedu.admin.entity.*;
 import com.muke.onlineedu.admin.service.*;
-import com.muke.onlineedu.common.tool.ResourcePathUtils;
+import com.muke.onlineedu.common.tool.CommonConfig;
 import com.muke.onlineedu.common.tool.ResourceUploadAndDownload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
@@ -49,6 +49,8 @@ public class UserController {
     UserAchievementService userAchievementService;
     @Autowired
     UserResultsService userResultsService;
+    @Autowired
+    CommonConfig commonConfig;
 
     @ResponseBody
     @RequestMapping("/getUserMessage")
@@ -216,16 +218,9 @@ public class UserController {
         int teacherId=(int) servletContext.getAttribute("id");
         boolean teacher=(boolean) servletContext.getAttribute("teacher");
 
-        File photoDirFile= ResourcePathUtils.getPhotoDirFile();
-        File vedioDirFile= ResourcePathUtils.getVedioDirFile();
-        File fileDirFile=ResourcePathUtils.getFileDirFile();
-
-        try {
-            String basePath = ResourceUtils.getURL("classpath:").getPath();
-            System.out.println("basepath:"+basePath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        File photoDirFile= commonConfig.getPhotoDirFile();
+        File videoDirFile= commonConfig.getVideoDirFile();
+        File fileDirFile= commonConfig.getFileDirFile();
 
         Map<String,String> data=new HashMap<>();
 
@@ -252,10 +247,10 @@ public class UserController {
         Map<Object,Object> result=new HashMap<>();
         Gson gson=new Gson();
         if(teacher){
-            ResourceUploadAndDownload resourceUploadAndDownload=new ResourceUploadAndDownload(photoDirFile, vedioDirFile,fileDirFile);
+            ResourceUploadAndDownload resourceUploadAndDownload=new ResourceUploadAndDownload(photoDirFile, videoDirFile,fileDirFile);
             data.putAll(resourceUploadAndDownload.resourceUpload(fileMap,teacherId));  //将表单解析,整理资源并存储,将表单信息放入 Map 中并返回
             System.out.println("resource:"+data);
-            courseEntry(teacherId,data,vedioDirFile.getPath());  //将上述返回的表单信息提取存入数据库中
+            courseEntry(teacherId,data,videoDirFile.getPath());  //将上述返回的表单信息提取存入数据库中
             result.put("result", true);
         }
         else{
@@ -436,9 +431,9 @@ public class UserController {
         int id=(int) servletContext.getAttribute("id");
         boolean teacher= (boolean) servletContext.getAttribute("teacher");
 
-        File photoDirFile= ResourcePathUtils.getPhotoDirFile();
-        File vedioDirFile= ResourcePathUtils.getVedioDirFile();
-        File fileDirFile=ResourcePathUtils.getFileDirFile();
+        File photoDirFile= commonConfig.getPhotoDirFile();
+        File vedioDirFile= commonConfig.getVideoDirFile();
+        File fileDirFile= commonConfig.getFileDirFile();
 
         // 表单数据
         Enumeration<String> parameterNames = request.getParameterNames();

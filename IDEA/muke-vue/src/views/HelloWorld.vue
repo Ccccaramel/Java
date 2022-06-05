@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: 'HelloWorld',
   data () {

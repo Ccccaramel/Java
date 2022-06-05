@@ -2,14 +2,11 @@ package com.muke.onlineedu.admin.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.muke.onlineedu.admin.dao.CoursePromotionDao;
-import com.muke.onlineedu.admin.entity.Course;
 import com.muke.onlineedu.admin.entity.CoursePromotion;
 import com.muke.onlineedu.admin.service.CoursePromotionService;
-import com.muke.onlineedu.common.tool.ResourcePathUtils;
+import com.muke.onlineedu.common.tool.CommonConfig;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("coursePromotionService")
@@ -41,7 +38,7 @@ public class CoursePromotionServiceImpl extends ServiceImpl<CoursePromotionDao, 
     public List<CoursePromotion> getAllCoursePromotionMessage(String url) {
         List<CoursePromotion> coursePromotionList = baseMapper.getAllCoursePromotionMessage();
         for(CoursePromotion coursePromotion:coursePromotionList){
-            String imgAddress=ResourcePathUtils.getPhotoPath(url)+coursePromotion.getCourse().getCourseImgName();
+            String imgAddress= url+coursePromotion.getCourse().getCourseImgName();
             coursePromotion.getCourse().setImageURL(imgAddress);
         }
         return coursePromotionList;

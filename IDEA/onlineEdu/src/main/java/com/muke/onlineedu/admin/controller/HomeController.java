@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.muke.onlineedu.admin.entity.*;
 import com.muke.onlineedu.admin.service.*;
 import com.muke.onlineedu.common.service.CourseTypeService;
-import com.muke.onlineedu.common.tool.ResourcePathUtils;
+import com.muke.onlineedu.common.tool.CommonConfig;
 import com.muke.onlineedu.common.tool.ResourceUploadAndDownload;
 import com.muke.onlineedu.common.tool.ServerConfig;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -57,6 +58,8 @@ public class HomeController {
     UserAchievementService userAchievementService;
     @Autowired
     UserResultsService userResultsService;
+    @Autowired
+    CommonConfig commonConfig;
 
     public String getUrl() {
         return  serverConfig.getUrl();
@@ -134,10 +137,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getTeacherId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","1");
+                            Cookie cookieTeacher=new Cookie("teacher","true");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(30);
                             cookiePassword.setMaxAge(30);
@@ -173,10 +176,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getTeacherId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","1");
+                            Cookie cookieTeacher=new Cookie("teacher","true");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(30);
                             cookiePassword.setMaxAge(30);
@@ -212,10 +215,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getTeacherId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","1");
+                            Cookie cookieTeacher=new Cookie("teacher","true");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(30);
                             cookiePassword.setMaxAge(30);
@@ -255,10 +258,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getUserId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","0");
+                            Cookie cookieTeacher=new Cookie("teacher","false");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(30);
                             cookiePassword.setMaxAge(30);
@@ -298,10 +301,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getUserId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","0");
+                            Cookie cookieTeacher=new Cookie("teacher","false");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(30);
                             cookiePassword.setMaxAge(30);
@@ -337,10 +340,10 @@ public class HomeController {
                         servletContext.setAttribute("state", true);
                         System.out.println("账号以及密码正确");
                         if(loginRememberMe) {  //记住密码
-                            Cookie cookieId= new Cookie("id",String.valueOf(user.getUserId()));
+                            Cookie cookieId= new Cookie("account",account);
                             Cookie cookiePassword=new Cookie("password",password);
                             Cookie cookieState=new Cookie("state","true");
-                            Cookie cookieTeacher=new Cookie("teacher","0");
+                            Cookie cookieTeacher=new Cookie("teacher","false");
                             Cookie cookieLoginRememberMe=new Cookie("loginRememberMe","true");
                             cookieId.setMaxAge(300);
                             cookiePassword.setMaxAge(300);
@@ -396,21 +399,21 @@ public class HomeController {
         System.out.println(">"+username);
 
         boolean state=false;
-        int id = 0;
+        String account = null;
         boolean teacher = false;
         boolean RememberMe = false;
         String password = null;
         if(cookies!=null) {
             for(Cookie c:cookies) {
                 String name=c.getName();  //获取cookie名称
-                if("id".equals(name)) {
-                    id=Integer.parseInt(c.getValue());  //获取cookie值并存入
+                if("account".equals(name)) {
+                    account=c.getValue();  //获取cookie值并存入
                 }
                 if("password".equals(name)) {
                     password = c.getValue();  //获取cookie值并存入
                 }
                 if("teacher".equals(name)) {
-                    RememberMe=Boolean.valueOf(c.getValue()).booleanValue();  //获取cookie值并存入
+                    teacher=Boolean.valueOf(c.getValue()).booleanValue();  //获取cookie值并存入
                 }
                 if("RememberMe".equals(name)) {
                     RememberMe=Boolean.valueOf(c.getValue()).booleanValue();  //获取cookie值并存入
@@ -424,7 +427,7 @@ public class HomeController {
         }
         data.put("state", state);
         if(state==true) {
-            data.put("id", id);
+            data.put("account", account);
             data.put("password", password);
             data.put("teacher", teacher);
             data.put("loginRememberMe", RememberMe);
@@ -458,18 +461,22 @@ public class HomeController {
     public String getPromotionCourse(){
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-//        http://localhost:8080/upload/photo/2022040109585410006443.jpg
-        data.put("promotionCourseList",coursePromotionService.getAllCoursePromotionMessage(serverConfig.getUrl()));
+        data.put("promotionCourseList",coursePromotionService.getAllCoursePromotionMessage(commonConfig.getPhotoPath()));
         return gson.toJson(data);
     }
 
     @ResponseBody
     @RequestMapping("/homeGetCourseType")
-    public String homeGetCourseType(){
-        int amount=13;
+    public String homeGetCourseType(String amount){
+        int amountNum;
+        if(amount==null) {
+            amountNum=1;
+        }else {
+            amountNum=Integer.parseInt(amount);
+        }
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-        data.put("partCourseTypeList",courseTypeService.homeGetCourseType(amount));
+        data.put("partCourseTypeList",courseTypeService.homeGetCourseType(amountNum));
         return gson.toJson(data);
     }
 
@@ -479,7 +486,7 @@ public class HomeController {
         int amount=6;
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-        data.put("popularCourseList",courseService.getPopularCourses(serverConfig.getUrl(),amount));
+        data.put("popularCourseList",courseService.getPopularCourses(commonConfig.getPhotoPath(),amount));
         return gson.toJson(data);
     }
 
@@ -489,7 +496,7 @@ public class HomeController {
         int amount=6;
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-        data.put("popularCourseList",courseService.getNewCourses(serverConfig.getUrl(),amount));
+        data.put("popularCourseList",courseService.getNewCourses(commonConfig.getPhotoPath(),amount));
         return gson.toJson(data);
     }
     @ResponseBody
@@ -499,7 +506,7 @@ public class HomeController {
         int conurseType=1006;
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-        data.put("itCourseList",courseService.getITCourses(serverConfig.getUrl(),conurseType,amount));
+        data.put("itCourseList",courseService.getITCourses(commonConfig.getPhotoPath(),conurseType,amount));
         return gson.toJson(data);
     }
     @ResponseBody
@@ -509,7 +516,7 @@ public class HomeController {
         int conurseType=1020;
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
-        data.put("historyCourseList",courseService.getITCourses(serverConfig.getUrl(),conurseType,amount));
+        data.put("historyCourseList",courseService.getITCourses(commonConfig.getPhotoPath(),conurseType,amount));
         return gson.toJson(data);
     }
 
@@ -534,8 +541,7 @@ public class HomeController {
         data.put("total", row);
         data.put("totalPage", totalPage);
         data.put("page", page);
-        String url=serverConfig.getUrl();
-        data.put("url", url+"/download/");
+        data.put("url", commonConfig.getUrl()+"/download/");
         return gson.toJson(data);
     }
 
@@ -548,16 +554,16 @@ public class HomeController {
         String resourceName=courseResource.getResourceName();
         String suffix=resourceName.substring(resourceName.lastIndexOf(".")+1);  //只保留文件名部分resourceId
         int type= ResourceUploadAndDownload.suffixJudgment(suffix);
+        System.out.println("resourceName:"+resourceName);
         String realPath = null;
-        String url = serverConfig.getUrl();
         if(type==0){ // 图片
-            realPath=ResourcePathUtils.getPhotoPath(url);
+            realPath= commonConfig.getRealPhotoPath();
         }else if(type==1){ // 视频
-            realPath=ResourcePathUtils.getVedioPath(url);
+            realPath= commonConfig.getRealVideoPath();
         }else if(type==2){ // 压缩文件
-            realPath=ResourcePathUtils.getFilePath(url);
+            realPath= commonConfig.getRealFilePath();
         }else if(type==3){ // 文本
-            realPath=ResourcePathUtils.getFilePath(url);
+            realPath= commonConfig.getRealFilePath();
         }
         try {
             // 取得输出流
@@ -566,12 +572,13 @@ public class HomeController {
             response.reset();
             response.setHeader("content-type", "application/octet-stream");
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", "attachment;filename=" + resourceName);
+            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(resourceName,"UTF-8"));
+
             //读取流
             File f = new File(realPath+courseResource.getLinkAdd());
             is = new FileInputStream(f);
             if (is == null) {
-                System.out.println("下载附件失败，请检查文件“" + resourceName + "”是否存在");
+                System.out.println("下载附件失败，请检查文件\"" + resourceName + "\"是否存在");
             }
             //复制
             IOUtils.copy(is, response.getOutputStream());
@@ -613,10 +620,10 @@ public class HomeController {
         }
         int pageSize=12;
         int startPage=page*pageSize;
-        int row=courseService.getSourchCourseRow(key, startPage, pageSize);
+        int row=courseService.getSearchCourseRow(key);
         int totalPage=(int) Math.ceil(row*1.0/pageSize);
 
-        data.put("courseList", courseService.sourchCourse(serverConfig.getUrl(),key, startPage, pageSize));
+        data.put("courseList", courseService.searchCourse(commonConfig.getPhotoPath(),key, startPage, pageSize));
         data.put("total", row);
         data.put("totalPage", totalPage);
         data.put("page", page);
@@ -640,7 +647,7 @@ public class HomeController {
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
         Course course=new Course();
-        course=courseService.getAppointCourseMessage(serverConfig.getUrl(),courseId);
+        course=courseService.getAppointCourseMessage(commonConfig.getPhotoPath(),courseId);
         data.put("course", course);
         Map<Integer,Map<Integer,Object>> chapterList=new HashMap<>();
 
@@ -670,8 +677,7 @@ public class HomeController {
         List<CourseResource> courseResourceList = courseResourceService.getAppointCourseResource(courseId, userType);
         data.put("count",courseResourceList.size());
         data.put("courseResourceList", courseResourceList);
-        String url=serverConfig.getUrl();
-        data.put("url", url+"/download/");
+        data.put("url", commonConfig.getUrl()+"/download/");
         return gson.toJson(data);
     }
 
@@ -763,27 +769,27 @@ public class HomeController {
         Gson gson=new Gson();
         Course course=courseService.findBy(courseId);
         CourseStructure courseStructure=courseStructureService.getSectionInfo(courseId, chapterId, sectionId);
-        String mvAdd=ResourcePathUtils.getVedioPath(serverConfig.getUrl())+courseStructure.getMvAdd();
+        String mvAdd= commonConfig.getVideoPath()+courseStructure.getMvAdd();
 
         int previousChapterId=0;
         int previousSectionId=0;
-        if(chapterId==1) {
-            if(sectionId==1) {
+        if(sectionId==1){
+            if(chapterId==1) {
                 //无 <上一节>
                 previousChapterId=0;
                 previousSectionId=0;
             }else {
-                previousChapterId=chapterId;
-                previousSectionId=sectionId-1;
+                previousChapterId=chapterId-1;
+                previousSectionId=courseStructureService.getChaptersSectionRow(courseId, previousChapterId);
             }
         }else {
-            previousChapterId=chapterId-1;
-            previousSectionId=courseStructureService.getChaptersSectionRow(courseId, previousChapterId);
+            previousChapterId=chapterId;
+            previousSectionId=sectionId-1;
         }
 
         int nextChapterId=0;
         int nextSectionId=0;
-        if(courseStructureService.getChaptersSectionRow(courseId, sectionId)==sectionId) {  //若本小节为本章的最后一小节
+        if(courseStructureService.getChaptersSectionRow(courseId, chapterId)==sectionId) {  //若本小节为本章的最后一小节
             if(courseStructureService.checkChapterExist(courseId, chapterId+1)) {
                 nextChapterId=chapterId+1;
                 nextSectionId=1;
@@ -917,9 +923,9 @@ public class HomeController {
             System.out.println("fileOldName:" + file.getOriginalFilename()+",:"+file);
             fileMap.put(file.getOriginalFilename(),file);
         }
-        File photoDirFile= ResourcePathUtils.getPhotoDirFile();
-        File vedioDirFile= ResourcePathUtils.getVedioDirFile();
-        File fileDirFile=ResourcePathUtils.getFileDirFile();
+        File photoDirFile= commonConfig.getPhotoDirFile();
+        File vedioDirFile= commonConfig.getVideoDirFile();
+        File fileDirFile= commonConfig.getFileDirFile();
         Map<Object,Object> result=new HashMap<>();
         ResourceUploadAndDownload resourceUploadAndDownload=new ResourceUploadAndDownload(photoDirFile, vedioDirFile,fileDirFile);
         data.putAll(resourceUploadAndDownload.resourceUpload(fileMap,id));  //将表单解析,整理资源并存储,将表单信息放入 Map 中并返回
@@ -931,13 +937,15 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping("/accountChecking")
-    public String accountChecking(HttpServletRequest request){
+    public String accountChecking(int testId,HttpServletRequest request){
         ServletContext servletContext = request.getServletContext();
         Map<Object,Object> data=new HashMap<>();
         Gson gson=new Gson();
         boolean pass=false;
         if(servletContext.getAttribute("state")!=null&&(boolean) servletContext.getAttribute("state") && !(boolean) servletContext.getAttribute("teacher")) {
             pass=true;
+            servletContext.setAttribute("testId",testId);
+            servletContext.setAttribute("isTest",true);
         }else {
             data.put("message", "仅限已登录的学生测试!");
         }
@@ -988,8 +996,9 @@ public class HomeController {
             data.put("answerSheetId", (String)servletContext.getAttribute("answerSheetId"));
             servletContext.removeAttribute("testId");
             servletContext.removeAttribute("answerSheetId");
+            servletContext.removeAttribute("isTest");
         }
-
+        System.out.println("data:"+data);
         return gson.toJson(data);
     }
 
@@ -1030,8 +1039,7 @@ public class HomeController {
         int startPage=page*pageSize;
         int totalPage=(int)Math.ceil(row*1.0/pageSize);  //总页数
 
-        String url = serverConfig.getUrl();
-        data.put("list", favoriteService.getFavoriteCourseMessage(url,startPage,pageSize,userId));
+        data.put("list", favoriteService.getFavoriteCourseMessage(commonConfig.getPhotoPath(),startPage,pageSize,userId));
         data.put("totalPage", totalPage);
         data.put("total", row);
         data.put("pageSize", pageSize);
@@ -1039,37 +1047,64 @@ public class HomeController {
         return gson.toJson(data);
     }
 
-//    @ResponseBody
-//    @RequestMapping("/getCourseResource")
-//    public String getCourseResource(String pageNum,HttpServletRequest request){
-//        ServletContext servletContext = request.getServletContext();
-//        Map<Object,Object> data=new HashMap<>();
-//        Gson gson=new Gson();
-//        int userType=0;
-//        int userId=(int) servletContext.getAttribute("id");
-//        boolean teacher=(boolean) servletContext.getAttribute("teacher");
-//        if(teacher) {
-//            userType=1;
-//        }
-//        int pageSize=12;  //每页数据最大行数
-//        int row=courseResourceService.getUserCourseResourceRow(userId, userType);  //总数据量
-//        int page;  //第几页
-//        if(pageNum==null) {
-//            page=1;
-//        }else {
-//            page=Integer.parseInt(pageNum);
-//        }
-//        int startPage=page*pageSize;
-//        int totalPage=(int)Math.ceil(row*1.0/pageSize);  //总页数
-//
-//        List<CourseResource> courseResouceList=new ArrayList<>();
-//        courseResouceList=courseResourceService.getCourseResource(userId, userType,startPage,pageSize);
-//        data.put("courseResouceList", courseResouceList);
-//        data.put("total",row);
-//        data.put("pageSize", pageSize);
-//        data.put("totalPage", totalPage);
-//        return gson.toJson(data);
-//    }
+    @ResponseBody
+    @RequestMapping("/saveCourseTypeId")
+    public String saveCourseTypeId(String courseTypeId,HttpSession session){
+        ServletContext servletContext = session.getServletContext();
+        Map<Object,Object> data=new HashMap<>();
+        servletContext.setAttribute("courseTypeId",courseTypeId);
+        data.put("result", "success");
+        Gson gson=new Gson();
+        return gson.toJson(data);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getCourseTypeId")
+    public String getCourseTypeId(HttpSession session){
+        ServletContext servletContext = session.getServletContext();
+        Map<Object,Object> data=new HashMap<>();
+        String courseTypeId=(String)servletContext.getAttribute("courseTypeId");
+        servletContext.removeAttribute("courseTypeId");
+        System.out.println(">>>"+courseTypeId);
+        data.put("courseTypeId", courseTypeId);
+        Gson gson=new Gson();
+        return gson.toJson(data);
+    }
+
+    @ResponseBody
+    @RequestMapping("/adoptCourseTypeSearchCourse")
+    public String adoptCourseTypeSearchCourse(String courseTypeId,String pageNum){
+        int courseClass = Integer.parseInt(courseTypeId);  //课程类型id
+        Map<Object,Object> data=new HashMap<>();
+        int page;
+        if(pageNum==null) {
+            page=1;
+        }else {
+            page=Integer.parseInt(pageNum);
+        }
+        int pageSize=12;  //规定每页显示数据条数
+        int row=0;  //课程总数
+        int startPage=page*pageSize;  //偏移量
+
+        List<Course> courseList;
+        if(courseClass==-1) {
+            row=courseService.getAllValidCourse().size();  //课程总数
+            courseList=courseService.getPartValidCourse(commonConfig.getPhotoPath(),startPage,pageSize);
+            data.put("typeName", "全部课程");
+        }else {
+            row=courseService.findAllByAdoptCourseType(courseClass).size();  //课程总数
+            courseList=courseService.findByAdoptCourseType(commonConfig.getPhotoPath(),courseClass,startPage,pageSize);
+            data.put("typeName", courseTypeService.getTypeName(courseClass));
+        }
+        int totalPage=(int) Math.ceil(row*1.0/pageSize);  //总页数
+        data.put("courseList", courseList);
+        data.put("total", row);
+        data.put("pageSize", pageSize);
+        data.put("totalPage", totalPage);
+
+        Gson gson=new Gson();
+        return gson.toJson(data);
+    }
 
     private static String md5(String str) {  // md5 加密
         byte[] digest = null;

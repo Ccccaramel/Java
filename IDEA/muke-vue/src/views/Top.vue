@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="course_type">课程分类 <span class="sr-only">(current)</span></a>
+          <a class="nav-link" style="cursor:pointer" @click="courseClassification()">课程分类 <span class="sr-only">(current)</span></a>
         </li>
 
         <li class="nav-item dropdown">
@@ -238,13 +238,13 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "Top",
   methods:{
     //注册数据检查
     registeredCheck() {
-      var em = /^[0-9a-zA-Z]{4 ,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
+      var em = /^[0-9a-zA-Z]{4,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
       var te = /^[0-9a-zA-Z]{11}$/;
       if ($("#registeredTeacher")[0].checked) {
         if ($("#rTeacherNmae").val() == "") {
@@ -310,10 +310,8 @@ export default {
     },
     //登录按钮响应
     submitLogin() {
-      console.log(">>>"+global.httpUrl);
-
       //数据检查
-      var loginMode = loginCheck();
+      var loginMode = this.loginCheck();
       var that = this;
 
       //用户登录类别标记
@@ -364,6 +362,7 @@ export default {
     },
     //注册按钮响应
     submitRegistered() {
+      var that=this;
       /**
        * 对注册用户信息进行检查，判断是否符合要求
        **/
@@ -399,7 +398,7 @@ export default {
             }else{
               alert("注册失败!");
             }
-            user_registered_successful();
+            that.userRegisteredSuccessful();
           },
           error: function (err) {
             alert("退出错误!");
@@ -423,7 +422,7 @@ export default {
         success: function (json) {
           if (json.state) {
             // alert("你记住了密码");
-            $("#lAccount").val(json.id);
+            $("#lAccount").val(json.account);
             $("#lPassWord").val(json.password);
             $("#loginRememberMe").click();
             if (json.teacher) {
@@ -452,12 +451,12 @@ export default {
         } else if (msg == 102) {
           alert("注册成功！");
           //清空并关闭注册弹窗
-
           //学生注册成功时即为已登录状态
-          user_registered_successful();
+          this.userRegisteredSuccessful();
         } else if (msg == 103) {
           alert("你已安全退出！");
-          location.href = '/Home';
+          // location.href = '/Home';
+          this.$router.push("/");
         } else if (msg == 104) {
           // alert("账号存在不用登录!");
           this.user_login_registered_successful();
@@ -467,7 +466,7 @@ export default {
           alert("账号异常,请登录!");
         } else if (msg == 107) {
           alert("注册提交成功，请等待审核！");
-          user_registered_successful();
+          this.userRegisteredSuccessful();
         } else if (msg == 201) {
           alert("邮箱不可为空!");
         } else if (msg == 202) {
@@ -499,7 +498,7 @@ export default {
           alert("密码修改失败!");
         } else if (msg == 501) {
           alert("你的账号正在审核中，请耐心等待!");
-          user_registered_successful();
+          this.userRegisteredSuccessful();
         } else if (msg == 502) {
           alert("欢迎回来!");
           this.user_login_registered_successful();
@@ -527,23 +526,25 @@ export default {
     user_login_registered_successful() {
       $("#lAccount").val('');
       $("#lPassWord").val('');
-      close_window();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
+      this.closeWindow();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
       document.getElementById("user_center").style = "display:";//按钮替换
     },
 
     //教师登录成功后关闭登录窗口以及灰色底层，然后进入exist()函数
     teacher_login_registered_successful() {
-      close_window();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
+      this.closeWindow();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
       document.getElementById("teacher_center").style = "display:";//按钮替换
     },
 
     //连接到用户类别对应的个人中心
     userCenter() {
-      location.href = '/StudentCenter';
+      // location.href = '/StudentCenter';
+      this.$router.push("/StudentCenter");
     },
 
     teacherCenter() {
-      location.href = '/TeacherCenter';
+      // location.href = '/TeacherCenter';
+      this.$router.push("/TeacherCenter");
     },
 
     //提交反馈意见
@@ -572,23 +573,91 @@ export default {
       });
     },
 
+    // 课程分类
+    courseClassification(){
+      this.$router.push("/CourseType");
+    },
+
     //课程搜索
     searchCourse() {
       var key = $("#searchCourse").val();
-      location.href = encodeURI("/SearchCourse?key=" + key);
+      // location.href = encodeURI("/SearchCourse?key=" + key);
+      this.$router.push(encodeURI("/SearchCourse?key=" + key));
     },
 
     //资源搜索
     searchResource() {
       var key = $("#searchResource").val();
-      location.href = encodeURI("/SearchResource?key=" + key);
+      // location.href = encodeURI("/SearchResource?key=" + key);
+      this.$router.push(encodeURI("/SearchResource?key=" + key));
     },
-  },
+
+    //学生注册成功后清除账号注册信息关闭注册窗口以及灰色底层，然后进入exist()函数
+    userRegisteredSuccessful() {
+      this.closeRegisteredWindow();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
+    },
+
+    //注册成功后关闭窗口和灰色底层，并将登录按钮和注册按钮隐藏
+    closeRegisteredWindow() {
+      /**
+       * 调用方法虽能一次性清除表单内容，但也会使注册窗口发生异常，当教师注册后再点击注册弹出注册窗口，模式注册教师模式但【我是教师】已被取消
+       * 解决办法：在清除表单之前获取【我是教师】状态，清除之后再恢复之前状态
+       **/
+      var sign=false;
+      if ($("#registeredTeacher")[0].checked) {
+        sign=true;
+      }
+      document.getElementById("registered_from").reset();//重置窗口数据
+
+      if(sign==true){
+        $("#registeredTeacher")[0].checked=true;
+      }
+      document.getElementById("rClose").click();//关闭登录灰色底层
+    },
+
+    //登录或注册成功后关闭窗口和灰色底层，并将登录按钮和注册按钮隐藏
+    closeWindow() {
+      document.getElementById("login_from").reset();//重置窗口数据
+      document.getElementById("lClose").click();//关闭登录灰色底层
+      document.getElementById("login_button").style = "display:none;";//隐藏登录按钮
+      document.getElementById("registered_button").style = "display:none;";//隐藏注册按钮
+    },
+
+    // 登录数据检查
+    loginCheck() {
+      var em = /^[0-9a-zA-Z]{4,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
+      var te = /^[0-9a-zA-Z]{11}$/;
+      var id = /^[0-9]{4,8}$/;
+      if ($("#lAccount").val() == "") {
+        alert("账号不可为空！");
+        return false;
+      }
+
+      if (em.test($("#lAccount").val())) {
+        return 1;
+      } else if (te.test($("#lAccount").val())) {
+        return 2;
+      } else if (id.test($("#lAccount").val())) {
+        return 3;
+      } else {
+        alert("账号格式错误！");
+        return false;
+      }
+      if ($("#lPassWord").val() == "") {
+        alert("密码不可为空！");
+        return false;
+      }
+    },
+},
 
   mounted() {
     var that = this;
+    // 悬浮窗相关
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
     // 页面加载完后立即自动执行
-// 判断是否已登录
+    // 判断是否已登录
     $(function () {
       $.ajax({
         url: global.httpUrl+'/userState',
@@ -612,89 +681,7 @@ export default {
       });
     });
   },
-
 }
-
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
-
-
-//课程搜索
-function search_course() {
-  var key = $("#searchCourse").val();
-  location.href = encodeURI("search_course.html?key=" + key);
-}
-
-//资源搜索
-function search_resource() {
-  var key = $("#searchResource").val();
-  location.href = encodeURI("search_resource.html?key=" + key);
-}
-
-// 登录数据检查
-function loginCheck() {
-  var em = /^[0-9a-zA-Z]{4,12}@[0-9a-zA-Z]{1,8}.[a-zA-Z]{2,6}$/;
-  var te = /^[0-9a-zA-Z]{11}$/;
-  var id = /^[0-9]{4,8}$/;
-  if ($("#lAccount").val() == "") {
-    alert("账号不可为空！");
-    return false;
-  }
-
-  if (em.test($("#lAccount").val())) {
-    return 1;
-  } else if (te.test($("#lAccount").val())) {
-    return 2;
-  } else if (id.test($("#lAccount").val())) {
-    return 3;
-  } else {
-    alert("账号格式错误！");
-    return false;
-  }
-
-  if ($("#lPassWord").val() == "") {
-    alert("密码不可为空！");
-    return false;
-  }
-
-}
-
-//学生注册成功后清除账号注册信息关闭注册窗口以及灰色底层，然后进入exist()函数
-function user_registered_successful() {
-  close_registered_window();//登录或注册成功后关闭注册窗口和灰色底层，并将登录按钮和注册按钮隐藏
-}
-
-//注册成功后关闭窗口和灰色底层，并将登录按钮和注册按钮隐藏
-function close_registered_window() {
-
-  /**
-   * 调用方法虽能一次性清除表单内容，但也会使注册窗口发生异常，当教师注册后再点击注册弹出注册窗口，模式注册教师模式但【我是教师】已被取消
-   * 解决办法：在清除表单之前获取【我是教师】状态，清除之后再恢复之前状态
-   **/
-  var sign=false;
-  if ($("#registeredTeacher")[0].checked) {
-    sign=true;
-  }
-  document.getElementById("registered_from").reset();//重置窗口数据
-
-  if(sign==true){
-    $("#registeredTeacher")[0].checked=true;
-  }
-  document.getElementById("rClose").click();//关闭登录灰色底层
-}
-
-//登录或注册成功后关闭窗口和灰色底层，并将登录按钮和注册按钮隐藏
-function close_window() {
-
-  document.getElementById("login_from").reset();//重置窗口数据
-  document.getElementById("lClose").click();//关闭登录灰色底层
-  document.getElementById("login_button").style = "display:none;";//隐藏登录按钮
-  document.getElementById("registered_button").style = "display:none;";//隐藏注册按钮
-}
-
-
-
 </script>
 
 <style scoped>

@@ -47,6 +47,25 @@
     <select id="getAllCourse" resultType="com.muke.onlineedu.admin.entity.Course">
         select * from course;
     </select>
+    <select id="getAllValidCourse" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course where courseStatus=1;
+    </select>
+    <select id="getPartValidCourse" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+        where courseStatus=1
+            limit #{startPage},#{pageSize};
+    </select>
+    <select id="findAllByAdoptCourseType" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+        where courseStatus=1
+          and courseClass = #{courseClass};
+    </select>
+    <select id="findByAdoptCourseType" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+        where courseStatus=1
+          and courseClass = #{courseClass}
+        limit #{startPage},#{pageSize};
+    </select>
     <select id="getTeacherAllCourse" resultType="com.muke.onlineedu.admin.entity.Course">
         select * from course
         where courseStatus!=3 and teacherId=#{teacherId};
@@ -68,6 +87,11 @@
               c.courseClass like "%${key}%" or
               c.courseStatus like "%${key}%"
               limit #{startPage},#{pageSize};
+    </select>
+    <select id="getSearchCourseRow" resultType="com.muke.onlineedu.admin.entity.Course">
+        select * from course
+        where courseName like "%${key}%"
+          and courseStatus=1;
     </select>
     <select id="getPartCourseMessage" resultType="com.muke.onlineedu.admin.entity.Course">
         select * from course

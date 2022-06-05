@@ -134,7 +134,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "Course",
   data(){
@@ -188,7 +188,11 @@ export default {
           //判断该课程是否合法
           if(!json.courseStatus){
             alert("非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
           //控制台打印出数据
           console.log(json);
@@ -315,7 +319,8 @@ export default {
         data: {'courseId': that.courseId, 'chapterId': chapterId, 'sectionId': sectionId},
         dataType: 'json',
         success: function (json) {
-          location.href = "/Learn";
+          // location.href = "/Learn";
+          that.$router.push("/Learn");
         },
         error: function () {
           alert("系统错误");
@@ -336,7 +341,11 @@ export default {
           //返回结果
           if (json.state) {
             //用户已登陆
-            window.open("/AddCourseResource");
+            // window.open("/AddCourseResource");
+            const { href } = that.$router.resolve({
+              path: "/AddCourseResource",
+            });
+            window.open(href, '_blank');
           } else {
             alert(json.message);
           }
@@ -349,16 +358,22 @@ export default {
 
     //点击进入测试
     goTest(testId) {
+      var that=this;
       $.ajax({
         url: global.httpUrl+'/accountChecking',
         type: 'post',
         dataType: 'json',
+        data: {"testId":testId},
         success: function (json) {
           //返回结果
           // alert(json.pass);
           if (json.pass) {
             //用户已登陆
-            window.open("/Test?testId=" + testId);
+            // window.open("/Test?testId=" + testId);
+            const { href } = that.$router.resolve({
+              path: "/Test?testId=" + testId,
+            });
+            window.open(href, '_blank');
           } else{
             alert(json.message);
           }
@@ -381,7 +396,11 @@ export default {
       that.courseId = url.split("?courseId=")[1];
       if(typeof (that.courseId)==='undefined'){
         alert("非法进入!");
-        window.open("/","_self").close();
+        // window.open("/","_self").close();
+        const { href } = that.$router.resolve({
+          path: "/",
+        });
+        window.open(href, '_self').close();
       }
       //加载课程简介
       that.loadingIntroduction(that.courseId);

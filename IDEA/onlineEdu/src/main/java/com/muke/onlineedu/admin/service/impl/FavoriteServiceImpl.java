@@ -5,7 +5,7 @@ import com.muke.onlineedu.admin.dao.FavoriteDao;
 import com.muke.onlineedu.admin.entity.Course;
 import com.muke.onlineedu.admin.entity.Favorite;
 import com.muke.onlineedu.admin.service.FavoriteService;
-import com.muke.onlineedu.common.tool.ResourcePathUtils;
+import com.muke.onlineedu.common.tool.CommonConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteDao,Favorite> imple
         List<Favorite> favoriteList = baseMapper.getPartFavoriteCourse(startPage, pageSize, userId);
         for(Favorite favorite:favoriteList){
             Course course = favorite.getCourse();
-            course.setImageURL(ResourcePathUtils.getPhotoPath(url)+course.getCourseImgName());
+            course.setImageURL(url+course.getCourseImgName());
         }
         return favoriteList;
     }

@@ -1,20 +1,11 @@
 package com.muke.onlineedu.common.tool;
 
-import com.muke.onlineedu.admin.entity.Course;
-import com.muke.onlineedu.admin.service.CourseAbstractService;
-import com.muke.onlineedu.admin.service.CourseService;
-import com.muke.onlineedu.admin.service.CourseStructureService;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,7 +16,7 @@ import java.util.Map;
 
 public class ResourceUploadAndDownload {
     private File photoDirFile;
-    private File vedioDirFile;
+    private File videoDirFile;
     private File fileDirFile;
 
     public ResourceUploadAndDownload() {
@@ -33,10 +24,10 @@ public class ResourceUploadAndDownload {
         // TODO Auto-generated constructor stub
     }
 
-    public ResourceUploadAndDownload(File photoDirFile, File vedioDirFile,File fileDirFile) {
+    public ResourceUploadAndDownload(File photoDirFile, File videoDirFile,File fileDirFile) {
         super();
         this.photoDirFile = photoDirFile;
-        this.vedioDirFile = vedioDirFile;
+        this.videoDirFile = videoDirFile;
         this.fileDirFile = fileDirFile;
     }
 
@@ -60,7 +51,7 @@ public class ResourceUploadAndDownload {
                 finalPath=this.photoDirFile+File.separator+newName;
             }
             else if(type==1){
-                finalPath=this.vedioDirFile+File.separator+newName;
+                finalPath=this.videoDirFile +File.separator+newName;
             }
             else if(type==2){
                 finalPath=this.fileDirFile+File.separator+newName;

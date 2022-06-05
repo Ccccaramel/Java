@@ -1,3 +1,5 @@
+
+
 *** 输出"hello word" ***
 1.创建一个 Maven 工程,在项目的 java 新建一个 java 类
     @SpringBootApplication
@@ -20,6 +22,37 @@
   将 Maven home path , User settings file , Local repository 三项更改为本地 maven
 3.运行,点击 main 方法 左侧的"run"按钮启动服务
 4.在浏览器输入 localhost:8080/hi 即可访问页面
+
+快速创建 springboot 项目
+  使用 Spring Initializr 初始化向导
+  1.填写项目名 Group 和模块名 Artifact ,修改包名 Package
+  2.Web > Spring Web
+    SQL > MySQL Driver
+    SQL > mybatis Framework
+    以及选择合适 springBoot 版本
+  3.finish 即可
+  yaml 配置
+    server:
+      port: 8080
+    spring:
+      datasource:
+        url: jdbc:mysql://localhost:3306/muke
+        username: root
+        password: root
+      web:
+        resources:
+          static-locations: classpath:/static/,file:D:/onlineEdu/
+    # 数据库映射
+    mybatis:
+      mapper-locations: classpath*:/mapper/*.xml
+      #实体扫描，多个package用逗号或者分号分隔
+      typeAliasesPackage: com.muke.onlineedu.*.entity
+    commonconfig:
+      url: http://127.0.0.1:8080
+      realpath: D:/onlineEdu
+      photopathprefix: /upload/photo
+      videopathprefix: /upload/video
+      filepathprefix: /upload/file
 
 springBoot 官方文档
   https://spring.io/projects/spring-boot#learn
@@ -243,76 +276,16 @@ A:1.Mybatis 使用 xml 配置
         typeAliasesPackage: com.muke.onlineedu.*.entity
 
 Q:2022-03-21 15:48:12.703 ERROR 16640 --- [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed; nested exception is java.lang.Error: Unresolved compilation problems: 
-	The method setGmAccountStatus(int) is undefined for the type Admin
-	The method getGmPower() is undefined for the type Admin
-	The method getGmAccountStatus() is undefined for the type Admin
-	The method getGmId() is undefined for the type Admin
-] with root cause
-
-java.lang.Error: Unresolved compilation problems: 
-	The method setGmAccountStatus(int) is undefined for the type Admin
-	The method getGmPower() is undefined for the type Admin
-	The method getGmAccountStatus() is undefined for the type Admin
-	The method getGmId() is undefined for the type Admin
-
-	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl.setUserData(AdministratorServiceImpl.java:101) ~[classes/:na]
-	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl.loginById(AdministratorServiceImpl.java:52) ~[classes/:na]
-	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl$$FastClassBySpringCGLIB$$772ad474.invoke(<generated>) ~[classes/:na]
-	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.16.jar:5.3.16]
-	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:689) ~[spring-aop-5.3.16.jar:5.3.16]
-	at com.muke.onlineedu.admin.service.impl.AdministratorServiceImpl$$EnhancerBySpringCGLIB$$1c910231.loginById(<generated>) ~[classes/:na]
-	at com.muke.onlineedu.admin.controller.AdministratorController.loginById(AdministratorController.java:166) ~[classes/:na]
-	at com.muke.onlineedu.admin.controller.AdministratorController.gmLogin(AdministratorController.java:37) ~[classes/:na]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64) ~[na:na]
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:564) ~[na:na]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:681) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) ~[spring-webmvc-5.3.16.jar:5.3.16]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:540) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:359) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:889) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1735) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
-	at java.base/java.lang.Thread.run(Thread.java:832) ~[na:na]
+    The method setGmAccountStatus(int) is undefined for the type Admin
+    The method getGmPower() is undefined for the type Admin
+    The method getGmAccountStatus() is undefined for the type Admin
+    The method getGmId() is undefined for the type Admin
+  ] with root cause
+  java.lang.Error: Unresolved compilation problems: 
+    The method setGmAccountStatus(int) is undefined for the type Admin
+    The method getGmPower() is undefined for the type Admin
+    The method getGmAccountStatus() is undefined for the type Admin
+    The method getGmId() is undefined for the type Admin
 A:莫名其妙报错,弄了半天,什么也没改,然后又莫名其妙的正常了
   或许与改动实体类有关,
 

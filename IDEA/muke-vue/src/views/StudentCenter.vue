@@ -130,10 +130,10 @@
                  aria-labelledby="v-pills-collection-tab" style="padding: 15px">
               <!--card-->
               <div id="my-course-collection-list" class="row">
-                <div class="card col-3" style="width: 18rem;cursor:pointer" v-for="myCourseCollection in myCourseCollectionList">
+                <div class="card col-3" style="width: 18rem;cursor:pointer" v-for="myCourseCollection in myCourseCollectionList" @click="introduce(myCourseCollection.courseId)">
                   <img class="card-img-top" :src="myCourseCollection.course.imageURL" alt="Card image cap">
                   <div class="card-body">
-                    <span class="card-title" :id="myCourseCollection.courseId" @click="introduce(myCourseCollection.courseId)">{{ myCourseCollection.course.courseName }}</span>
+                    <span class="card-title" :id="myCourseCollection.courseId">{{ myCourseCollection.course.courseName }}</span>
                   </div>
                 </div>
               </div>
@@ -252,7 +252,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "StudentCenter",
   data(){
@@ -291,11 +291,13 @@ export default {
     },
     //账号退出
     userExitXuesi() {
+      var that=this;
       $.ajax({
         type: 'POST',
         url: global.httpUrl+'/exit',
         success: function (json) {
-          location.href = '/';
+          // location.href = '/';
+          that.$router.push("/");
         },
         error: function () {
           alert("操作失败");
@@ -465,16 +467,38 @@ export default {
     },
     //运行此函数将携带答题卡id进入test页面，并将答卷以及正确答案和解析重现给用户
     answerDetails(testId, answerSheetId) {
+      var that=this;
       $.ajax({
         type: 'POST',
         url: global.httpUrl+'/saveAnswerSheetId',
         data: {'testId': testId,'answerSheetId':answerSheetId},
         dataType: 'json',
         success: function () {
-          window.open("/Test");
+          // window.open("/Test");
+          const { href } = that.$router.resolve({
+            path: "/Test",
+          });
+          window.open(href, '_self');
         },
         error: function () {
           alert("跳转失败");
+        }
+      });
+    },
+    //点击课程名获取课程名称，跳转到课程介绍页面
+    introduce(courseId) {
+      var that=this;
+      $.ajax({
+        //数据提交方式
+        type: 'POST',
+        //后端URL
+        url: global.httpUrl+'/heatsUp',
+        data: {'courseId': courseId},
+        success: function () {
+          that.$router.push("/Course?courseId=" + courseId);
+        },
+        error: function () {
+          alert("数据加载失败");
         }
       });
     },
@@ -484,6 +508,7 @@ export default {
     'Botton': botton,
   },
   mounted() {
+    var that=this;
     // 页面加载完后立即自动执行
     // 判断是否已登录
     $(function () {
@@ -494,7 +519,11 @@ export default {
         success: function (response) {
           if(!response.state){
             alert("非法访问!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
 
           $("#userName").val(response.userName);

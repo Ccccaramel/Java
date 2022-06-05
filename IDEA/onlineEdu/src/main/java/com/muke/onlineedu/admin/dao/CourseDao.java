@@ -22,6 +22,8 @@ public interface CourseDao extends BaseMapper<Course> {
     List<Course> getAllCourseMessage(int startPage, int pageSize, String key);
     Course findBy(int courseId);
     List<Course> getAllCourse();
+    List<Course> getAllValidCourse();
+    List<Course> getPartValidCourse(int startPage, int pageSize);
     List<Course> getTeacherAllCourse(int teacherId);
     Course getCourseInfo(int courseId);
     List<Course> getPopularCourses(int amount);
@@ -31,4 +33,7 @@ public interface CourseDao extends BaseMapper<Course> {
     List<Course> getPartCourseMessage(String key, int startPage, int pageSize);
     void heatsUp(int courseId);
     Course getAppointCourseMessage(int courseId);
+    List<Course> findAllByAdoptCourseType(int courseClass);
+    List<Course> findByAdoptCourseType(int courseClass, int startPage, int pageSize);
+    List<Course> getSearchCourseRow(String key);
 }

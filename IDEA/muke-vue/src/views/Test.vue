@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import global from './Common.vue'
 export default {
   name: "Test",
   data(){
@@ -224,7 +225,11 @@ export default {
           },
           error: function () {
             alert("还原答题卡失败，非法进入!");
-            window.open("home.html","_self").close();
+            // window.open("home.html","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
         });
       }
@@ -233,6 +238,7 @@ export default {
   mounted() {
     var that=this;
     //加载测试卷的所有信息
+    console.log(">>>"+global.httpUrl);
     $(function () {
       //testId存有测试卷id，立即获取测试卷所有信息---课程id、课程名、测试卷总分值、测试卷及格线、测试卷的所有小题以及小题相应的选项、分值、正确答案、解析
       $.ajax({
@@ -241,11 +247,15 @@ export default {
         dataType: 'json',
         data: {},
         success: function (json) {
-          console.log(json);
+          console.log("test:"+json);
           //判断是否已登录
           if(!json.status){
             alert("你未登录，非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
 
           that.testId = json.testId;
@@ -258,7 +268,11 @@ export default {
           //获取test数组，取出课程id、测试卷名称、总分、及格分
           if(that.test.testStatus!=1){
             alert("试卷已失效，非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
 
           // that.checkAnswerSheetId();  //再接着判断是否存在答题卡

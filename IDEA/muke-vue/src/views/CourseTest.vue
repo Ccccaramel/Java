@@ -3,7 +3,7 @@
     <!--课程测试卷表单-->
     <form name="add_test" id="add_test">
       <div class="alert alert-dark" role="alert"
-           style="width:100%;margin-bottom: 16px;elevation: deg;font-weight: bold">
+           style="width:100%;margin-bottom: 16px;font-weight: bold">
         <span>学思网-编辑测试卷</span>
       </div>
 
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "CourseTest",
   data(){
@@ -324,6 +324,7 @@ export default {
      * 否则关闭当前页面
      **/
     checkIdentitl(testId) {
+      var that=this;
       $.ajax({
         url: global.httpUrl+'/editTestIdentitlCheck',
         type: 'post',
@@ -331,7 +332,11 @@ export default {
         data: {'testId': testId},
         success: function (json) {
           if (json.status === false) {
-            window.open("/", "_self").close();
+            // window.open("/", "_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
         },
         error: function () {

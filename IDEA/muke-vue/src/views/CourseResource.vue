@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "CourseResource",
   data(){
@@ -118,7 +118,11 @@ export default {
             that.courseList=json.courseList;
           }else{
             alert("非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
         },
         error: function () {

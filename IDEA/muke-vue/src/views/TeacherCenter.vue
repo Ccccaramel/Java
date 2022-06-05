@@ -295,7 +295,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "TeacherCenter",
   components: {
@@ -403,15 +403,21 @@ export default {
     },
     //添加课程
     addCourse() {
-      window.open('/CourseManagement');
+      // window.open('/CourseManagement');
+      const { href } = this.$router.resolve({
+        path: "/CourseManagement",
+      });
+      window.open(href, '_blank');
     },
     //教师退出
     teacherExitXuesi() {
+      var that=this;
       $.ajax({
         type: 'POST',
         url: global.httpUrl+'/exit',
         success: function (json) {
-          location.href = '/';
+          // location.href = '/';
+          that.$router.push("/");
         },
         error: function () {
           alert("操作失败");
@@ -482,11 +488,16 @@ export default {
     },
     //编辑或修改课程
     changeCourse(courseId) {
-      window.open("/CourseManagement?courseId=" + courseId);
+      // window.open("/CourseManagement?courseId=" + courseId);
+      const { href } = this.$router.resolve({
+        path: "/CourseManagement?courseId=" + courseId,
+      });
+      window.open(href, '_blank');
     },
 
     //添加课程测试卷
     addCourseTest() {
+      var that=this;
       //在此之前判断该教师是否已发布过课程
       $.ajax({
         url: global.httpUrl+'/checkTeacherCourse',
@@ -494,7 +505,11 @@ export default {
         dataType: 'json',
         success: function (json) {
           if(json.total>0){
-            window.open('/CourseTest');
+            // window.open('/CourseTest');
+            const { href } = that.$router.resolve({
+              path: "/CourseTest",
+            });
+            window.open(href, '_blank');
           }else{
             alert("你还未发布过课程或无正常状态的课程，请添加课程或将课程状态恢复!");
           }
@@ -565,11 +580,16 @@ export default {
 
     //编辑或修改测试卷
     changeTest(testId) {
-      window.open("/CourseTest?testId=" + testId);
+      // window.open("/CourseTest?testId=" + testId);
+      const { href } = this.$router.resolve({
+        path: "/CourseTest?testId=" + testId,
+      });
+      window.open(href, '_blank');
     },
 
     //添加课程资源
     addCourseResources() {
+      var that=this;
       //在此之前判断该教师是否已发布过课程
       $.ajax({
         url: global.httpUrl+'/checkTeacherCourse',
@@ -577,7 +597,11 @@ export default {
         dataType: 'json',
         success: function (json) {
           if(json.total>0){
-            window.open('/CourseResource');
+            // window.open('/CourseResource');
+            const { href } = that.$router.resolve({
+              path: "/CourseResource",
+            });
+            window.open(href, '_blank');
           }else{
             alert("你还未发布过课程或无正常状态的课程，请添加课程或将课程状态恢复!");
           }
@@ -664,7 +688,11 @@ export default {
             $("#teachersSchoolEmail").val(response.teachersSchoolEmail);
           }else{
             alert("非法进入!");
-            window.open("/", "_self").close();
+            // window.open("/", "_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }
         },
         error: function (err) {

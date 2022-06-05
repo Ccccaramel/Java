@@ -58,7 +58,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "SearchResource",
   components:{
@@ -146,7 +146,11 @@ export default {
       this.key = decodeURI(keyStr);
       if (typeof(this.key)== "undefined") {
         alert("非法访问!");
-        window.open("/", "_self").close();
+        // window.open("/", "_self").close();
+        const { href } = that.$router.resolve({
+          path: "/",
+        });
+        window.open(href, '_self').close();
       }
       //此页面第一次加载将会显示第一页的搜索结果
       that.loadingResource(1);

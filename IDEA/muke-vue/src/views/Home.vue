@@ -14,9 +14,14 @@
         <div class="col-2" style="padding-right: 0px;padding-left: 0px">
           <div class="btn-group-vertical carousel slide carousel-fade" role="group"
                aria-label="Button group with nested dropdown"
-               style="width: 100%;height: 100%;" id="course-type">
-            <button type="button" class="btn btn-secondary" style="width: 100%;height: 100%;" :id="CourseType.typeValue" @click="saveCourseType(CourseType.typeValue)" v-for="CourseType in partCourseTypeList">{{CourseType.typeName}}</button>
+               style="width: 100%;" id="course-type">
+            <button type="button" class="btn btn-secondary" style="width: 100%;" :id="courseType.typeValue" @click="saveCourseTypeId(courseType.typeValue)" v-for="courseType in partCourseTypeList">{{courseType.typeName}}</button>
           </div>
+<!--          <div style="width: 100%;height: 100%; background-color: #0f6ab4">-->
+<!--            <div style="width: 100%;height:100%">-->
+<!--              <button type="button" class="btn btn-secondary" style="width: 100%;height: 12.5%;float: left" :id="courseType.typeValue" @click="saveCourseTypeId(courseType.typeValue)" v-for="courseType in partCourseTypeList">{{courseType.typeName}}</button>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
 
         <div id="carouselExampleCaptions" class="col-10 carousel slide carousel-fade" data-ride="carousel" style="padding:0px">
@@ -24,45 +29,14 @@
             <li data-target="#carouselExampleCaptions" :data-slide-to="i" :class="[i===0?'active':'']"  v-for="(promotionCourse,i) in promotionCourseList"></li>
           </ol>
           <div class="carousel-inner">
-            <div :class="[i===0?'carousel-item active':'carousel-item']" v-for="(promotionCourse,i) in promotionCourseList">
+            <div :class="[i===0?'carousel-item active':'carousel-item']" v-for="(promotionCourse,i) in promotionCourseList"  @click="introduce(promotionCourse.courseId)">
               <img :src="promotionCourse.course.imageURL" class="d-block w-100">
               <div class="carousel-caption d-none d-md-block">
                 <h5 style="background: rgba(0,0,0,0.4)">{{promotionCourse.course.courseName}}</h5>
               </div>
             </div>
           </div>
-<!--          <button class="carousel-control-prev" type="button" data-target="#carouselExampleCaptions" data-slide="prev">-->
-<!--            <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-<!--            <span class="sr-only">Previous</span>-->
-<!--          </button>-->
-<!--          <button class="carousel-control-next" type="button" data-target="#carouselExampleCaptions" data-slide="next">-->
-<!--            <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-<!--            <span class="sr-only">Next</span>-->
-<!--          </button>-->
         </div>
-        <!--左侧轮播图-->
-<!--        <div id="carouselExampleFade" class="col-10 carousel slide carousel-fade" data-ride="carousel" style="padding-right: 0px;padding-left: 0px">-->
-<!--          <div class="carousel-inner">-->
-<!--            <div class="carousel-item active" v-if="i===1" v-for="(promotionCourse,i) in promotionCourseList">-->
-<!--              <img src="/upload/photo/2022033120293710005051.jpg" class="d-block w-100" alt="1">-->
-<!--            </div>-->
-<!--            <div class="carousel-item">-->
-<!--              <img src="http://localhost:8080/upload/photo/2022040109585410006443.jpg" class="d-block w-100" alt="2">-->
-<!--            </div>-->
-<!--            <div class="carousel-item">-->
-<!--              <img src="../assets/image/play.png" class="d-block w-100" alt="3">-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <button class="carousel-control-prev" type="button" data-target="#carouselExampleFade" data-slide="prev">-->
-<!--            <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-<!--            <span class="sr-only">Previous</span>-->
-<!--          </button>-->
-<!--          <button class="carousel-control-next" type="button" data-target="#carouselExampleFade" data-slide="next">-->
-<!--            <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-<!--            <span class="sr-only">Next</span>-->
-<!--          </button>-->
-<!--        </div>-->
-
       </div>
     </div>
   </div>
@@ -81,7 +55,7 @@
             <p class="card-text">{{ course.courseFirstAbstract }}</p>
           </div>
           <div class="card-footer bg-transparent border-success">
-            <button class="btn btn-primary" :id="course.courseId" onclick="introduce()">立即学习</button>
+            <button class="btn btn-primary" :id="course.courseId" @click="introduce(course.courseId)">立即学习</button>
           </div>
         </div>
       </div>
@@ -103,7 +77,7 @@
             <p class="card-text">{{ course.courseFirstAbstract }}</p>
           </div>
           <div class="card-footer bg-transparent border-success">
-            <button class="btn btn-primary" :id="course.courseId" onclick="introduce()">立即学习</button>
+            <button class="btn btn-primary" :id="course.courseId" onclick="introduce(course.courseId)">立即学习</button>
           </div>
         </div>
       </div>
@@ -125,7 +99,7 @@
             <p class="card-text">{{ course.courseFirstAbstract }}</p>
           </div>
           <div class="card-footer bg-transparent border-success">
-            <button class="btn btn-primary" :id="course.courseId" onclick="introduce()">立即学习</button>
+            <button class="btn btn-primary" :id="course.courseId" @click="introduce(course.courseId)">立即学习</button>
           </div>
         </div>
       </div>
@@ -147,7 +121,7 @@
             <p class="card-text">{{ course.courseFirstAbstract }}</p>
           </div>
           <div class="card-footer bg-transparent border-success">
-            <button class="btn btn-primary" :id="course.courseId" onclick="introduce()">立即学习</button>
+            <button class="btn btn-primary" :id="course.courseId" @click="introduce(course.courseId)">立即学习</button>
           </div>
         </div>
       </div>
@@ -160,7 +134,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
@@ -178,10 +152,43 @@ export default {
   },
   methods: {
     //点击课程名获取课程名称，跳转到课程介绍页面
-    introduce(str) {
-      //获取课程id
-      // var courseId = $(str).attr("id");
-      // heats_up(courseId);
+    introduce(courseId) {
+      var that=this;
+      $.ajax({
+        //数据提交方式
+        type: 'POST',
+        //后端URL
+        url: global.httpUrl+'/heatsUp',
+        data: {'courseId': courseId},
+        success: function () {
+          that.$router.push("/Course?courseId=" + courseId);
+        },
+        error: function () {
+          alert("数据加载失败");
+        }
+      });
+    },
+    //点击课程类型，将课程类型的id存入session，并跳转到课程类型搜索界面
+    saveCourseTypeId(courseTypeId) {
+      var that = this;
+      $.ajax({
+        //数据提交方式
+        type: 'POST',
+        //后端URL
+        url: global.httpUrl+'/saveCourseTypeId',
+        /**
+         * 向后端传递的数据
+         * 搜索的关键字以及当前页码
+         **/
+        data: {'courseTypeId': courseTypeId},
+        dataType: 'json',
+        success: function () {
+          that.$router.push("/CourseType");
+        },
+        error: function () {
+          alert("此课程类别搜索失败");
+        }
+      });
     },
   },
   mounted () {
@@ -191,7 +198,7 @@ export default {
       $.ajax({
         //数据提交方式
         type: 'POST',
-        // data: {"amount": 13},
+        data: {"amount": 13},
         //后端URL
         url: global.httpUrl+'/homeGetCourseType',
         //返回数据类型

@@ -64,4 +64,9 @@ export default [
     name:'Test',
     component:()=>import('@/views/Test.vue')
   },
+  {
+    path:'/CourseType',
+    name:'CourseType',
+    component:()=>import('@/views/CourseType.vue')
+  },
 ]

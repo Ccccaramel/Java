@@ -82,7 +82,7 @@
 <script>
 import top from '@/views/Top.vue'
 import botton from '@/views/Botton.vue'
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "Learn",
   data(){
@@ -210,7 +210,8 @@ export default {
 
     //回到课程简介
     goCourse(courseId) {
-      location.href = "/Course?courseId=" + courseId;
+      // location.href = "/Course?courseId=" + courseId;
+      this.$router.push("/Course?courseId=" + courseId);
     },
   },
   mounted() {
@@ -226,7 +227,11 @@ export default {
         success: function (json) {
           if(json.state==false){
             alert("非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
             return;
           }else {
             that.courseId = json.courseId;

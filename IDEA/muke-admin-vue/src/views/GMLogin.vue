@@ -30,7 +30,7 @@
 
 <!-- src="../assets/canvas" -->
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 function check() {
   var id = /^[0-9]{4}$/;
   var te = /^[0-9]{11}$/;
@@ -54,50 +54,12 @@ function check() {
     exit(0);
   }
 }
-function GMStatHandler(msg) {
-  if (msg == 901) {
-    alert("账号密码不可为空！");
-  } else if (msg == 902) {
-    alert("请检查你的账号是否正确!");
-  } else if (msg == 903) {
-    alert("登录失败，请检查账号或密码是否正确!");
-  }else if (msg == 905) {
-    alert("非法访问请登录!");
-    location.href = '/';
-  } else if (msg == 906) {
-    alert("检测到可能session异常，请尝试重新登录!");
-    location.href = '/';
-  } else if (msg == 907) {
-    //程序an无需额外操作
-  } else if (msg == 908) {
-    alert("已安全退出!");
-    location.href = '/';
-  } else if (msg == 910) {
-    alert("修改失败！");
-  } else if (msg == 911) {
-    alert("账号待审核中");
-  } else if (msg == 912) {
-    alert("请尽快修改初始密码！");
-    location.href = '/ManagementSystem';
-  } else if (msg == 913) {
-    alert("账号已被冻结");
-  } else if (msg == 914) {
-    alert("账号已被注销");
-  } else if (msg == 915) {
-    alert("登陆成功!");
-    location.href = '/ManagementSystem';
-  } else if (msg == 916) {
-    alert("登录失败,请检查账号或密码是否正确!");
-  } else {
-    alert("请使用正常的账号登录");
-    alert(msg);
-  }
-}
 
 export default {
   name: 'GMLogin',
   methods:{
     submitGMLogin() {
+      var that=this;
       $.ajax({
         type : 'POST',
         url : global.httpUrl+"/gmLogin",
@@ -110,7 +72,7 @@ export default {
         success : function(json) {
           console.log("success");
           console.log("result>sign:" + json.sign+",state:"+json.state);
-          GMStatHandler(json.sign);
+          that.GMStatHandler(json.sign);
         },
         error : function(xhr, status, error) {
           console.log("状态码:" + xhr.status + ",状态:" + xhr.readyState
@@ -118,6 +80,50 @@ export default {
             + ",error:" + error);
         }
       });
+    },
+    GMStatHandler(msg) {
+      if (msg == 901) {
+        alert("账号密码不可为空！");
+      } else if (msg == 902) {
+        alert("请检查你的账号是否正确!");
+      } else if (msg == 903) {
+        alert("登录失败，请检查账号或密码是否正确!");
+      }else if (msg == 905) {
+        alert("非法访问请登录!");
+        // location.href = '/';
+        this.$router.push("/");
+      } else if (msg == 906) {
+        alert("检测到可能session异常，请尝试重新登录!");
+        // location.href = '/';
+        this.$router.push("/");
+      } else if (msg == 907) {
+        //程序an无需额外操作
+      } else if (msg == 908) {
+        alert("已安全退出!");
+        // location.href = '/';
+        this.$router.push("/");
+      } else if (msg == 910) {
+        alert("修改失败！");
+      } else if (msg == 911) {
+        alert("账号待审核中");
+      } else if (msg == 912) {
+        alert("请尽快修改初始密码！");
+        // location.href = '/ManagementSystem';
+        this.$router.push("/ManagementSystem");
+      } else if (msg == 913) {
+        alert("账号已被冻结");
+      } else if (msg == 914) {
+        alert("账号已被注销");
+      } else if (msg == 915) {
+        alert("登陆成功!");
+        // location.href = '/ManagementSystem';
+        this.$router.push("/ManagementSystem");
+      } else if (msg == 916) {
+        alert("登录失败,请检查账号或密码是否正确!");
+      } else {
+        alert("请使用正常的账号登录");
+        alert(msg);
+      }
     },
   },
 }

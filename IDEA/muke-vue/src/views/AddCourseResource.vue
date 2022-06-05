@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <form name="add_course_resource" id="add_course_resource">
-      <div class="alert alert-dark" role="alert" style="width:100%;margin-bottom: 16px;elevation: deg">
+      <div class="alert alert-dark" role="alert" style="width:100%;margin-bottom: 16px;">
         <span>学思网-添加课程资源</span>
       </div>
 
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "AddCourseResource",
   data(){
@@ -75,7 +75,11 @@ export default {
         contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
         success: function (response, status, xhr) {
           alert("课程资源保存成功!");
-          window.open('',"_self").close();
+          // window.open('',"_self").close();
+          const { href } = that.$router.resolve({
+            path: "",
+          });
+          window.open(href, '_blank').close();
         },
         error: function () {
           alert("课程资源上传失败!");
@@ -96,13 +100,21 @@ export default {
         success: function (json) {
           if(json.courseId==null){
             alert("非法进入!");
-            window.open("/","_self").close();
+            // window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_blank').close();
           }
           that.courseId=json.courseId;
         },
         error: function () {
           alert("获取课程id失败,非法进入!");
-          window.open("/","_self").close();
+          // window.open("/","_self").close();
+          const { href } = that.$router.resolve({
+            path: "/",
+          });
+          window.open(href, '_blank').close();
         }
       });
 

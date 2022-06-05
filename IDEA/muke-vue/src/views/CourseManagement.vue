@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import global from './common.vue'
+import global from './Common.vue'
 export default {
   name: "CourseManagement",
   data(){
@@ -340,6 +340,7 @@ export default {
      **/
     checkIdentitl(courseId) {
       console.log("checkIdentitl"+courseId);
+      var that=this;
       $.ajax({
         url: global.httpUrl+'/editCourseIdentitlCheck',
         type: 'post',
@@ -350,6 +351,10 @@ export default {
           if(json.state===false){
             alert(json.state+"非法进入!");
             window.open("/","_self").close();
+            const { href } = that.$router.resolve({
+              path: "/",
+            });
+            window.open(href, '_self').close();
           }else {
             alert("允许继续编辑课程!");
           }
@@ -402,7 +407,7 @@ export default {
             var abstractList = json.abstract;
             console.log("size:"+abstractList.length);
             //获取课程简介
-            for(var i=1;i<=3;i++){
+            for(var i=1;i<=abstractList.length;i++){
               $("#courseAbstract-" + i).val(abstractList[i-1].courseIntroduce);
             }
 
@@ -411,6 +416,7 @@ export default {
              * 创建组件
              */
             var courseStructureList = json.structure;
+            console.log("courseStructureList>"+courseStructureList);
             for(var i in courseStructureList){
               var chapterId=courseStructureList[i].chapterId;
               var sectionId=courseStructureList[i].sectionId;

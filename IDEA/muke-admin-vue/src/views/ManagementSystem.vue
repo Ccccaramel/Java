@@ -234,16 +234,16 @@
               </tr>
               </thead>
               <tbody id="course-resource-list">
-                <tr v-for="courseResouce in courseResouceList">
-                  <th scope="row">{{courseResouce.resourceId}}</th>
-                  <td>{{courseResouce.resourceName}}</td>
-                  <td>{{courseResouce.courseId}}</td>
-                  <td>{{courseResouce.course.courseName}}</td>
-                  <td>{{courseResouce.teacher.teacherId}}</td>
-                  <td v-if="courseResouce.userClass.typeName==='教师'">{{courseResouce.teacher.teacherName}}</td>
-                  <td v-if="courseResouce.userClass.typeName!=='教师'">{{courseResouce.student.userName}}</td>
-                  <td>{{courseResouce.userClass.typeName}}</td>
-                  <td :id="courseResouce.resourceId">{{courseResouce.accountStatus.accountClass}}</td>
+                <tr v-for="courseResource in courseResourceList">
+                  <th scope="row">{{courseResource.resourceId}}</th>
+                  <td>{{courseResource.resourceName}}</td>
+                  <td>{{courseResource.courseId}}</td>
+                  <td>{{courseResource.course.courseName}}</td>
+<!--                  <td>{{courseResource.teacher.teacherId}}</td>-->
+                  <td v-if="courseResource.userClass.typeName==='教师'">{{courseResource.teacher.teacherName}}</td>
+                  <td v-if="courseResource.userClass.typeName!=='教师'">{{courseResource.student}}</td>
+                  <td>{{courseResource.userClass.typeName}}</td>
+                  <td :id="courseResource.resourceId">{{courseResource.accountStatus.accountClass}}</td>
                   <td style="text-align: center">
                     <span class="btn badge badge-danger" onclick="operation(array['resourceId'],3,7)">删除</span>
                     <span class="btn badge badge-light" style="margin-left: 6px;margin-right: 6px" onclick="operation(array['resourceId'],2,7)">冻结</span>
@@ -650,10 +650,7 @@
 </template>
 
 <script>
-import global from './common.vue'
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
+import global from './Common.vue'
 export default {
   name: "ManagementSystem",
   data(){
@@ -671,7 +668,7 @@ export default {
       userList:[],
       courseTypeList:[],
       courseList:[],
-      courseResouceList:[],
+      courseResourceList:[],
       testList:[],
       coursePromotionList:[],
       suggestionsList:[],
@@ -727,19 +724,21 @@ export default {
       });
     },
     gmLoginCheck() {
+      var that=this;
       $.ajax({
         type : 'POST',
         url : global.httpUrl+"/loginCheck",
         dataType : 'json',
         success : function(json) {
           console.log("账号状态检查");
-          GMStatHandler(json);
+          that.GMStatHandler(json);
         },
         error : function(xhr, status, error) {
           console.log("***>状态码:" + xhr.status + ",状态:" + xhr.readyState
             + ",错误信息:" + xhr.statusText + ",请求状态:" + status
             + ",error:" + error);
-          location.href="/";
+          // location.href="/";
+          that.$router.push("/");
         }
       });
     },
@@ -848,12 +847,14 @@ export default {
     },
     //管理员退出
     GMExitXuesi() {
+      var that=this;
       $.ajax({
         url: global.httpUrl+"/gmExit",
         type: 'post',
         success: function () {
           alert("成功退出!");
-          location.href = '/';
+          // location.href = '/';
+          that.$router.push("/");
         },
         error: function () {
           alert("退出错误!");
@@ -862,7 +863,12 @@ export default {
     },
     //添加管理员
     addGM() {
-      window.open('AddGM');
+      // window.open('/AddGM');
+      // this.$router.resolve("/AddGM");
+      const { href } = this.$router.resolve({
+        path: "/AddGM",
+      });
+      window.open(href, '_blank');
     },
     //加载课程推广信息
     loadingCoursePromotion(page) {
@@ -1116,7 +1122,7 @@ export default {
           pageSize = json.pageSize;
           that.curPage = page;
           that.totalPage = json.totalPage;
-          that.courseResouceList=json.courseResouceList;
+          that.courseResourceList=json.courseResouceList;
         },
         complete: function () {
           // $("#course-resource-pagecount").html(getPageBar());
@@ -1265,10 +1271,80 @@ export default {
         }
       });
     },
+
+    //数据返回后端处理结果反馈给用户，便于指导用户正确操作
+    //100-199:状态相关(登陆/注册成功)
+    //200-299：账号相关(Id/邮箱/电话号码检测)
+    //300-399：密码相关(密码检测)
+    //400-499:个人信息相关(信息修改)
+    GMStatHandler(msg) {
+      if (msg == 901) {
+        alert("账号密码不可为空！");
+      } else if (msg == 902) {
+        alert("请检查你的账号是否正确!");
+      } else if (msg == 903) {
+        alert("登录失败，请检查密码是否正确!");
+      } else if (msg == 904) {
+        alert("登陆成功!");
+        // location.href = 'ManagementSystem.html';
+        this.$router.push("/ManagementSystem");
+      } else if (msg == 905) {
+        alert("非法访问!");
+        // location.href = '/';
+        this.$router.push("/");
+      } else if (msg == 906) {
+        alert("已安全退出!");
+        // location.href = 'GMLogin.html';
+        this.$router.push("/");
+      } else if (msg == 908) {
+        alert("已成功修改！");
+      } else if (msg == 909) {
+        alert("密码不可为空！");
+      } else if (msg == 910) {
+        alert("新密码不一致！");
+      } else if (msg == 911) {
+        alert("密码不符合要求！");
+      } else if (msg == 912) {
+        alert("不可以与原密码相同！");
+      } else if (msg == 913) {
+        alert("新密码不可以使用曾今使用过的密码！");
+      } else if (msg == 914) {
+        alert("密码修改失败！");
+      } else if (msg == 915) {
+        alert("密码修改成功！");
+        $("#GMOldPassword").val('');
+        $("#GMNewPassword").val('');
+        $("#GMNewPasswordR").val('');
+      } else if (msg == 916) {
+        alert("空！");
+      } else if (msg == 917) {
+        alert("新类型添加成功!");
+      } else if (msg == 918) {
+        alert("不存在该课程，请检查后重新输入!");
+      } else if (msg == 919) {
+        alert("该课程正在推广中!");
+      } else if (msg == 920) {
+        $("#v-pills-course-promotion-tab").click();
+        alert("添入成功!");
+      }else if (msg == 1) {
+        // 账号正常 无需其它操作
+      } else if (msg == 2) {
+        alert("此号已被冻结!");
+        GMExitXuesi();//清除账号session信息
+      } else if (msg == 3) {
+        alert("此号已被权限更高的管理员注销!");
+        GMExitXuesi();//清除账号session信息
+      }else {
+        alert("失败！" + msg);
+      }
+    },
   },
 
   mounted() {
     var that = this;
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
     setInterval(this.gmLoginCheck, "20000");  // 每10秒进行一次账号状态检查
     $(function(){  // 获取管理员的基本信息
       $.ajax({
@@ -1286,6 +1362,7 @@ export default {
           }else{
             console.log("信息获取失败");
             // location.href="/";
+            that.$router.push("/");
           }
 
         },
@@ -1294,27 +1371,26 @@ export default {
         }
       });
     });
+    // 判断是否已登录并获取登录信息
+    $(function () {
+      $.ajax({
+        type : 'POST',
+        url : global.httpUrl+"/loginCheck",
+        dataType : 'json',
+        success : function(json) {
+          console.log("loginCheck>result:" + json);
+          that.GMStatHandler(json);
+        },
+        error : function(xhr, status, error) {
+          console.log("状态码:" + xhr.status + ",状态:" + xhr.readyState
+            + ",错误信息:" + xhr.statusText + ",请求状态:" + status
+            + ",error:" + error);
+          that.$router.push({path:'/'});
+        }
+      });
+    });
   }
 }
-
-// 判断是否已登录并获取登录信息
-$(function () {
-  $.ajax({
-    type : 'POST',
-    url : global.httpUrl+"/loginCheck",
-    dataType : 'json',
-    success : function(json) {
-      console.log("loginCheck>result:" + json);
-      GMStatHandler(json);
-    },
-    error : function(xhr, status, error) {
-      console.log("状态码:" + xhr.status + ",状态:" + xhr.readyState
-        + ",错误信息:" + xhr.statusText + ",请求状态:" + status
-        + ",error:" + error);
-      that.$router.push({path:'/'});
-    }
-  });
-});
 
 //获取数据
 var curPage = 1; //当前页码
@@ -1364,71 +1440,6 @@ function gm_search() {
   alert(key);
 }
 
-
-
-//数据返回后端处理结果反馈给用户，便于指导用户正确操作
-//100-199:状态相关(登陆/注册成功)
-//200-299：账号相关(Id/邮箱/电话号码检测)
-//300-399：密码相关(密码检测)
-//400-499:个人信息相关(信息修改)
-function GMStatHandler(msg) {
-  if (msg == 901) {
-    alert("账号密码不可为空！");
-  } else if (msg == 902) {
-    alert("请检查你的账号是否正确!");
-  } else if (msg == 903) {
-    alert("登录失败，请检查密码是否正确!");
-  } else if (msg == 904) {
-    alert("登陆成功!");
-    location.href = 'ManagementSystem.html';
-  } else if (msg == 905) {
-    alert("非法访问!");
-    location.href = '/';
-  } else if (msg == 906) {
-    alert("已安全退出!");
-    location.href = 'GMLogin.html';
-  } else if (msg == 908) {
-    alert("已成功修改！");
-  } else if (msg == 909) {
-    alert("密码不可为空！");
-  } else if (msg == 910) {
-    alert("新密码不一致！");
-  } else if (msg == 911) {
-    alert("密码不符合要求！");
-  } else if (msg == 912) {
-    alert("不可以与原密码相同！");
-  } else if (msg == 913) {
-    alert("新密码不可以使用曾今使用过的密码！");
-  } else if (msg == 914) {
-    alert("密码修改失败！");
-  } else if (msg == 915) {
-    alert("密码修改成功！");
-    $("#GMOldPassword").val('');
-    $("#GMNewPassword").val('');
-    $("#GMNewPasswordR").val('');
-  } else if (msg == 916) {
-    alert("空！");
-  } else if (msg == 917) {
-    alert("新类型添加成功!");
-  } else if (msg == 918) {
-    alert("不存在该课程，请检查后重新输入!");
-  } else if (msg == 919) {
-    alert("该课程正在推广中!");
-  } else if (msg == 920) {
-    $("#v-pills-course-promotion-tab").click();
-    alert("添入成功!");
-  }else if (msg == 1) {
-    // 账号正常 无需其它操作
-  } else if (msg == 2) {
-    alert("此号已被冻结!");
-    GMExitXuesi();//清除账号session信息
-  } else if (msg == 3) {
-    alert("此号已被权限更高的管理员注销!");
-    GMExitXuesi();//清除账号session信息
-  }else {
-    alert("失败！" + msg);
-  }
-}
 
 //触发账号检查事件
 function click() {

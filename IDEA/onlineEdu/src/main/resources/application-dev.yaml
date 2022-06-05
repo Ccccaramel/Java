@@ -17,3 +17,10 @@ mybatis:
   mapper-locations: classpath*:/mapper/*.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: com.muke.onlineedu.*.entity
+
+commonconfig:
+  url: http://127.0.0.1:8080
+  realpath: D:/onlineEdu
+  photopathprefix: /upload/photo
+  videopathprefix: /upload/video
+  filepathprefix: /upload/file

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.TeamWithPlayerMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.TeamWithPlayer">
+        <id column="id" property="id"/>
+
+        <id column="playerId" property="playerId"/>
+        <id column="teamId" property="teamId"/>
+        <id column="teamMemberStatus" property="teamMemberStatus"/>
+        <id column="joinTime" property="joinTime"/>
+        <id column="joinWay" property="joinWay"/>
+        <id column="leaveTime" property="leaveTime"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="TeamMemberMap" type="com.ding.hyld.vo.TeamMemberVo">
+        <id column="playerId" property="playerId"/>
+        <id column="teamMemberId" property="teamMemberId"/>
+        <id column="scid" property="scid"/>
+        <id column="name" property="name"/>
+        <id column="joinTime" property="joinTime"/>
+        <id column="joinWay" property="joinWay"/>
+        <id column="status" property="status"/>
+        <id column="statusId" property="statusId"/>
+        <id column="leaveTime" property="leaveTime"/>
+
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="TeamMemberCreditMap" type="com.ding.hyld.vo.TeamMemberCreditVo">
+        <id column="teamMemberId" property="teamMemberId"/>
+        <id column="scid" property="scid"/>
+        <id column="playerName" property="playerName"/>
+    </resultMap>
+    <select id="searchTeamMember" resultMap="TeamMemberMap">
+        SELECT
+        p.`id` as playerId,
+        p.`scid` as scid,
+        p.`name` as name,
+        twp.`joinTime` as joinTime,
+        d1.`name` as joinWay,
+        twp.teamMemberStatus as statusId,
+        twp.id as teamMemberId,
+        d.`name` as status,
+        twp.`leaveTime` as leaveTime,
+        twp.`note` as note
+        from team_with_player twp
+        join team t on t.id = twp.teamId
+        join player p on p.id = twp.playerId
+        join dictionary d on d.id = twp.teamMemberStatus
+        join dictionary d1 on d1.id = twp.joinWay
+        <where>
+            <if test="teamMemberVo.teamScid != null and teamMemberVo.teamScid.trim() != ''">
+                and t.scid like concat('%',#{teamMemberVo.teamScid},'%')
+            </if>
+            <if test="teamMemberVo.scid != null and teamMemberVo.scid.trim() != ''">
+                and p.scid like concat('%',#{teamMemberVo.scid},'%')
+            </if>
+            <if test="teamMemberVo.name != null and teamMemberVo.name.trim() != ''">
+                and p.name like concat('%',#{teamMemberVo.name},'%')
+            </if>
+            <if test="teamMemberVo.teamId != null">
+                and t.id= #{teamMemberVo.teamId}
+            </if>
+            <if test="teamMemberVo.teamMemberStatusId != null and teamMemberVo.teamMemberStatusId != 0">
+                and twp.teamMemberStatus=#{teamMemberVo.teamMemberStatusId}
+            </if>
+        </where>
+        order by playerId
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+
+    <update id="changeTeamMemberStatus">
+        update team_with_player
+        set teamMemberStatus=#{changeTeamMemberStatusInfo.teamMemberStatusId},
+            note=#{changeTeamMemberStatusInfo.note},
+            leaveTime=#{changeTeamMemberStatusInfo.time}
+        where id=#{changeTeamMemberStatusInfo.teamMemberId}
+    </update>
+
+    <insert id="addNewTeamMember">
+        insert into team_with_player(playerId,teamId,teamMemberStatus,joinTime,joinWay,note)
+        values(#{teamMemberInfo.playerId},#{teamMemberInfo.teamId},100,#{teamMemberInfo.time},#{teamMemberInfo.joinWay},#{teamMemberInfo.note});
+    </insert>
+    <select id="findTeamMember" resultMap="resultMap">
+        select twp.*
+        from team_with_player twp
+        join player p on p.id=twp.playerId
+        <where>
+            and p.scid=#{teamMemberInfo.playerScid}
+            and twp.teamMemberStatus = 100
+        </where>
+    </select>
+
+    <select id="getAllValidTeamMember" resultMap="TeamMemberCreditMap">
+        SELECT
+        twp.`id` as teamMemberId,
+        p.`scid` as scid,
+        p.`name` as playerName
+        from team_with_player twp
+        join team t on t.id = twp.teamId
+        join player p on p.id = twp.playerId
+        <where>
+            <if test="creditImportInfo.teamId != null">
+                and t.id= #{creditImportInfo.teamId}
+            </if>
+            <if test="teamMemberStatusId != null">
+                and twp.teamMemberStatus=#{teamMemberStatusId}
+            </if>
+        </where>
+    </select>
+</mapper>

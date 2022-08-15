@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="test01" />
+        <module name="hyld" />
         <module name="onlineEdu" />
         <module name="baseJava" />
         <module name="springBoot" />
@@ -19,6 +20,7 @@
     <bytecodeTargetLevel>
       <module name="baseJava" target="15" />
       <module name="demo" target="11" />
+      <module name="hyld" target="11" />
       <module name="onlineEdu" target="11" />
       <module name="renren-fast" target="1.8" />
       <module name="springBoot" target="1.8" />
@@ -31,6 +33,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="demo" options="-parameters" />
+      <module name="hyld" options="-parameters" />
       <module name="onlineEdu" options="-parameters" />
       <module name="springBoot" options="-parameters" />
       <module name="test01" options="-parameters" />

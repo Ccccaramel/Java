@@ -1,0 +1,281 @@
+select * from ding;
+-- 1
+drop TABLE dictionary;
+create TABLE dictionary(
+	id INT,
+	name VARCHAR(20),
+	value INT,
+	type VARCHAR(20),
+	typeName VARCHAR(20),
+	note VARCHAR(100),
+	PRIMARY KEY (id)
+)COMMENT "字典";
+insert into dictionary(id,name,value,type,typeName) VALUES(0,"正常",0,"teamStatus","战队状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(1,"长期未运营",1,"teamStatus","战队状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(2,"已解散",2,"teamStatus","战队状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(100,"正式成员",0,"playerStatus","成员状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(101,"已毕业",1,"playerStatus","成员状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(102,"末位淘汰",2,"playerStatus","成员状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(103,"7日未上线淘汰",3,"playerStatus","成员状态");
+insert into dictionary(id,name,value,type,typeName,note) VALUES(200,"正常积分",0,"creditType","积分类型","战队赛结算积分");
+insert into dictionary(id,name,value,type,typeName,note) VALUES(201,"初始积分",1,"creditType","积分类型","使用新规则对部分队员奖励的额外积分");
+insert into dictionary(id,name,value,type,typeName,note) VALUES(202,"请假积分",2,"creditType","积分类型","低保积分,建议副队*30/资深*15/队员*0");
+insert into dictionary(id,name,value,type,typeName,note) VALUES(203,"额外积分",3,"creditType","积分类型","超过指定奖杯数的额外积分");
+insert into dictionary(id,name,value,type,typeName) VALUES(204,"请假积分",4,"creditType","积分类型");
+insert into dictionary(id,name,value,type,typeName) VALUES(300,"战队搜索",0,"joinWay","加入战队途径");
+insert into dictionary(id,name,value,type,typeName) VALUES(301,"b站直播",1,"joinWay","加入战队途径");
+insert into dictionary(id,name,value,type,typeName) VALUES(302,"队员安利",2,"joinWay","加入战队途径");
+insert into dictionary(id,name,value,type,typeName) VALUES(303,"战队创建者",3,"joinWay","加入战队途径");
+insert into dictionary(id,name,value,type,typeName) VALUES(400,"正常",0,"userStatus","账号状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(401,"冻结",1,"userStatus","账号状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(402,"注销",2,"userStatus","账号状态");
+insert into dictionary(id,name,value,type,typeName) VALUES(500,"平台管理员",0,"userType","用户类型");
+insert into dictionary(id,name,value,type,typeName) VALUES(501,"战队管理者",1,"userType","用户类型");
+insert into dictionary(id,name,value,type,typeName) VALUES(502,"战队成员",2,"userType","用户类型");
+SELECT * from dictionary;
+-- 2
+drop TABLE team;
+CREATE TABLE team(
+	id int auto_increment,
+	name VARCHAR(20),
+	scId VARCHAR(20) NOT NULL,
+	status int,
+	note VARCHAR(100),
+	PRIMARY KEY (id),
+	FOREIGN KEY (status) REFERENCES dictionary(id),
+	UNIQUE(scId)
+)COMMENT "战队信息";
+INSERT INTO team(name,scId,status) VALUES("天下会","YYUYC",0);
+SELECT * from team;
+-- 3
+drop table player;
+create TABLE player(
+	id int auto_increment,
+	scid VARCHAR(40) COMMENT "玩家标签",
+	name varchar(40) COMMENT "玩家名称",
+	createTime timestamp DEFAULT CURRENT_TIMESTAMP COMMENT "数据创建时间",
+	note VARCHAR(100) COMMENT "备注",
+	PRIMARY KEY (id)
+)COMMENT "玩家";
+(
+insert into player(scId,name) VALUES("8LJGPP2","蟑螂恶霸");
+insert into player(scId,name) VALUES("CY8YQ9G","一个很帅的GUY");
+insert into player(scId,name) VALUES("2GQJVUCY","顶格处罚");
+insert into player(scId,name) VALUES("L2VPR8RC","THOR|小龙");
+insert into player(scId,name) VALUES("2C02QR9R","苏维埃小兵");
+insert into player(scId,name) VALUES("QLP90J2Y","雨中花");
+insert into player(scId,name) VALUES("V0RPQQQG","一个只会修胎的像皮");
+insert into player(scId,name) VALUES("JGPY92UC","boy");
+insert into player(scId,name) VALUES("RRVGJ0U","D7N");
+insert into player(scId,name) VALUES("90GLRQV8","江羽清");
+insert into player(scId,name) VALUES("YJRCRU9Q","猴子宝宝");
+insert into player(scId,name) VALUES("2L00P9CJQ","听说名字长的开箱都容易出英雄");
+insert into player(scId,name) VALUES("8RP0UCC2","炮灰阿见鸡");
+insert into player(scId,name) VALUES("802820UY","快乐的小张");
+insert into player(scId,name) VALUES("2P0CJRGJY","可爱的，小鹿(>﹏<)");
+insert into player(scId,name) VALUES("UR00QLRU","又白给啦");
+insert into player(scId,name) VALUES("2PVVQ2L0Y","。。。。");
+insert into player(scId,name) VALUES("RVRP9Y","小沐啊");
+insert into player(scId,name) VALUES("YUCCP8G","这么菜找个班上吧");
+insert into player(scId,name) VALUES("2GPRVVVG8","护虾使者");
+insert into player(scId,name) VALUES("2YY9QVJJR","NA.听西");
+insert into player(scId,name) VALUES("8900U9V8","火焰涅槃");
+insert into player(scId,name) VALUES("990QV2Y","骑士");
+insert into player(scId,name) VALUES("99PRPP8C","陈伟霆");
+insert into player(scId,name) VALUES("2P28GUVLQ","王侃侃");
+insert into player(scId,name) VALUES("2Q2Q92C9J","收高质量游族账号，想卖的加我");
+insert into player(scId,name) VALUES("2PG99P89Q","悠棠");
+insert into player(scId,name) VALUES("2GLJG0QYG","我不爱荒野");
+insert into player(scId,name) VALUES("LU99YJLY","叫爸爸");
+insert into player(scId,name) VALUES("2GCGYQ900","st奥特曼");
+)
+SELECT * from player;
+--4
+DROP TABLE team_with_player;
+CREATE TABLE team_with_player(
+	id INT auto_increment,
+	playerId INT,
+	teamId INT,
+	playerStatus INT COMMENT "玩家状态",
+	joinTime timestamp COMMENT "成员加入时间",
+	joinWay INT COMMENT "加入方式",
+	leaveTime timestamp COMMENT "成员离开时间",
+	note VARCHAR(100),
+	PRIMARY KEY (id),
+	FOREIGN KEY(playerId) REFERENCES player(id),
+	FOREIGN KEY(teamId) REFERENCES team(id),
+	FOREIGN KEY (playerStatus) REFERENCES dictionary(id),
+	FOREIGN KEY (joinWay) REFERENCES dictionary(id)
+)COMMENT "战队与玩家关系表";
+(
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(1, 100,1,"2020-06-09 10:00:00",303);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(2, 100,1,"2020-06-09 10:00:00",300);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(3, 100,1,"2020-06-09 10:00:00",300);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,leaveTime,joinWay) VALUES(4, 101,1,"2020-06-09 10:00:00","2022-07-11 18:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(5, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(6, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(7, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(8, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(9, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(10, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(11, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(12, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(13, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(14, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(15, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(16, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(17, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(18, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(19, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(20, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(21, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(22, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(23, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(24, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(25, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(26, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,leaveTime,joinWay) VALUES(27, 102,1,"2020-06-09 10:00:00","2022-07-11 18:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(28, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(29, 100,1,"2020-06-09 10:00:00",301);
+INSERT INTO team_with_player(playerId,playerStatus,teamId,joinTime,joinWay) VALUES(30, 100,1,"2020-06-09 10:00:00",301);
+)
+SELECT * FROM team_with_player;
+SELECT twp.id,p.id,p.name from team_with_player twp
+JOIN player p on p.id=twp.playerId;
+-- 5
+drop TABLE credit;
+create TABLE credit(
+	id int auto_increment,
+	teamPlayerId int COMMENT "战队成员id",
+	createTime timestamp DEFAULT CURRENT_TIMESTAMP COMMENT "数据创建时间",
+	settlementTime TIMESTAMP COMMENT "结算时间",
+	credit int COMMENT "积分",
+	creditType int COMMENT "积分类型",
+	note VARCHAR(100),
+	PRIMARY KEY (id),
+	FOREIGN key (teamPlayerId) REFERENCES team_with_player(id),
+	FOREIGN key (creditType) REFERENCES dictionary(id)
+)COMMENT "成员积分";
+-- 7.4 战队赛积分 + 初始积分
+(INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(1,"2022-07-04 18:00:00",37,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(3,"2022-07-04 18:00:00",37,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(3,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(4,"2022-07-04 18:00:00",51,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(4,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(5,"2022-07-04 18:00:00",44,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(5,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(6,"2022-07-04 18:00:00",35,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(6,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(7,"2022-07-04 18:00:00",33,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(7,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(8,"2022-07-04 18:00:00",49,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(8,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(9,"2022-07-04 18:00:00",33,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(9,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(10,"2022-07-04 18:00:00",23,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(10,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(11,"2022-07-04 18:00:00",26,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(12,"2022-07-04 18:00:00",32,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(12,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(14,"2022-07-04 18:00:00",19,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(14,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(15,"2022-07-04 18:00:00",27,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(15,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(16,"2022-07-04 18:00:00",14,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(17,"2022-07-04 18:00:00",41,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(17,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(18,"2022-07-04 18:00:00",28,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(18,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(19,"2022-07-04 18:00:00",23,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(19,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(20,"2022-07-04 18:00:00",18,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(21,"2022-07-04 18:00:00",28,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(21,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(22,"2022-07-04 18:00:00",17,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(22,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(23,"2022-07-04 18:00:00",30,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(23,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(24,"2022-07-04 18:00:00",26,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(24,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(25,"2022-07-04 18:00:00",43,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(25,"2022-07-04 18:00:00",30,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(27,"2022-07-04 18:00:00",31,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(27,"2022-07-04 18:00:00",15,201);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(28,"2022-07-04 18:00:00",24,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(30,"2022-07-04 18:00:00",29,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(30,"2022-07-04 18:00:00",15,201);
+-- 7.11 战队赛
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(1,"2022-07-11 18:00:00",47,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(2,"2022-07-11 18:00:00",33,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(3,"2022-07-11 18:00:00",37,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(4,"2022-07-11 18:00:00",45,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(5,"2022-07-11 18:00:00",42,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(6,"2022-07-11 18:00:00",41,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(7,"2022-07-11 18:00:00",37,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(8,"2022-07-11 18:00:00",27,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(9,"2022-07-11 18:00:00",29,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(10,"2022-07-11 18:00:00",13,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(11,"2022-07-11 18:00:00",25,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(12,"2022-07-11 18:00:00",22,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(13,"2022-07-11 18:00:00",41,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(14,"2022-07-11 18:00:00",26,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(15,"2022-07-11 18:00:00",24,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(16,"2022-07-11 18:00:00",16,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(17,"2022-07-11 18:00:00",23,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(18,"2022-07-11 18:00:00",27,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(19,"2022-07-11 18:00:00",19,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(20,"2022-07-11 18:00:00",31,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(21,"2022-07-11 18:00:00",24,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(22,"2022-07-11 18:00:00",27,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(23,"2022-07-11 18:00:00",26,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(24,"2022-07-11 18:00:00",24,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(25,"2022-07-11 18:00:00",51,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(26,"2022-07-11 18:00:00",37,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(27,"2022-07-11 18:00:00",16,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(28,"2022-07-11 18:00:00",30,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(29,"2022-07-11 18:00:00",39,200);
+INSERT INTO credit(teamPlayerId,settlementTime,credit,creditType) VALUES(30,"2022-07-11 18:00:00",33,200);
+)
+SELECT * from credit;
+-- 6
+DROP TABLE user;
+CREATE TABLE user(
+	id INT auto_increment,
+	name VARCHAR(20) COMMENT "昵称",
+	teamId INT COMMENT "所属战队",
+	status INT COMMENT "账号状态",
+	type INT COMMENT "用户类型",
+	qq VARCHAR(20) COMMENT "qq号",
+	password VARCHAR(80) COMMENT "密码",
+	createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT "创建时间",
+	PRIMARY KEY (id),
+	FOREIGN KEY(teamId) REFERENCES team(id),
+	FOREIGN KEY(status) REFERENCES dictionary(id),
+	FOREIGN KEY(type) REFERENCES dictionary(id)
+) COMMENT "用户";
+INSERT INTO user(name,teamId,status,type,password) VALUES("ding",1,400,500,MD5("123123"));
+SELECT * FROM user;
+--sql--
+SELECT * from dictionary where id in (" 100 ");
+
+select
+name as 队员,
+rank() over(ORDER BY Round(ture_credit/times,2) desc) as 平均积分排名,
+Round(ture_credit/times,2) as 平均每次战队赛积分,
+times as 战队赛结算次数,
+ture_credit as 战队赛总积分,
+ex_credit as 额外总积分,
+total_credit as 总积分
+from (SELECT
+p.`name` as name,
+SUM(if(c.creditType =201,0,1)) as times,
+SUM(if(c.creditType =201,c.credit,0)) ex_credit,
+SUM(if(c.creditType =201,0,c.credit)) ture_credit,
+SUM(c.credit) as total_credit
+FROM team_with_player twp
+join player p on p.id=twp.playerId
+join team t on t.id=twp.teamId
+join credit c on c.teamPlayerId=twp.id
+where t.scId="#YYUYC"
+GROUP BY p.id
+ORDER BY total_credit DESC) as t;

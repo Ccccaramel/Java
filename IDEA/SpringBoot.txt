@@ -24,6 +24,8 @@
 4.在浏览器输入 localhost:8080/hi 即可访问页面
 
 快速创建 springboot 项目
+  创建一个项目
+  右键项目 > 新建 > 模块..
   使用 Spring Initializr 初始化向导
   1.填写项目名 Group 和模块名 Artifact ,修改包名 Package
   2.Web > Spring Web
@@ -53,6 +55,172 @@
       photopathprefix: /upload/photo
       videopathprefix: /upload/video
       filepathprefix: /upload/file
+
+使用 axios
+  npm install axios
+
+添加 mybatis-plus 依赖开发更方便
+  <dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus</artifactId>
+    <version>3.5.1</version>
+  </dependency>
+
+接口返回结果封装
+  在项目内新建 util 包,新建 R.java
+  属性和方法按需修改
+    public class R<T> implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private int code = CommonConstants.SUCCESS;
+        private String msg = "success";
+        private T data;
+        public R() {
+            super();
+        }
+        public R(T data) {
+            super();
+            this.data = data;
+        }
+        public R(T data, String msg) {
+            super();
+            this.data = data;
+            this.msg = msg;
+        }
+        public static <T> R<T> ok() {
+            return restResult(null, CommonConstants.SUCCESS, null);
+        }
+        private static <T> R<T> restResult(T data, int code, String msg) {
+            R<T> apiResult = new R<>();
+            apiResult.setCode(code);
+            apiResult.setData(data);
+            apiResult.setMsg(msg);
+            return apiResult;
+        }
+        public static <T> R<T> ok(T data) {
+            return restResult(data, CommonConstants.SUCCESS, null);
+        }
+        public static <T> R<T> ok(T data, String msg) {
+            return restResult(data, CommonConstants.SUCCESS, msg);
+        }
+        public static <T> R<T> failed() {
+            return restResult(null, CommonConstants.FAIL, null);
+        }
+        public static <T> R<T> failed(String msg) {
+            return restResult(null, CommonConstants.FAIL, msg);
+        }
+        public static <T> R<T> failed(T data) {
+            return restResult(data, CommonConstants.FAIL, null);
+        }
+        public static <T> R<T> failed(T data, String msg) {
+            return restResult(data, CommonConstants.FAIL, msg);
+        }
+        /**
+         * 接口返回成功
+         * @param msg
+         * @return
+         */
+        public static <T> R<T> interfaceSuccess(String msg) {
+            return restResult(null, InterFaceConstants.SUCCESS, msg);
+        }
+        /**
+         * 接口返回成功 ,返回一个对象信息
+         * @param msg
+         * @return
+         */
+        public static <T> R<T> interfaceSuccess(String msg,T t) {
+            return restResult(t, InterFaceConstants.SUCCESS, msg);
+        }
+        /**
+         * 接口返回失败
+         * @param msg
+         * @return
+         */
+        public static <T> R<T> interfaceFailed(String msg) {
+            return restResult(null, InterFaceConstants.FAIL, msg);
+        }
+        public R(Integer code, String msg) {
+            super();
+            this.code = code;
+            this.msg = msg;
+        }
+        public R(Throwable e) {
+            super();
+            this.msg = e.getMessage();
+            this.code = CommonConstants.FAIL;
+        }
+    }
+
+基于 JWT 的登录验证
+  添加依赖
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <version>0.6.0</version>
+    </dependency>
+  添加工具类 JWTUtils(见项目 hyld)
+    Q:测试 JWT 报错
+        ClassNotFoundException: javax.xml.bind.DatatypeConverter
+    A:可能你的 JDK 版本过高
+      1. JDK 降低至 8
+      2.添加依赖
+        <dependency>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+          <version>2.3.1</version>
+        </dependency>
+  添加 redis 依赖
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+  下载 redis
+   在 bin 目录下 新建一个 start.bat 并将如下命令添入
+     redis-server.exe redis.windows.conf
+   这样以后直接 start.bat 即可方便运行
+   可看到默认端口为 6379
+   让 redis 持续在后台运行
+  配置 redis
+    spring:
+      redis:
+        host: localhost
+        port: 6379
+  添加 Fasstjson 依赖
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>2.0.7</version>
+    </dependency>
+  添加依赖,用于 md5
+  <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+  </dependency>
+
+Q:启动报错
+    Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+A:相互/循环-引用/依赖,在 配置(yaml)中加入如下配置
+    spring.main.allow-circular-references=true
+添加 refresh_token
+  <额外模块,优化相关,非必要>
+
+Q:关于循环引用
+A:推荐使用 @Resource
+    https://baijiahao.baidu.com/s?id=1715596620406357296&wfr=spider&for=pc
+
+Q:重启 IDEA 找不到自定义的类?
+A: IDEA > 选项 > 清除缓存...
+
+Q:如何修改 vue3 的 title ?
+A:在 vue.config.js 中添加如下配置
+    chainWebpack(config) {
+      config.plugin('html').tap((args) => { //标题
+        args[0].title = '在吗?';
+        return args;
+      })
+    }
+
+Q:如何在每次进行数据库操作时将最终 sql 和参数打印至控制台?
+A:
 
 springBoot 官方文档
   https://spring.io/projects/spring-boot#learn
@@ -290,3 +458,23 @@ A:莫名其妙报错,弄了半天,什么也没改,然后又莫名其妙的正常
   或许与改动实体类有关,
 
 不要使用 Lombok!
+
+Q:Description:
+  Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+  Reason: Failed to determine a suitable driver class
+  Action:
+  Consider the following:
+  	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+  	If you have database settings to be loaded from a particular profile you may need to activate it (the profiles dev are currently active).
+A:添加依赖
+    <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus</artifactId>
+        <version>3.5.1</version>
+    </dependency>
+
+四种认证方式：cookie、session、token、jwt
+
+Q:复制粘贴别人的代码结果请求报错 CORS ERROR
+    httpServletResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
+A:地址填自己的前端 IP !

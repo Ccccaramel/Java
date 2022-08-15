@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.DictionaryMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Dictionary">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="value" property="value"/>
+        <id column="type" property="type"/>
+        <id column="typeName" property="typeName"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="findBy" resultMap="resultMap">
+        select *
+        from dictionary
+            where id=#{id}
+    </select>
+
+    <select id="findByType" resultMap="resultMap">
+        select * from dictionary
+        <where>
+            <if test="teamMemberStatus != null and teamMemberStatus.trim() != ''">
+                and type=#{teamMemberStatus}
+            </if>
+            <if test="exclude != null and exclude.size() > 0">
+                and id not in
+                <foreach item="typeId" collection="exclude" open="(" separator="," close=")" index="index">
+                    #{typeId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="searchDictionary" resultMap="resultMap">
+        select * from dictionary
+        <where>
+            <if test="dictionaryInfo.name != null and dictionaryInfo.name.trim() != ''">
+                and name like concat('%',#{dictionaryInfo.name},'%')
+            </if>
+            <if test="dictionaryInfo.type != null and dictionaryInfo.type.trim() != ''">
+                and type like concat('%',#{dictionaryInfo.type},'%')
+            </if>
+            <if test="dictionaryInfo.typeName != null and dictionaryInfo.typeName.trim() != ''">
+                and typeName like concat('%',#{dictionaryInfo.typeName},'%')
+            </if>
+        </where>
+        ORDER BY id
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="addDictionaryInfo">
+        insert into dictionary(id,name,value,type,typeName,note)
+        values(#{dictionaryInfo.id},#{dictionaryInfo.name},#{dictionaryInfo.value},#{dictionaryInfo.type},#{dictionaryInfo.typeName},#{dictionaryInfo.note})
+    </insert>
+    <update id="updateDictionaryInfo">
+        update dictionary
+        set name = #{dictionaryInfo.name},
+            value = #{dictionaryInfo.value},
+            type = #{dictionaryInfo.type},
+            typeName = #{dictionaryInfo.typeName},
+            note = #{dictionaryInfo.note}
+        where id = #{dictionaryInfo.id}
+    </update>
+</mapper>

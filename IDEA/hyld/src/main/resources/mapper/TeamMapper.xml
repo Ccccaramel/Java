@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.TeamMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Team">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+        <id column="status" property="status"/>
+        <id column="eliminationLine" property="eliminationLine"/>
+        <id column="excellentLine" property="excellentLine"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="findById" resultMap="resultMap">
+        select * from team
+        <where>
+            id = #{id}
+        </where>
+    </select>
+    <select id="findBy" resultMap="resultMap">
+        select * from team
+        <where>
+            <if test="team.scid!=null and team.scid.trim()!=''">
+                scid = #{team.scid}
+            </if>
+        </where>
+    </select>
+    <select id="findByScid" resultMap="resultMap">
+        select * from team
+        where scid = #{scid}
+    </select>
+    <insert id="add" parameterType="com.ding.hyld.entity.Team" useGeneratedKeys="true" keyProperty="id">
+        insert into team(name,scid,note,status,eliminationLine,excellentLine)
+        values (#{newTeam.name},#{newTeam.scid},#{newTeam.note},#{newTeam.status},#{newTeam.eliminationLine},#{newTeam.excellentLine});
+    </insert>
+    <update id="update">
+        update team
+        set name=#{team.name},scid=#{team.scid},note=#{team.note},eliminationLine=#{team.eliminationLine},excellentLine=#{team.excellentLine}
+        where id=#{team.id}
+    </update>
+</mapper>

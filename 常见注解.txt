@@ -1,0 +1,140 @@
+***spring***
+@PreAuthorize
+  接口权限,功能授权
+
+@Inner
+  基于微服务架构SpringCloud OAuth无Token的接口调用
+  @Inner 是对内部调用公开,拦截外部调用
+  @Inner(value = false) 是对外部暴露
+  两者都会舍弃token鉴权,如果代码中需要用到token,建议不要使用
+
+@Scheduled
+  创建定时任务
+  标记要调度的方法的注解
+  必须指定 cron fixedDelay 或 fixedRate 属性之一
+  该注解共有8个参数
+  1.cron
+    该参数为cron表达式,从左到右
+      [秒] [分] [小时] [日] [月] [周]
+    样例:
+      @Configuration
+      @EnableScheduling
+      public class ScheduledDemo {
+          @Scheduled(cron = "*/5 * * * * ?") //每五秒钟执行一次
+          public void scheduledDemo() {
+              System.out.println("test"+new Date());
+          }
+      }
+      结果:
+      testSat Jan 16 14:23:25 CST 2021
+      testSat Jan 16 14:23:30 CST 2021
+      testSat Jan 16 14:23:35 CST 2021
+      testSat Jan 16 14:23:40 CST 2021
+      testSat Jan 16 14:23:45 CST 2021
+      testSat Jan 16 14:23:50 CST 2021
+  2.zone
+    时区
+    cron表达式会基于该时区解析
+    默认是一个空字符串,即取服务器所在地的时区
+  3.fixedDelay
+    从上次调用结束到下一次调用之间的固定时间(以毫秒为单位)
+    样例:
+      @Scheduled(fixedDelay = 5000) //上次调用结束后5秒再执行
+  4.fixedDelayString
+    与 fixedDelay 意思相同,只是使用字符串的形式,唯一不同的是支持占位符
+    样例:
+      @Scheduled(fixedDelayString = "5000")  
+      //占位符的使用(配置文件中有配置:time.fixedDelay=5000):
+      @Scheduled(fixedDelayString = "${time.fixedDelay}")
+      //上次调用结束后5秒再执行
+  5.fixedRate
+    两次调用之间固定的毫秒数
+    样例:
+      @Scheduled(fixedRate = 5000)
+      //上次开始无论是否结束5秒钟之后会再次执行
+  6.fixedRateString
+    与 fixedRate 意思相同,只是使用字符串的形式,唯一不同的是支持占位符
+  7.initialDelay
+    第一次执行 fixedRate 或者 fixedDelay 任务之前要延迟的毫秒数
+    样例:
+      @Scheduled(initialDelay=1000, fixedRate=5000) 
+      //第一次延迟1秒后执行,之后按fixedRate的规则每5秒执行一次
+  8.initialDelayString
+    与 initialDelay 意思相同,只是使用字符串的形式,唯一不同的是支持占位符
+
+定时任务符号含义
+  Seconds: 可出现 , - * / 四个字符,有效范围为0-59的整数
+  Minutes: 可出现 , - * / 四个字符,有效范围为0-59的整数
+  Hours: 可出现 , - * / 四个字符,有效范围为0-23的整数
+  DayofMonth: 可出现 , - * / ? L W C 八个字符,有效范围为0-31的整数
+  Month: 可出现 , - * / 四个字符,有效范围为1-12的整数或JAN-DEc
+  DayofWeek: 可出现 , - * / ? L C # 四个字符,有效范围为1-7的整数或SUN-SAT两个范围,1表示星期天,2表示星期一,依次类推
+  Year: 可出现", - * /"四个字符,有效范围为1970-2099年
+  *: 表示匹配该域的任意值,假如在Minutes域使用*, 即表示每分钟都会触发事件,
+  ?: 只能用在DayofMonth和DayofWeek两个域,它也匹配域的任意值,但实际不会,因为DayofMonth和 DayofWeek会相互影响,例如想在每月的20日触发调度,不管20日到底是星期几,则只能使用如下写法: 13 13 15 20 * ?, 其中最后一位只能用？,而不能使用*,如果使用*表示不管星期几都会触发,实际上并不是这样,
+  -: 表示范围,例如在Minutes域使用5-20,表示从5分到20分钟每分钟触发一次
+  /: 表示起始时间开始触发,然后每隔固定时间触发一次,例如在Minutes域使用5/20,则意味着5分钟触发一次,而25,45等分别触发一次
+  ,: 表示列出枚举值值,例如:在Minutes域使用5,20,则意味着在5和20分每分钟触发一次,
+  L: 表示最后,只能出现在DayofWeek和DayofMonth域,如果在DayofWeek域使用5L,意味着在最后的一个星期四触发,
+  W: 表示有效工作日(周一到周五),只能出现在DayofMonth域,系统将在离指定日期的最近的有效工作日触发事件,例如:在 DayofMonth使用5W,如果5日是星期六,则将在最近的工作日:星期五,即4日触发,如果5日是星期天,则在6日(周一)触发；如果5日在星期一 到星期五中的一天,则就在5日触发,另外一点,W的最近寻找不会跨过月份,
+  LW: 这两个字符可以连用,表示在某个月最后一个工作日,即最后一个星期五,
+  #: 用于确定每个月第几个星期几,只能出现在DayofMonth域,例如在4#2,表示某月的第二个星期三
+
+定时任务案例:
+  每隔5秒执行一次 "*/5 * * * * ?"
+  每隔1分钟执行一次 "0 */1 * * * ?"
+  每天23点执行一次 "0 0 23 * * ?"
+  每天凌晨1点执行一次 "0 0 1 * * ?"
+  每月1号凌晨1点执行一次 "0 0 1 1 * ?"
+  每月最后一天23点执行一次 "0 0 23 L * ?"
+  每周星期天凌晨1点实行一次 "0 0 1 ? * L"
+  在26分,29分,33分执行一次 "0 26,29,33 * * * ?"
+  每天的0点,13点,18点,21点都执行一次 "0 0 0,13,18,21 * * ?"
+  表示在每月的1日的凌晨2点调度任务 "0 0 2 1 * ? *"
+  表示周一到周五每天上午 10:15 执行作业 "0 15 10 ? * MON-FRI"
+  表示2002-2006年的每个月的最后一个星期五上午10:15执行 "0 15 10 ? 6L 2002-2006"
+
+***Lombok***
+
+
+***MyBatis-Plus***
+@TableName
+  映射数据库的表名
+
+@TableId
+  主键
+  属性
+    type - @TableId(type=IdType.AUTO)
+      IdType.AUTO
+        数据库自增
+      IdType.NONE
+        MP set 主键,雪花算法实现
+      IdType.INPUT
+        需要开发者手动赋值
+      IdType.ASSIGN_ID
+        MP 分配 ID(Long/Integer/String)
+      IdType.ASSIGN_UUID
+        分配 UUID(String)
+
+@TableField
+  非主键字段使用
+  属性
+    exist - @TableField(exist=false)
+      true 实体表字段
+      false 非实体表字段
+    select - @TableField(select=false)
+      true 参与查询
+      false 不参与查询
+    fill - @TableField(fill=FieldFill.DEFAULT)
+      DEFAULT 不处理
+      INSERT 插入时填充字段
+      INSERT_UPDATE 插入和更新时填充字段
+      UPDATE 更新时填充字段
+
+@Version
+  标记乐观锁,通过 version 字段保证数据的安全性
+  防止数据被重复操作
+  防止两个线程同时操作同一个数据,保证数据的安全性
+
+@EnumValue
+  通用的枚举类注解,将数据库字段映射成实体类的枚举类型成员变量(字典表?)

@@ -1,0 +1,2 @@
+@Autowired 构造注入
+@Resource setter 注入

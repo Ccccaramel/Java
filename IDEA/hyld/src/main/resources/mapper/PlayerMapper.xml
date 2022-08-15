@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.PlayerMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Player">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+
+    <select id="findBy" resultMap="resultMap">
+        select * from player
+        <where>
+            <if test="player.scid != null and player.scid.trim() != ''">
+                and scid=#{player.scid}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addPlayer"  parameterType="com.ding.hyld.entity.Player" useGeneratedKeys="true" keyProperty="id">
+        insert into player(scid,name)
+        values(#{player.scid},#{player.name});
+    </insert>
+</mapper>

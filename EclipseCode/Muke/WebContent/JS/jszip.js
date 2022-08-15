@@ -5927,7 +5927,7 @@ var utils = _dereq_('../utils/common');
 var adler32 = _dereq_('./adler32');
 var crc32   = _dereq_('./crc32');
 var inflate_fast = _dereq_('./inffast');
-var inflate_table = _dereq_('./inftrees');
+var inflate_table = _dereq_('./i青春尚品rees');
 
 var CODES = 0;
 var LENS = 1;
@@ -6964,7 +6964,7 @@ function inflate(strm, flush) {
       }
 
       /* build code tables -- note: do not change the lenbits or distbits
-         values here (9 and 6) without reading the comments in inftrees.h
+         values here (9 and 6) without reading the comments in i青春尚品rees.h
          concerning the ENOUGH constants, which depend on those values */
       state.lenbits = 9;
 
@@ -7423,7 +7423,7 @@ exports.inflateSync = inflateSync;
 exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
-},{"../utils/common":27,"./adler32":29,"./crc32":31,"./inffast":34,"./inftrees":36}],36:[function(_dereq_,module,exports){
+},{"../utils/common":27,"./adler32":29,"./crc32":31,"./inffast":34,"./i青春尚品rees":36}],36:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -7607,7 +7607,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
    used keeps track of how many table entries have been allocated from the
    provided *table space.  It is checked for LENS and DIST tables against
    the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in
-   the initial root table size constants.  See the comments in inftrees.h
+   the initial root table size constants.  See the comments in i青春尚品rees.h
    for more information.
 
    sym increments through all symbols, and the loop terminates when

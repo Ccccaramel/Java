@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.UserWithTeamMapper">
+    <resultMap id="searchTeamResultMap" type="com.ding.hyld.entity.UserWithTeam">
+        <id column="id" property="id"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association column="uwtStatus" property="uwtStatus" select="com.ding.hyld.mapper.DictionaryMapper.findBy"/>
+        <association column="teamStatus" property="teamStatus" select="com.ding.hyld.mapper.DictionaryMapper.findBy"/>
+        <association column="userId" property="user" select="com.ding.hyld.mapper.UserMapper.findBy"/>
+        <association column="teamId" property="team" select="com.ding.hyld.mapper.TeamMapper.findById"/>
+    </resultMap>
+    <select id="searchTeam" resultMap="searchTeamResultMap">
+        select
+        uwt.id id,
+        uwt.userId userId,
+        uwt.teamId teamId,
+        uwt.createTime createTime,
+        uwt.note note,
+        uwt.status uwtStatus,
+        t.status teamStatus
+        from user_with_team uwt
+        join team t on t.id = uwt.teamId
+        join user u on u.id = uwt.userId
+        <where>
+            <if test="searchTeamInfo.teamScid != null and searchTeamInfo.teamScid.trim()!=''">
+                and t.scid like concat('%',#{searchTeamInfo.teamScid},'%')
+            </if>
+            <if test="searchTeamInfo.teamName != null and searchTeamInfo.teamName.trim()!=''">
+                and t.name like concat('%',#{searchTeamInfo.teamName},'%')
+            </if>
+            <if test="searchTeamInfo.userId != null">
+                and u.id = #{searchTeamInfo.userId}
+            </if>
+            <if test="searchTeamInfo.userName != null and searchTeamInfo.userName.trim()!=''">
+                and u.name like concat('%',#{searchTeamInfo.userName},'%')
+            </if>
+            and uwt.status = 701
+            and t.status = 0
+        </where>
+        order by t.id
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+                limit #{start},#{page.size}
+        </if>
+    </select>
+    <resultMap id="ResultMap" type="com.ding.hyld.entity.UserWithTeam">
+        <id column="id" property="id"/>
+
+        <id column="userId" property="userId"/>
+        <id column="teamId" property="teamId"/>
+        <id column="status" property="status"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="findBy" resultMap="ResultMap">
+        select *
+        from user_with_team uwt
+        join team t on uwt.teamId=t.id
+        <where>
+            <if test="newTeam.scid != null and newTeam.scid.trim() != ''">
+                and t.scid = #{newTeam.scid}
+            </if>
+            and uwt.status = 701
+        </where>
+    </select>
+    <select id="findByTeamId" resultMap="ResultMap">
+        select *
+        from user_with_team uwt
+        join team t on uwt.teamId=t.id
+        <where>
+            and t.id = #{teamId}
+            and uwt.status = 701
+        </where>
+    </select>
+    <select id="getBy" resultMap="ResultMap">
+        select *
+        from user_with_team
+        <where>
+            <if test="userWithTeamInfo.id != null">
+                and id = #{userWithTeamInfo.id}
+            </if>
+            <if test="userWithTeamInfo.teamId != null">
+                and teamId = #{userWithTeamInfo.teamId}
+            </if>
+            and status = 701
+        </where>
+    </select>
+    <insert id="add">
+        insert into user_with_team(userId,teamId,status,note)
+        values(#{userWithTeam.userId},#{userWithTeam.teamId},#{userWithTeam.status},#{userWithTeam.note});
+    </insert>
+    <update id="removeTeam">
+        update user_with_team
+        set status=702
+        <where>
+            and userId = #{userId}
+            and teamId = #{teamId}
+        </where>
+    </update>
+    <update id="update">
+        update user_with_team
+        set note = #{userWithTeam.note}
+        <where>
+            and id = #{userWithTeam.id}
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,26 @@
+# 生产环境
+#mybatis:
+#  config-location: classpath:
+server:
+  port: 8090
+spring:
+  datasource:
+    url: jdbc:mysql://121.36.141.65:3306/hyld
+    username: root
+    password: 211506164Ding!
+  web:
+    resources:
+      static-locations: classpath:/static/,file:/usr/local/myData/mukeData
+
+# 数据库映射
+mybatis:
+  mapper-locations: classpath*:/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.muke.onlineedu.*.entity
+
+commonconfig:
+  url: http://121.36.141.65:8090
+  realpath: /usr/local/myData/mukeData
+  photopathprefix: /upload/photo
+  videopathprefix: /upload/video
+  filepathprefix: /upload/file

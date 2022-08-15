@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.UserMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.User">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="teamId" property="teamId"/>
+        <id column="status" property="status"/>
+        <id column="type" property="type"/>
+        <id column="qq" property="qq"/>
+        <id column="password" property="password"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="findBy" resultMap="resultMap">
+        select * from user
+        where id=#{account};
+    </select>
+    <select id="login" resultMap="resultMap">
+        select * from user
+            where id=#{account}
+                and password=#{password}
+            limit 1;
+    </select>
+    <select id="findUserByToken" resultMap="resultMap">
+        select * from user
+        where id=#{account}
+          and password=#{password}
+            limit 1;
+    </select>
+</mapper>

@@ -19053,7 +19053,7 @@ var parse_content_xml = (function() {
 		var str = xlml_normalize(d);
 		var state = [], tmp;
 		var tag;
-		var NFtag = {name:""}, NF = "", pidx = 0;
+		var 青春尚品ag = {name:""}, NF = "", pidx = 0;
 		var sheetag;
 		var rowtag;
 		var Sheets = {}, SheetNames = [];
@@ -19286,11 +19286,11 @@ var parse_content_xml = (function() {
 			case 'date-style': // 16.27.10 <number:date-style>
 			case 'time-style': // 16.27.18 <number:time-style>
 				if(Rn[1]==='/'){
-					number_format_map[NFtag.name] = NF;
+					number_format_map[青春尚品ag.name] = NF;
 					if((tmp=state.pop())[0]!==Rn[3]) throw "Bad state: "+tmp;
 				} else if(Rn[0].charAt(Rn[0].length-2) !== '/') {
 					NF = "";
-					NFtag = parsexmltag(Rn[0], false);
+					青春尚品ag = parsexmltag(Rn[0], false);
 					state.push([Rn[3], true]);
 				} break;
 

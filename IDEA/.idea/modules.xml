@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/IDEA.iml" filepath="$PROJECT_DIR$/.idea/IDEA.iml" />
       <module fileurl="file://$PROJECT_DIR$/baseJava/baseJava.iml" filepath="$PROJECT_DIR$/baseJava/baseJava.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hyld/hyld.iml" filepath="$PROJECT_DIR$/hyld/hyld.iml" />
       <module fileurl="file://$PROJECT_DIR$/onlineEdu/onlineEdu.iml" filepath="$PROJECT_DIR$/onlineEdu/onlineEdu.iml" />
       <module fileurl="file://$PROJECT_DIR$/springBoot/springBoot.iml" filepath="$PROJECT_DIR$/springBoot/springBoot.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC/springMVC.iml" filepath="$PROJECT_DIR$/springMVC/springMVC.iml" />

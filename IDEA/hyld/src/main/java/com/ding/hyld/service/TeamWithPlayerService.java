@@ -2,28 +2,28 @@ package com.ding.hyld.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ding.hyld.entity.TeamWithPlayer;
-import com.ding.hyld.info.ChangeTeamMemberStatusInfo;
-import com.ding.hyld.info.CreditImportInfo;
+import com.ding.hyld.info.TeamMemberCreditInfo;
+import com.ding.hyld.info.TeamMemberInfo;
+import com.ding.hyld.vo.ChangeTeamMemberStatusVo;
+import com.ding.hyld.vo.CreditImportVo;
 import com.ding.hyld.vo.Page;
-import com.ding.hyld.vo.TeamMemberCreditVo;
-import com.ding.hyld.vo.TeamMemberInfo;
 import com.ding.hyld.vo.TeamMemberVo;
 
 import java.util.List;
 
 public interface TeamWithPlayerService extends IService<TeamWithPlayer> {
 
-    List<TeamMemberVo> searchTeamMember(Page page, TeamMemberVo teamMemberVo);
+    List<TeamMemberInfo> searchTeamMember(Page page, TeamMemberVo teamMemberVo);
 
-    void changeTeamMemberStatus(ChangeTeamMemberStatusInfo changeTeamMemberStatusInfo);
+    void changeTeamMemberStatus(ChangeTeamMemberStatusVo changeTeamMemberStatusVo);
 
     /**
      * 将玩家添加至战队中
-     * @param teamMemberInfo
+     * @param teamMemberVo
      */
-    void addNewTeamMember(TeamMemberInfo teamMemberInfo);
+    void addNewTeamMember(TeamMemberVo teamMemberVo);
 
     TeamWithPlayer findTeamMember(String playerScid);
 
-    List<TeamMemberCreditVo> getAllValidTeamMember(CreditImportInfo creditImportInfo, Integer teamMemberStatusId);
+    List<TeamMemberCreditInfo> getAllValidTeamMember(CreditImportVo creditImportVo, Integer teamMemberStatusId);
 }

@@ -10,17 +10,18 @@ spring:
     password: 211506164Ding!
   web:
     resources:
-      static-locations: classpath:/static/,file:/usr/local/myData/mukeData
+      static-locations: classpath:/static/,file:/usr/local/myData/hyldData
 
 # 数据库映射
 mybatis:
   mapper-locations: classpath*:/mapper/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.muke.onlineedu.*.entity
+  typeAliasesPackage: com.ding.hyld.entity
 
-commonconfig:
+resourcespathutils:
   url: http://121.36.141.65:8090
-  realpath: /usr/local/myData/mukeData
+  realpath: /usr/local/myData/hyldData
   photopathprefix: /upload/photo
   videopathprefix: /upload/video
+  audiopathprefix: /upload/audio
   filepathprefix: /upload/file

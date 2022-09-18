@@ -13,7 +13,7 @@ import java.util.List;
 public interface CreditService extends IService<Credit> {
     List<CreditVo> getTeamMemberScoreboard(SearchTeamMemberScoreboardInfo searchTeamMemberScoreboardInfo);
 
-    List<TeamMemberCreditVo> searchTeamMemberCredit(Page page, CreditVo creditVo);
+    List<TeamMemberCreditVo> searchCreditBy(Page page, CreditVo creditVo);
 
     void saveTeamMemberCredit(Credit credit);
 
@@ -22,4 +22,6 @@ public interface CreditService extends IService<Credit> {
     void singleCreditAddSave(TeamMemberCreditVo teamMemberCreditVo);
 
     List<LocalDateTime> getSettlementTimeList(Integer teamId);
+
+    List<CreditVo> getTeamData(Integer teamId,Integer teamCompetitionType);
 }

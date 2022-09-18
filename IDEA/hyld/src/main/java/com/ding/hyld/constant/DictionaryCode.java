@@ -15,13 +15,57 @@ public interface DictionaryCode {
      */
     Integer TEAM_STATUS_1 = 0;
 
-    // 用户与战队关联状态
+    // 关联状态
     /**
-     * 未关联
+     * 冻结中
      */
-    Integer USER_WITH_PLAYER_STATUS_1 = 700;
+    Integer RELATION_STATUS_1 = 700;
     /**
      * 关联中
      */
-    Integer USER_WITH_PLAYER_STATUS_2 = 701;
+    Integer RELATION_STATUS_2 = 701;
+    /**
+     * 已断联
+     */
+    Integer RELATION_STATUS_3 = 702;
+
+    // 战队竞赛类型
+    /**
+     * 战队联赛周
+     */
+    Integer TEAM_COMPETITION_TYPE_1 = 600;
+    /**
+     * 战队任务周
+     */
+    Integer TEAM_COMPETITION_TYPE_2 = 601;
+
+    /**
+     * 待审核
+     */
+    Integer CHECK_STATUS_1 = 1400;
+
+    /**
+     * 审核中
+     */
+    Integer CHECK_STATUS_2 = 1401;
+
+    /**
+     * 审核通过
+     */
+    Integer CHECK_STATUS_3 = 1402;
+
+    /**
+     * 审核不通过
+     */
+    Integer CHECK_STATUS_4 = 1403;
+
+    /**
+     * 队长
+     */
+    Integer PLAYER_POSITION_1 = 1200;
+
+    /**
+     * 副队长
+     */
+    Integer PLAYER_POSITION_2 = 1201;
 }

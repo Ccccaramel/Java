@@ -12,7 +12,7 @@
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
-    <select id="findBy" resultMap="resultMap">
+    <select id="findById" resultMap="resultMap">
         select *
         from dictionary
             where id=#{id}
@@ -24,10 +24,10 @@
             <if test="teamMemberStatus != null and teamMemberStatus.trim() != ''">
                 and type=#{teamMemberStatus}
             </if>
-            <if test="exclude != null and exclude.size() > 0">
-                and id not in
-                <foreach item="typeId" collection="exclude" open="(" separator="," close=")" index="index">
-                    #{typeId}
+            <if test="excludeTypeValueList != null and excludeTypeValueList.size() > 0">
+                and value not in
+                <foreach item="typeValue" collection="excludeTypeValueList" open="(" separator="," close=")" index="index">
+                    #{typeValue}
                 </foreach>
             </if>
         </where>
@@ -36,6 +36,9 @@
     <select id="searchDictionary" resultMap="resultMap">
         select * from dictionary
         <where>
+            <if test="dictionaryInfo.id != null">
+                and id like concat('%',#{dictionaryInfo.id},'%')
+            </if>
             <if test="dictionaryInfo.name != null and dictionaryInfo.name.trim() != ''">
                 and name like concat('%',#{dictionaryInfo.name},'%')
             </if>
@@ -46,7 +49,7 @@
                 and typeName like concat('%',#{dictionaryInfo.typeName},'%')
             </if>
         </where>
-        ORDER BY id
+        ORDER BY id desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
@@ -65,4 +68,7 @@
             note = #{dictionaryInfo.note}
         where id = #{dictionaryInfo.id}
     </update>
+    <delete id="deleteById">
+        delete from dictionary where id = #{dictionaryId};
+    </delete>
 </mapper>

@@ -14,7 +14,7 @@
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
-    <resultMap id="TeamMemberMap" type="com.ding.hyld.vo.TeamMemberVo">
+    <resultMap id="TeamMemberMap" type="com.ding.hyld.info.TeamMemberInfo">
         <id column="playerId" property="playerId"/>
         <id column="teamMemberId" property="teamMemberId"/>
         <id column="scid" property="scid"/>
@@ -27,7 +27,7 @@
 
         <id column="note" property="note"/>
     </resultMap>
-    <resultMap id="TeamMemberCreditMap" type="com.ding.hyld.vo.TeamMemberCreditVo">
+    <resultMap id="TeamMemberCreditMap" type="com.ding.hyld.info.TeamMemberCreditInfo">
         <id column="teamMemberId" property="teamMemberId"/>
         <id column="scid" property="scid"/>
         <id column="playerName" property="playerName"/>
@@ -75,22 +75,22 @@
 
     <update id="changeTeamMemberStatus">
         update team_with_player
-        set teamMemberStatus=#{changeTeamMemberStatusInfo.teamMemberStatusId},
-            note=#{changeTeamMemberStatusInfo.note},
-            leaveTime=#{changeTeamMemberStatusInfo.time}
-        where id=#{changeTeamMemberStatusInfo.teamMemberId}
+        set teamMemberStatus=#{changeTeamMemberStatusVo.teamMemberStatusId},
+            note=#{changeTeamMemberStatusVo.note},
+            leaveTime=#{changeTeamMemberStatusVo.time}
+        where id=#{changeTeamMemberStatusVo.teamMemberId}
     </update>
 
     <insert id="addNewTeamMember">
         insert into team_with_player(playerId,teamId,teamMemberStatus,joinTime,joinWay,note)
-        values(#{teamMemberInfo.playerId},#{teamMemberInfo.teamId},100,#{teamMemberInfo.time},#{teamMemberInfo.joinWay},#{teamMemberInfo.note});
+        values(#{teamMemberVo.playerId},#{teamMemberVo.teamId},100,#{teamMemberVo.time},#{teamMemberVo.joinWay},#{teamMemberVo.note});
     </insert>
     <select id="findTeamMember" resultMap="resultMap">
         select twp.*
         from team_with_player twp
         join player p on p.id=twp.playerId
         <where>
-            and p.scid=#{teamMemberInfo.playerScid}
+            and p.scid=#{teamMemberVo.playerScid}
             and twp.teamMemberStatus = 100
         </where>
     </select>
@@ -104,8 +104,8 @@
         join team t on t.id = twp.teamId
         join player p on p.id = twp.playerId
         <where>
-            <if test="creditImportInfo.teamId != null">
-                and t.id= #{creditImportInfo.teamId}
+            <if test="creditImportVo.teamId != null">
+                and t.id= #{creditImportVo.teamId}
             </if>
             <if test="teamMemberStatusId != null">
                 and twp.teamMemberStatus=#{teamMemberStatusId}

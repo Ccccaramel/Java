@@ -16,11 +16,13 @@ import java.util.List;
 public interface CreditMapper extends BaseMapper<Credit> {
     List<CreditVo> getTeamMemberScoreboard(@Param("searchTeamMemberScoreboardInfo") SearchTeamMemberScoreboardInfo searchTeamMemberScoreboardInfo);
 
-    List<TeamMemberCreditVo> searchTeamMemberCredit(@Param("page") Page page,@Param("creditVo") CreditVo creditVo);
+    List<TeamMemberCreditVo> searchCreditBy(@Param("page") Page page, @Param("creditVo") CreditVo creditVo);
 
     void saveTeamMemberCredit(@Param("credit") Credit credit);
 
     void add(@Param("teamMemberCreditVo") TeamMemberCreditVo teamMemberCreditVo);
 
     List<LocalDateTime> getSettlementTimeList(Integer teamId);
+
+    List<CreditVo> getTeamData(Integer teamId,Integer teamCompetitionType);
 }

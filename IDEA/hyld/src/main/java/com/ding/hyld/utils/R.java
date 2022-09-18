@@ -76,6 +76,10 @@ public class R<T> implements Serializable {
         return restResult(data, ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMsg());
     }
 
+    public static <T> R<T> success(T data,String msg) {
+        return restResult(data, ResponseCode.SUCCESS.getCode(), msg);
+    }
+
     // 通用,只返回处理结果信息,不用于返回数据
     public static R<ResponseCode> currency(ResponseCode data) {
         return restResult(null, data.getCode(), data.getMsg());
@@ -123,5 +127,14 @@ public class R<T> implements Serializable {
         super();
         this.msg = e.getMessage();
         this.code = ResponseCode.FAIL.getCode();
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "code:" + code +
+                ", msg:'" + msg + "'" +
+                ", data:" + data +
+                '}';
     }
 }

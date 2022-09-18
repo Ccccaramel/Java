@@ -1,6 +1,7 @@
 package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ding.hyld.entity.base.BaseObject;
 
 @TableName("team")
 public class Team extends BaseObject {
@@ -9,6 +10,9 @@ public class Team extends BaseObject {
     private Integer status;
     private Integer eliminationLine;
     private Integer excellentLine;
+    private Integer type; // 战队所在区
+
+    private Dictionary teamType; // 战队所在区
 
     public String getName() {
         return name;
@@ -48,5 +52,21 @@ public class Team extends BaseObject {
 
     public void setExcellentLine(Integer excellentLine) {
         this.excellentLine = excellentLine;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Dictionary getTeamType() {
+        return teamType;
+    }
+
+    public void setTeamType(Dictionary teamType) {
+        this.teamType = teamType;
     }
 }

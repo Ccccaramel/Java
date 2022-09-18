@@ -1,44 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ding.hyld.mapper.UserWithTeamMapper">
-    <resultMap id="searchTeamResultMap" type="com.ding.hyld.entity.UserWithTeam">
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.UserWithTeamInfo">
         <id column="id" property="id"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
+        <id column="controllerPreparePage" property="controllerPreparePage"/>
+        <id column="teamMainPage" property="teamMainPage"/>
 
-        <association column="uwtStatus" property="uwtStatus" select="com.ding.hyld.mapper.DictionaryMapper.findBy"/>
-        <association column="teamStatus" property="teamStatus" select="com.ding.hyld.mapper.DictionaryMapper.findBy"/>
-        <association column="userId" property="user" select="com.ding.hyld.mapper.UserMapper.findBy"/>
+        <association column="relationStatus" property="relation" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association column="teamStatus" property="teamStatus" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association column="userId" property="user" select="com.ding.hyld.mapper.UserMapper.findById"/>
         <association column="teamId" property="team" select="com.ding.hyld.mapper.TeamMapper.findById"/>
+        <association column="playerPosition" property="playerPositionType" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association column="checkStatus" property="checkStatus" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
     </resultMap>
-    <select id="searchTeam" resultMap="searchTeamResultMap">
+    <select id="searchTeam" resultMap="resultInfoMap">
         select
         uwt.id id,
         uwt.userId userId,
         uwt.teamId teamId,
         uwt.createTime createTime,
         uwt.note note,
-        uwt.status uwtStatus,
+        uwt.relationStatus relationStatus,
+        uwt.playerPosition playerPosition,
+        uwt.checkStatus checkStatus,
+        uwt.controllerPreparePage controllerPreparePage,
+        uwt.teamMainPage teamMainPage,
         t.status teamStatus
         from user_with_team uwt
         join team t on t.id = uwt.teamId
         join user u on u.id = uwt.userId
         <where>
-            <if test="searchTeamInfo.teamScid != null and searchTeamInfo.teamScid.trim()!=''">
-                and t.scid like concat('%',#{searchTeamInfo.teamScid},'%')
+            <if test="userWithTeamVo.id != null">
+                and uwt.id = #{userWithTeamVo.id}
             </if>
-            <if test="searchTeamInfo.teamName != null and searchTeamInfo.teamName.trim()!=''">
-                and t.name like concat('%',#{searchTeamInfo.teamName},'%')
+            <if test="userWithTeamVo.teamType != null">
+                and t.type = #{userWithTeamVo.teamType}
             </if>
-            <if test="searchTeamInfo.userId != null">
-                and u.id = #{searchTeamInfo.userId}
+            <if test="userWithTeamVo.teamScid != null and userWithTeamVo.teamScid.trim()!=''">
+                and t.scid like concat('%',#{userWithTeamVo.teamScid},'%')
             </if>
-            <if test="searchTeamInfo.userName != null and searchTeamInfo.userName.trim()!=''">
-                and u.name like concat('%',#{searchTeamInfo.userName},'%')
+            <if test="userWithTeamVo.teamId != null">
+                and uwt.teamId = #{userWithTeamVo.teamId}
             </if>
-            and uwt.status = 701
-            and t.status = 0
+            <if test="userWithTeamVo.teamName != null and userWithTeamVo.teamName.trim()!=''">
+                and t.name like concat('%',#{userWithTeamVo.teamName},'%')
+            </if>
+            <if test="userWithTeamVo.userId != null">
+                and u.id = #{userWithTeamVo.userId}
+            </if>
+            <if test="userWithTeamVo.userName != null and userWithTeamVo.userName.trim()!=''">
+                and u.name like concat('%',#{userWithTeamVo.userName},'%')
+            </if>
+            <if test="userWithTeamVo.relationStatus!=null">
+                and uwt.relationStatus = #{userWithTeamVo.relationStatus}
+            </if>
+            <if test="userWithTeamVo.userWithTeamStatus!=null">
+                and t.status = #{userWithTeamVo.userWithTeamStatus}
+            </if>
+            <if test="userWithTeamVo.checkStatus!=null">
+                and uwt.checkStatus = #{userWithTeamVo.checkStatus}
+            </if>
+            <if test="userWithTeamVo.playerPosition!=null">
+                and uwt.playerPosition = #{userWithTeamVo.playerPosition}
+            </if>
         </where>
         order by t.id
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
@@ -51,61 +78,78 @@
 
         <id column="userId" property="userId"/>
         <id column="teamId" property="teamId"/>
-        <id column="status" property="status"/>
+        <id column="relationStatus" property="relationStatus"/>
+        <id column="playerPosition" property="playerPosition"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
-    <select id="findBy" resultMap="ResultMap">
-        select *
-        from user_with_team uwt
-        join team t on uwt.teamId=t.id
+    <select id="findBy" resultMap="resultInfoMap">
+        select * from user_with_team
         <where>
-            <if test="newTeam.scid != null and newTeam.scid.trim() != ''">
-                and t.scid = #{newTeam.scid}
+            <if test="userWithTeamVo.id!=null">
+                and id = #{userWithTeamVo.id}
             </if>
-            and uwt.status = 701
-        </where>
-    </select>
-    <select id="findByTeamId" resultMap="ResultMap">
-        select *
-        from user_with_team uwt
-        join team t on uwt.teamId=t.id
-        <where>
-            and t.id = #{teamId}
-            and uwt.status = 701
-        </where>
-    </select>
-    <select id="getBy" resultMap="ResultMap">
-        select *
-        from user_with_team
-        <where>
-            <if test="userWithTeamInfo.id != null">
-                and id = #{userWithTeamInfo.id}
+            <if test="userWithTeamVo.userId!=null">
+                and userId = #{userWithTeamVo.userId}
             </if>
-            <if test="userWithTeamInfo.teamId != null">
-                and teamId = #{userWithTeamInfo.teamId}
+           <if test="userWithTeamVo.teamId!=null">
+               and teamId = #{userWithTeamVo.teamId}
+           </if>
+           <if test="userWithTeamVo.relationStatus!=null">
+               and relationStatus = #{userWithTeamVo.relationStatus}
+           </if>
+            <if test="userWithTeamVo.checkStatus!=null">
+                and checkStatus = #{userWithTeamVo.checkStatus}
             </if>
-            and status = 701
         </where>
     </select>
     <insert id="add">
-        insert into user_with_team(userId,teamId,status,note)
-        values(#{userWithTeam.userId},#{userWithTeam.teamId},#{userWithTeam.status},#{userWithTeam.note});
+        insert into user_with_team(userId,teamId,relationStatus,checkStatus,note,playerPosition)
+        values(#{userWithTeam.userId},#{userWithTeam.teamId},#{userWithTeam.relationStatus},#{userWithTeam.checkStatus},#{userWithTeam.note},#{userWithTeam.playerPosition});
     </insert>
-    <update id="removeTeam">
+    <!--  解除单个战队关联  -->
+    <update id="relieveTeam">
         update user_with_team
-        set status=702
+        set relationStatus=#{userWithTeamVo.relationStatus}
         <where>
-            and userId = #{userId}
-            and teamId = #{teamId}
+            and id = #{userWithTeamVo.id}
         </where>
     </update>
-    <update id="update">
+    <!--  解除多个战队关联  -->
+    <update id="allRelieveTeam">
         update user_with_team
-        set note = #{userWithTeam.note}
+        set relationStatus=#{userWithTeamVo.relationStatus}
         <where>
-            and id = #{userWithTeam.id}
+            and teamId = #{userWithTeamVo.teamId}
+            and checkStatus = #{userWithTeamVo.checkStatus}
         </where>
     </update>
+    <!--  更改关联状态  -->
+    <update id="changeCheckStatus">
+        update user_with_team
+        set checkStatus=#{userWithTeamVo.checkStatus}
+        <where>
+            and teamId = #{userWithTeamVo.teamId}
+            and checkStatus = #{userWithTeamVo.oldCheckStatus}
+        </where>
+    </update>
+    <update id="saveCheckInfo">
+        update user_with_team
+        set controllerPreparePage = #{controllerPreparePageNewName},teamMainPage=#{teamMainPageNewName},checkStatus=#{checkStatus}
+        where id = #{relationId}
+    </update>
+    <update id="teamExamineCheck">
+        update user_with_team
+        set checkStatus=#{userWithTeamVo.checkStatus},note=#{userWithTeamVo.note}
+        where id = #{userWithTeamVo.id}
+    </update>
+    <insert id="addViceCaptain">
+        insert into user_with_team(userId,teamId,relationStatus,checkStatus,playerPosition)
+        values(#{userWithTeamVo.userId},
+               #{userWithTeamVo.teamId},
+               #{userWithTeamVo.relationStatus},
+               #{userWithTeamVo.checkStatus},
+               #{userWithTeamVo.playerPosition});
+    </insert>
 </mapper>

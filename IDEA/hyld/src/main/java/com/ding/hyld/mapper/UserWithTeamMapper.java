@@ -1,10 +1,9 @@
 package com.ding.hyld.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ding.hyld.entity.Team;
 import com.ding.hyld.entity.UserWithTeam;
-import com.ding.hyld.info.SearchTeamInfo;
 import com.ding.hyld.info.UserWithTeamInfo;
+import com.ding.hyld.vo.UserWithTeamVo;
 import com.ding.hyld.vo.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,17 +13,29 @@ import java.util.List;
 @Mapper
 public interface UserWithTeamMapper extends BaseMapper<UserWithTeam> {
 
-    List<Team> searchTeam(@Param("page") Page page,@Param("searchTeamInfo") SearchTeamInfo searchTeamInfo);
+    List<UserWithTeamInfo> searchTeam(@Param("page") Page page, @Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
-    List<UserWithTeam> findBy(@Param("newTeam") Team newTeam);
-
-    List<UserWithTeam> findByTeamId(Integer teamId);
+    List<UserWithTeamInfo> findBy(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
     void add(@Param("userWithTeam") UserWithTeam userWithTeam);
 
-    void removeTeam(Integer userId, Integer teamId);
+    /**
+     * 直接解除关联
+     * @param userWithTeamVo
+     */
+    void relieveTeam(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
-    UserWithTeam getBy(@Param("userWithTeamInfo") UserWithTeamInfo userWithTeamInfo);
+    void saveCheckInfo(Integer relationId, String controllerPreparePageNewName, String teamMainPageNewName, Integer checkStatus);
 
-    void update(@Param("userWithTeam") UserWithTeam userWithTeam);
+    void teamExamineCheck(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    void addViceCaptain(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    void allRelieveTeam(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    /**
+     * 更改关联的验证状态
+     * @param userWithTeamVo
+     */
+    void changeCheckStatus(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 }

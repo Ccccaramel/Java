@@ -21,8 +21,8 @@ public class CreditServiceImpl extends ServiceImpl<CreditMapper, Credit> impleme
     }
 
     @Override
-    public List<TeamMemberCreditVo> searchTeamMemberCredit( Page page, CreditVo creditVo) {
-        return baseMapper.searchTeamMemberCredit(page,creditVo);
+    public List<TeamMemberCreditVo> searchCreditBy(Page page, CreditVo creditVo) {
+        return baseMapper.searchCreditBy(page,creditVo);
     }
 
     @Override
@@ -45,5 +45,10 @@ public class CreditServiceImpl extends ServiceImpl<CreditMapper, Credit> impleme
     @Override
     public List<LocalDateTime> getSettlementTimeList(Integer teamId) {
         return baseMapper.getSettlementTimeList(teamId);
+    }
+
+    @Override
+    public List<CreditVo> getTeamData(Integer teamId,Integer teamCompetitionType) {
+        return baseMapper.getTeamData(teamId,teamCompetitionType);
     }
 }

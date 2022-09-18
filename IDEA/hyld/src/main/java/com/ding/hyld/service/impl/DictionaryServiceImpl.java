@@ -16,12 +16,12 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
     /**
      * 查询指定类型所有种类
      * @param teamMemberStatus
-     * @param exclude 排除的种类,例如踢人更改队员状态时,”正常队员“不可出现在下拉框中
+     * @param excludeTypeValueList 排除的种类,例如踢人更改队员状态时,”正常队员“不可出现在下拉框中
      * @return
      */
     @Override
-    public List<Dictionary> findByType(String teamMemberStatus,List<Integer> exclude) {
-        return baseMapper.findByType(teamMemberStatus, exclude);
+    public List<Dictionary> findByType(String teamMemberStatus,List<Integer> excludeTypeValueList) {
+        return baseMapper.findByType(teamMemberStatus, excludeTypeValueList);
     }
 
     @Override
@@ -37,5 +37,10 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
     @Override
     public void updateDictionaryInfo(DictionaryInfo dictionaryInfo) {
         baseMapper.updateDictionaryInfo(dictionaryInfo);
+    }
+
+    @Override
+    public void delete(Integer dictionaryId) {
+        baseMapper.deleteById(dictionaryId);
     }
 }

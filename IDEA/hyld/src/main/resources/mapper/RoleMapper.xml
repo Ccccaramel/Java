@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.RoleMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Role">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="power" property="power"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="roleInfoMap" type="com.ding.hyld.info.RoleInfo">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="power" property="power"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="getAllRole" resultMap="roleInfoMap">
+        select * from role
+    </select>
+    <insert id="addRole">
+        insert into role(name,note)
+        values (#{roleVo.name},#{roleVo.note})
+    </insert>
+    <update id="updateRole">
+        update role set name=#{roleVo.name},note=#{roleVo.note}
+        where id = #{roleVo.id}
+    </update>
+    <update id="saveRolePower">
+        update role set power=#{roleVo.power}
+        where id = #{roleVo.id}
+    </update>
+    <delete id="deleteRolePower">
+        delete from role where id=#{roleId}
+    </delete>
+</mapper>

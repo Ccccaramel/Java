@@ -1,12 +1,15 @@
 package com.ding.hyld.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 返回积分统计结果
  */
 public class CreditVo {
-    private Integer teamId; // 队员id
+    private Integer teamId; // 战队id
     private Integer teamMemberId; // 队员id
     private String teamMemberName; // 队员name
     private String playerScid; // 玩家scid
@@ -19,6 +22,9 @@ public class CreditVo {
     private Integer exCredit; // 额外总积分
     private Integer totalCredit; // 总积分
     private LocalDateTime settlementTime; // 结算时间
+    private String settlementTimeStr; // 结算时间 yyyy-MM-dd HH:mm:ss
+    private String settlementTimeDate; // 结算时间 yyyy-MM-dd
+    private Integer playerId; // 玩家id
 
     public Integer getTeamMemberId() {
         return teamMemberId;
@@ -112,10 +118,12 @@ public class CreditVo {
         return settlementTime;
     }
 
-    public void setSettlementTime(String settlementTime) {
-        if(!settlementTime.isEmpty()){
-            this.settlementTime = LocalDateTime.parse(settlementTime);
-        }
+    public void setSettlementTime(LocalDateTime settlementTime) {
+        this.settlementTime = settlementTime;
+        DateTimeFormatter dateTimeFormatter1=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.settlementTimeStr = dateTimeFormatter1.format(settlementTime);
+        DateTimeFormatter dateTimeFormatter2=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.settlementTimeDate = dateTimeFormatter2.format(settlementTime);
     }
 
     public Integer getRestTimes() {
@@ -124,5 +132,32 @@ public class CreditVo {
 
     public void setRestTimes(Integer restTimes) {
         this.restTimes = restTimes;
+    }
+
+    public String getSettlementTimeStr() {
+        return settlementTimeStr;
+    }
+
+    public void setSettlementTimeStr(String settlementTimeStr) {
+        this.settlementTimeStr = settlementTimeStr;
+        if(!settlementTimeStr.isEmpty()){
+            this.settlementTime = LocalDateTime.parse(settlementTimeStr);
+        }
+    }
+
+    public String getSettlementTimeDate() {
+        return settlementTimeDate;
+    }
+
+    public void setSettlementTimeDate(String settlementTimeDate) {
+        this.settlementTimeDate = settlementTimeDate;
+    }
+
+    public Integer getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(Integer playerId) {
+        this.playerId = playerId;
     }
 }

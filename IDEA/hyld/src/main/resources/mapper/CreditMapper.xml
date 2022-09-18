@@ -25,6 +25,7 @@
         <id column="exCredit" property="exCredit"/>
         <id column="totalCredit" property="totalCredit"/>
         <id column="teamCompetitionType" property="teamCompetitionType"/>
+        <id column="settlementTime" property="settlementTime"/>
     </resultMap>
 
     <resultMap id="TeamMemberCreditVoMap" type="com.ding.hyld.vo.TeamMemberCreditVo">
@@ -36,7 +37,7 @@
         <id column="creditTypeId" property="creditTypeId"/>
         <id column="note" property="note"/>
         <id column="teamName" property="teamName"/>
-        <association property="creditType" column="creditTypeId" select="com.ding.hyld.mapper.DictionaryMapper.findBy"/>
+        <association property="creditType" column="creditTypeId" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
     </resultMap>
 
     <!--  统计战队所有正常队员的战队赛积分并排名  -->
@@ -75,7 +76,7 @@
     </select>
 
     <!--  获取所有队员的积分记录  -->
-    <select id="searchTeamMemberCredit" resultMap="TeamMemberCreditVoMap">
+    <select id="searchCreditBy" resultMap="TeamMemberCreditVoMap">
         select
             c.id creditId,
             c.settlementTime settlementTime,
@@ -104,6 +105,9 @@
             </if>
             <if test="creditVo.settlementTime != null">
                 and c.settlementTime = #{creditVo.settlementTime}
+            </if>
+            <if test="creditVo.playerId != null">
+                and twp.playerId = #{creditVo.playerId}
             </if>
         </where>
         ORDER BY c.id
@@ -141,5 +145,16 @@
         join team_with_player twp on twp.id=c.teamPlayerId
         where twp.teamId=#{teamId}
         GROUP BY c.settlementTime;
+    </select>
+    <select id="getTeamData" resultMap="CreditVoMap">
+        SELECT SUM(c.credit) totalCredit,c.settlementTime settlementTime
+        from credit c
+        <where>
+            and EXISTS (SELECT 1 from team_with_player twp WHERE twp.id=c.teamPlayerId and twp.teamId=#{teamId} )
+            and c.creditType=200
+            and c.teamCompetitionType=#{teamCompetitionType}
+        </where>
+        GROUP BY c.settlementTime
+        ORDER BY c.settlementTime;
     </select>
 </mapper>

@@ -1,11 +1,11 @@
 package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ding.hyld.entity.base.BaseObject;
 
 @TableName("user")
 public class User extends BaseObject {
     private String name;
-    private Integer teamId;
     private Integer status;
     private Integer type;
     private String qq;
@@ -17,14 +17,6 @@ public class User extends BaseObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
     }
 
     public Integer getStatus() {

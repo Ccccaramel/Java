@@ -5,7 +5,6 @@
         <id column="id" property="id"/>
 
         <id column="name" property="name"/>
-        <id column="teamId" property="teamId"/>
         <id column="status" property="status"/>
         <id column="type" property="type"/>
         <id column="qq" property="qq"/>
@@ -14,13 +13,49 @@
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.UserInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="qq" property="qq"/>
+        <id column="note" property="note"/>
+
+        <association property="type" column="type" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="searchUser" resultMap="resultInfoMap">
+        select * from user
+        <where>
+            <if test="userVo.name!=null and userVo.name.trim()!=''">
+                and name like concat('%',#{userVo.name},'%')
+            </if>
+            <if test="userVo.type!=null">
+                and type = #{userVo.type}
+            </if>
+            <if test="userVo.status!=null">
+                and name = #{userVo.status}
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
     <select id="findBy" resultMap="resultMap">
         select * from user
         where id=#{account};
     </select>
+    <select id="findByName" resultMap="resultMap">
+        select * from user
+        where name=#{account};
+    </select>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from user
+        where id=#{id};
+    </select>
     <select id="login" resultMap="resultMap">
         select * from user
-            where id=#{account}
+            where name=#{account}
                 and password=#{password}
             limit 1;
     </select>
@@ -30,4 +65,23 @@
           and password=#{password}
             limit 1;
     </select>
+    <insert id="register">
+        insert into user(name,status,type,password)
+        values(#{userVo.account},400,501,#{userVo.password});
+    </insert>
+    <update id="updateUserInfo">
+        update user
+        set qq = #{userVo.qq},note = #{userVo.note}
+        where id=#{userVo.id}
+    </update>
+    <update id="saveUser">
+        update user
+        set name = #{userVo.name},qq = #{userVo.qq},type = #{userVo.type},status = #{userVo.status},note = #{userVo.note}
+        where id=#{userVo.id}
+    </update>
+    <update id="saveUserPassword">
+        update user
+        set password = #{userVo.password}
+        where id=#{userVo.id}
+    </update>
 </mapper>

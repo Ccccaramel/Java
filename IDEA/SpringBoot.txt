@@ -478,3 +478,12 @@ A:添加依赖
 Q:复制粘贴别人的代码结果请求报错 CORS ERROR
     httpServletResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
 A:地址填自己的前端 IP !
+
+Q:过滤器与拦截器
+A:过滤器(Filter)
+    依赖于 servlet 容器,对几乎所有的请求进行过滤
+    缺点是只能在容器初始化时调用一次
+    针对 URL 地址编码,过滤无效参数和安全校验,是否需要登录
+  拦截器(Intercepter)
+    依赖 web 框架,基于 java 的反射机制,属于面向切面编程(AOP)的一种运用
+  Tomcat 容器(Filter(Servelt((Interceptor(Controller)))))

@@ -2,7 +2,6 @@ package com.ding.hyld.vo;
 
 import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.utils.TimeUtils;
-import jdk.jshell.execution.LoaderDelegate;
 
 import java.time.LocalDateTime;
 
@@ -53,7 +52,7 @@ public class TeamMemberCreditVo {
 
     public void setSettlementTime(LocalDateTime settlementTime) {
         this.settlementTime = settlementTime;
-        setSettlementTimeStr(TimeUtils.getTime(settlementTime));
+        setSettlementTimeStr(TimeUtils.toString(settlementTime));
     }
 
     public String getSettlementTimeStr() {

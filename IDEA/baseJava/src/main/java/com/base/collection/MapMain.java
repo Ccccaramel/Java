@@ -32,13 +32,21 @@ public class MapMain {
         hashMap.put("a","aaa");
         hashMap.put("b","bbb");
         hashMap.put("c","ccc");
+        System.out.println("直接打印:"+hashMap);
+        System.out.println("打印输出:");
         hashMap.forEach((s, s2) -> System.out.println(s+":"+s2));
+
+        System.out.println("put()的返回值:");
         HashMap<String,String> hashMap1=new HashMap<>();
         hashMap.forEach((s, s2) -> {
             String put = hashMap1.put(s, s2 + "(clone1)");
             System.out.println("put1:"+put+" ");
         });
+
+        System.out.println("遍历map并生成新的副本:");
         hashMap1.forEach((s, s2) -> System.out.println(s+":"+s2));
+
+
         for (Map.Entry<String, String> entry : hashMap.entrySet()) {
             String key = entry.getKey();
             String s2 = entry.getValue();

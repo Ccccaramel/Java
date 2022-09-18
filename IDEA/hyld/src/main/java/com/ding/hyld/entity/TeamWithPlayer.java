@@ -1,6 +1,7 @@
 package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ding.hyld.entity.base.BaseObject;
 
 import java.time.LocalDateTime;
 

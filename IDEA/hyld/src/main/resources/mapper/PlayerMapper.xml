@@ -10,18 +10,56 @@
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.PlayerInfo">
+        <id column="id" property="id"/>
 
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <id column="type" property="type"/>
+
+        <association property="playerType" column="type" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+    </resultMap>
     <select id="findBy" resultMap="resultMap">
         select * from player
         <where>
-            <if test="player.scid != null and player.scid.trim() != ''">
-                and scid=#{player.scid}
+            <if test="playerVo.id != null">
+                and id=#{playerVo.id}
+            </if>
+            <if test="playerVo.scid != null and playerVo.scid.trim() != ''">
+                and scid=#{playerVo.scid}
             </if>
         </where>
     </select>
-
-    <insert id="addPlayer"  parameterType="com.ding.hyld.entity.Player" useGeneratedKeys="true" keyProperty="id">
-        insert into player(scid,name)
-        values(#{player.scid},#{player.name});
+    <select id="findById" resultMap="resultInfoMap">
+        select * from player
+        where id=#{id}
+    </select>
+    <insert id="addPlayer" parameterType="com.ding.hyld.vo.PlayerVo" useGeneratedKeys="true" keyProperty="id">
+        insert into player(scid,name,type)
+        values(#{playerVo.scid},#{playerVo.name},#{playerVo.type});
     </insert>
+
+    <select id="searchPlayerInfo" resultMap="resultInfoMap">
+        select * from player
+        <where>
+            <if test="playerVo.name!=null and playerVo.name.trim() != ''">
+                and name like concat('%',#{playerVo.name},'%')
+            </if>
+            <if test="playerVo.scid!=null and playerVo.scid.trim() != ''">
+                and scid like concat('%',#{playerVo.scid},'%')
+            </if>
+        </where>
+        ORDER BY id
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <update id="update">
+        update player set name=#{playerVo.name},type=#{playerVo.type}
+        where id = #{playerVo.id}
+    </update>
 </mapper>

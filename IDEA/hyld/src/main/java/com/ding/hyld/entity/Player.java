@@ -1,11 +1,13 @@
 package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ding.hyld.entity.base.BaseObject;
 
 @TableName("player")
 public class Player extends BaseObject {
     private String scid;
     private String name;
+    private Integer type;
 
     public String getScid() {
         return scid;
@@ -21,5 +23,13 @@ public class Player extends BaseObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

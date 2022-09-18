@@ -1,33 +1,18 @@
 package com.ding.hyld.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.time.LocalDateTime;
+import com.ding.hyld.entity.base.BaseObject;
 
 @TableName("user_with_team")
-public class UserWithTeam extends BaseObject{
+public class UserWithTeam extends BaseObject {
     private Integer userId;
     private Integer teamId;
-    private Integer status;
+    private Integer relationStatus; // 关联状态
+    private Integer playerPosition; // 职位
+    private Integer checkStatus; // 验证状态
+    private String controllerPreparePage; // 管理者准备界面
+    private String teamMainPage; // 战队界面
 
-    @TableField(exist = false)
-    private String teamName;
-
-    @TableField(exist = false)
-    private String teamNote; // 战队信息备注
-
-    @TableField(exist = false)
-    private Dictionary teamStatus; // 战队状态
-
-    @TableField(exist = false)
-    private Dictionary uwtStatus; // 关联状态
-
-    @TableField(exist = false)
-    private User user;
-
-    @TableField(exist = false)
-    private Team team;
 
     public Integer getUserId() {
         return userId;
@@ -45,59 +30,43 @@ public class UserWithTeam extends BaseObject{
         this.teamId = teamId;
     }
 
-    public Dictionary getTeamStatus() {
-        return teamStatus;
+    public Integer getRelationStatus() {
+        return relationStatus;
     }
 
-    public void setTeamStatus(Dictionary teamStatus) {
-        this.teamStatus = teamStatus;
+    public void setRelationStatus(Integer relationStatus) {
+        this.relationStatus = relationStatus;
     }
 
-    public String getTeamName() {
-        return teamName;
+    public Integer getPlayerPosition() {
+        return playerPosition;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setPlayerPosition(Integer playerPosition) {
+        this.playerPosition = playerPosition;
     }
 
-    public String getTeamNote() {
-        return teamNote;
+    public Integer getCheckStatus() {
+        return checkStatus;
     }
 
-    public void setTeamNote(String teamNote) {
-        this.teamNote = teamNote;
+    public void setCheckStatus(Integer checkStatus) {
+        this.checkStatus = checkStatus;
     }
 
-    public Dictionary getUwtStatus() {
-        return uwtStatus;
+    public String getControllerPreparePage() {
+        return controllerPreparePage;
     }
 
-    public void setUwtStatus(Dictionary uwtStatus) {
-        this.uwtStatus = uwtStatus;
+    public void setControllerPreparePage(String controllerPreparePage) {
+        this.controllerPreparePage = controllerPreparePage;
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getTeamMainPage() {
+        return teamMainPage;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeamMainPage(String teamMainPage) {
+        this.teamMainPage = teamMainPage;
     }
 }

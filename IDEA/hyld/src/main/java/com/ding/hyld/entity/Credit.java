@@ -1,6 +1,8 @@
 package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ding.hyld.entity.base.BaseObject;
+
 import java.time.LocalDateTime;
 
 @TableName("credit")
@@ -9,6 +11,7 @@ public class Credit extends BaseObject {
     private LocalDateTime settlementTime;
     private Integer credit;
     private Integer creditType;
+    private Integer teamCompetitionType;
 
     public Integer getTeamPlayerId() {
         return teamPlayerId;
@@ -40,5 +43,13 @@ public class Credit extends BaseObject {
 
     public void setCreditType(Integer creditType) {
         this.creditType = creditType;
+    }
+
+    public Integer getTeamCompetitionType() {
+        return teamCompetitionType;
+    }
+
+    public void setTeamCompetitionType(Integer teamCompetitionType) {
+        this.teamCompetitionType = teamCompetitionType;
     }
 }

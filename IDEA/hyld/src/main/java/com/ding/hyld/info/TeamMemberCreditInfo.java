@@ -13,12 +13,14 @@ public class TeamMemberCreditInfo {
     private String scid; // 玩家scid
     private String playerName; // 玩家昵称
     private LocalDateTime settlementTime; // 结算计算时间
-    private String settlementTimeStr; // 结算计算时间
+    private String settlementTimeStr; // 结算计算时间(字符串)
+    private String settlementTimeShowFormat; // 结算计算时间(显示格式)
     private Integer credit; // 积分
     private Integer creditTypeId; // 积分类型Id
     private Dictionary creditType; // 积分类型
     private String note; // 备注
     private String teamName; // 所属战队名称
+    private Integer teamMemberId;
 
     public Integer getCreditId() {
         return creditId;
@@ -48,17 +50,26 @@ public class TeamMemberCreditInfo {
         return settlementTime;
     }
 
-    public void setSettlementTime(LocalDateTime settlementTime) {
-        this.settlementTime = settlementTime;
-        setSettlementTimeStr(TimeUtils.getTime(settlementTime));
-    }
-
     public String getSettlementTimeStr() {
         return settlementTimeStr;
     }
 
     public void setSettlementTimeStr(String settlementTimeStr) {
         this.settlementTimeStr = settlementTimeStr;
+    }
+
+    public void setSettlementTime(LocalDateTime settlementTime) {
+        this.settlementTime = settlementTime;
+        setSettlementTimeShowFormat(TimeUtils.toString(settlementTime));
+        setSettlementTimeStr(settlementTime.toString());
+    }
+
+    public String getSettlementTimeShowFormat() {
+        return settlementTimeShowFormat;
+    }
+
+    public void setSettlementTimeShowFormat(String settlementTimeShowFormat) {
+        this.settlementTimeShowFormat = settlementTimeShowFormat;
     }
 
     public Integer getCredit() {
@@ -99,5 +110,13 @@ public class TeamMemberCreditInfo {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public Integer getTeamMemberId() {
+        return teamMemberId;
+    }
+
+    public void setTeamMemberId(Integer teamMemberId) {
+        this.teamMemberId = teamMemberId;
     }
 }

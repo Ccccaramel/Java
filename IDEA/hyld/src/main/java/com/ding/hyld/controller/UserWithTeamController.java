@@ -4,6 +4,7 @@ import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.entity.Team;
 import com.ding.hyld.entity.UserWithTeam;
+import com.ding.hyld.info.TeamInfo;
 import com.ding.hyld.info.UserWithTeamInfo;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.ResourceUploadAndDownloadUtils;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -42,33 +44,40 @@ public class UserWithTeamController extends BaseController {
 
     @PostMapping("/saveTeamRelationInfo")
     public R saveTeamRelationInfo(@RequestBody UserWithTeamVo userWithTeamVo){
-        Integer userId=getCurrentUser().getUser().getId();
+        Integer userId=getUserId();
         if(userWithTeamVo.isAdd()){ // 新增关联
-            Team team = teamService.findByScid(userWithTeamVo.getTeamScid());
-            if(team==null){ // 新增关联 > team 不存在
-                Team newTeam = new Team();
-                newTeam.setScid(userWithTeamVo.getTeamScid());
-                newTeam.setName(userWithTeamVo.getTeamName());
-                newTeam.setNote(userWithTeamVo.getTeamNote());
-                newTeam.setEliminationLine(userWithTeamVo.getTeamEliminationLine());
-                newTeam.setExcellentLine(userWithTeamVo.getTeamExcellentLine());
-                newTeam.setType(userWithTeamVo.getTeamType());
-                newTeam.setStatus(DictionaryCode.TEAM_STATUS_1);
-                teamService.add(newTeam);
+            TeamInfo teamInfo = teamService.findByScid(userWithTeamVo.getTeamScid());
+            if(teamInfo==null){ // 新增关联 > team 不存在
 
-                UserWithTeam newUserWithTeam = new UserWithTeam();
-                newUserWithTeam.setUserId(userId);
-                newUserWithTeam.setTeamId(newTeam.getId());
-                newUserWithTeam.setNote(userWithTeamVo.getUserNote());
-                newUserWithTeam.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
-                newUserWithTeam.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
-                newUserWithTeam.setCheckStatus(DictionaryCode.CHECK_STATUS_1);
-                userWithTeamService.add(newUserWithTeam); // 关联
+                if(userWithTeamVo.getPlayerPosition().equals(DictionaryCode.PLAYER_POSITION_3)){ // 队员关联战队,战队不存在
+                    return R.fail("你的战队暂未入驻平台,请先联系你战队的管理者入驻本平台");
+                }
+
+                TeamVo teamVo = new TeamVo();
+                teamVo.setScid(userWithTeamVo.getTeamScid());
+                teamVo.setName(userWithTeamVo.getTeamName());
+                teamVo.setNote(userWithTeamVo.getTeamNote());
+                teamVo.setEliminationLine(userWithTeamVo.getTeamEliminationLine());
+                teamVo.setExcellentLine(userWithTeamVo.getTeamExcellentLine());
+                teamVo.setType(userWithTeamVo.getTeamType());
+                teamVo.setStatus(DictionaryCode.TEAM_STATUS_1);
+                teamService.add(teamVo);
+
+                UserWithTeamVo newUserWithTeamVo = new UserWithTeamVo();
+                newUserWithTeamVo.setUserId(userId);
+                newUserWithTeamVo.setTeamId(teamVo.getId());
+                newUserWithTeamVo.setNote(userWithTeamVo.getUserNote());
+                newUserWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
+                newUserWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+                newUserWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_1);
+                userWithTeamService.add(newUserWithTeamVo); // 关联
                 return R.success("战队关联成功!");
             }
             else { // 新增关联 > team 存在
+
+
                 userWithTeamVo.setUserId(userId);
-                userWithTeamVo.setTeamId(team.getId());
+                userWithTeamVo.setTeamId(teamInfo.getId());
                 userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
                 List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
                 if(userWithTeamInfoList.size()>0){ // 新增关联 > team 存在 > 已被关联中
@@ -77,27 +86,51 @@ public class UserWithTeamController extends BaseController {
                         return R.fail("你已关联该战队,请勿重复关联!");
                     }
                 }
-                UserWithTeam newUserWithTeam = new UserWithTeam();
-                newUserWithTeam.setUserId(userId);
-                newUserWithTeam.setTeamId(team.getId());
-                newUserWithTeam.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
-                newUserWithTeam.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
-                newUserWithTeam.setCheckStatus(DictionaryCode.CHECK_STATUS_1);
-                userWithTeamService.add(newUserWithTeam); // 关联
+
+                // 队员关联战队,战队存在,检查是否存在验证通过且关联中的 uwt
+                if(userWithTeamVo.getPlayerPosition().equals(DictionaryCode.PLAYER_POSITION_3)){
+                    userWithTeamVo.setUserId(null);
+                    userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
+                    userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+                    List<UserWithTeamInfo> res = userWithTeamService.findBy(userWithTeamVo); // 获取队长信息,主要为了获取 id
+                    if(res.size()==1){
+                        UserWithTeamVo newUserWithTeamVo = new UserWithTeamVo();
+                        newUserWithTeamVo.setUserId(userId);
+                        newUserWithTeamVo.setTeamId(teamInfo.getId());
+                        newUserWithTeamVo.setParentId(res.get(0).getId());
+                        newUserWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
+                        newUserWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_3);
+                        newUserWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_5);
+                        userWithTeamService.add(newUserWithTeamVo); // 关联
+                        return R.success("战队关联成功!");
+                    }
+                    else{
+                        return R.fail("数据异常,为了保证数据正确后台终止了你的操作,请进QQ群(475765701)联系群主!,一起纠正数据,谢谢!");
+                    }
+
+                }
+
+                UserWithTeamVo newUserWithTeamVo = new UserWithTeamVo();
+                newUserWithTeamVo.setUserId(userId);
+                newUserWithTeamVo.setTeamId(teamInfo.getId());
+                newUserWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
+                newUserWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+                newUserWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_1);
+                userWithTeamService.add(newUserWithTeamVo); // 关联
                 return R.success("战队关联成功!");
             }
         }
         else{ // 编辑关联
-            Team team = teamService.findById(userWithTeamVo.getTeamId());
+            TeamInfo teamInfo = teamService.findById(userWithTeamVo.getTeamId());
             userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
             userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
             List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
-            if(team != null && userWithTeamInfoList != null){ // 该用户与战队已关联且通过了审核
+            if(teamInfo != null && userWithTeamInfoList != null){ // 该用户与战队已关联且通过了审核
                 TeamVo teamVo = new TeamVo();
-                teamVo.setId(team.getId());
-                teamVo.setScid(team.getScid());
+                teamVo.setId(teamInfo.getId());
+                teamVo.setScid(teamInfo.getScid());
                 teamVo.setName(userWithTeamVo.getTeamName());
-                teamVo.setStatus(team.getStatus());
+                teamVo.setStatus(teamInfo.getStatus().getId());
                 teamVo.setNote(userWithTeamVo.getTeamNote());
                 teamVo.setEliminationLine(userWithTeamVo.getTeamEliminationLine());
                 teamVo.setExcellentLine(userWithTeamVo.getTeamExcellentLine());
@@ -111,19 +144,39 @@ public class UserWithTeamController extends BaseController {
         }
     }
 
+    // 队长解除副队长
     @PostMapping("/relieveTeam")
     public R relieveTeam(UserWithTeamVo userWithTeamVo){
-        userWithTeamVo.setUserId(getCurrentUser().getUser().getId());
+//        userWithTeamVo.setUserId(getUserId());
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
-        List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
-        if(userWithTeamInfoList.size()!=1){ // 查看该用户与该战队的关系是否关联中且验证通过
-            return R.fail("非法请求!");
+
+        UserWithTeamVo vo = new UserWithTeamVo();
+        vo.setUserId(getUserId());
+        vo.setTeamId(userWithTeamVo.getTeamId());
+        vo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
+        vo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
+        vo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+        List<UserWithTeamInfo> list = userWithTeamService.findBy(vo);
+        if(list.size()!=1){
+            return R.fail("你不是该战队的队长/副队长,你无权解除其他用户关联!");
         }
+        else{
+            UserWithTeamInfo info = list.get(0);
+            if(Objects.equals(info.getPlayerPosition(), DictionaryCode.PLAYER_POSITION_2) && !Objects.equals(info.getId(), userWithTeamVo.getId())){
+                return R.fail("你是该战队的副队长,你无权解除其他用户关联!");
+            }
+        }
+
+        List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
+        if(userWithTeamInfoList.size()!=1){
+            return R.fail("该用户未关联战队!无需解除关联!");
+        }
+
         UserWithTeamInfo userWithTeamInfo = userWithTeamInfoList.get(0);
-        if(Objects.equals(userWithTeamInfo.getPlayerPositionType().getId(), DictionaryCode.PLAYER_POSITION_2)){ // 判断是否为队长,如果是副队长则为非法请求
+        if(Objects.equals(userWithTeamInfo.getPlayerPositionType().getId(), DictionaryCode.PLAYER_POSITION_2)){
             userWithTeamVo.setAllRelieve(false);
-        }else{
+        }else{ // 判断是否为队长
             userWithTeamVo.setTeamId(userWithTeamInfo.getTeam().getId());
             userWithTeamVo.setAllRelieve(true);
         }
@@ -141,7 +194,7 @@ public class UserWithTeamController extends BaseController {
     @GetMapping("/searchMyTeam")
     public R searchMyTeam(Page page, UserWithTeamVo userWithTeamVo){
         HashMap<String,Object> result=new HashMap<>();
-        userWithTeamVo.setUserId(getCurrentUser().getUser().getId()); // 查询当前用户所关联的战队信息
+        userWithTeamVo.setUserId(getUserId()); // 查询当前用户所关联的战队信息
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setUserWithTeamStatus(DictionaryCode.TEAM_STATUS_1);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
@@ -161,7 +214,7 @@ public class UserWithTeamController extends BaseController {
     @GetMapping("/searchMyRelationTeam")
     public R searchMyRelationTeam(Page page, UserWithTeamVo userWithTeamVo){
         HashMap<String,Object> result=new HashMap<>();
-        userWithTeamVo.setUserId(getCurrentUser().getUser().getId()); // 查询当前用户所关联的战队信息
+        userWithTeamVo.setUserId(getUserId()); // 查询当前用户所关联的战队信息
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setUserWithTeamStatus(DictionaryCode.TEAM_STATUS_1);
         result.put("data",userWithTeamService.searchTeam(page, userWithTeamVo));
@@ -173,10 +226,21 @@ public class UserWithTeamController extends BaseController {
 
     @PostMapping("/saveTeamCheckData")
     public R saveTeamCheckData(@RequestParam("relationId")Integer relationId, @RequestParam("controllerPreparePageFile") MultipartFile controllerPreparePageFile, @RequestParam("teamMainPageFile") MultipartFile teamMainPageFile){
+        UserWithTeamInfo userWithTeamInfo = userWithTeamService.findById(relationId);
+        // 1.删除旧资源
+        if(!userWithTeamInfo.getControllerPreparePage().isEmpty()){
+            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getControllerPreparePage());
+            oldFile.delete();
+        }
+        if(!userWithTeamInfo.getTeamMainPage().isEmpty()){
+            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getTeamMainPage());
+            oldFile.delete();
+        }
+
         // 1.将解析整理资源并存储,并返回资源信息
         ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
-        String controllerPreparePageNewName = resourceUploadAndDownload.resourceUpload(controllerPreparePageFile,getCurrentUser().getUser().getId()).get("newName");
-        String teamMainPageNewName = resourceUploadAndDownload.resourceUpload(teamMainPageFile,getCurrentUser().getUser().getId()).get("newName");
+        String controllerPreparePageNewName = resourceUploadAndDownload.resourceUpload(controllerPreparePageFile,getUserId()).get("newName");
+        String teamMainPageNewName = resourceUploadAndDownload.resourceUpload(teamMainPageFile,getUserId()).get("newName");
 
         // 2.将资源信息存入表中
         userWithTeamService.saveCheckInfo(relationId,controllerPreparePageNewName,teamMainPageNewName,DictionaryCode.CHECK_STATUS_2);
@@ -184,8 +248,8 @@ public class UserWithTeamController extends BaseController {
         return R.success("验证信息已提交!请等待审核");
     }
 
-    @GetMapping("/searchTeamExamine")
-    public R searchTeamExamine(UserWithTeamVo userWithTeamVo,Page page){
+    @GetMapping("/searchTeamRelation")
+    public R searchTeamRelation(UserWithTeamVo userWithTeamVo,Page page){
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",userWithTeamService.searchTeam(page,userWithTeamVo));
         if(!Objects.equals(page.getSize(),null)){
@@ -196,13 +260,15 @@ public class UserWithTeamController extends BaseController {
 
     @PostMapping("/teamExamineCheck")
     public R teamExamineCheck(@RequestBody UserWithTeamVo userWithTeamVo){
+        TeamInfo teamInfo = teamService.findByScid(userWithTeamVo.getTeamScid());
+        userWithTeamVo.setTeamId(teamInfo.getId());
         userWithTeamService.teamExamineCheck(userWithTeamVo);
         return R.success("战队关联信息验证信息提交成功!");
     }
 
     @GetMapping("/getAllViceCaptain")
     public R getAllViceCaptain(UserWithTeamVo userWithTeamVo,Page page){
-        userWithTeamVo.setUserId(getCurrentUser().getUser().getId());
+        userWithTeamVo.setUserId(getUserId());
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
@@ -226,10 +292,10 @@ public class UserWithTeamController extends BaseController {
             return R.fail("不存在该用户!");
         }
         Integer viceCaptainUserId = userWithTeamVo.getUserId();
-        if(viceCaptainUserId.equals(getCurrentUser().getUser().getId())){
+        if(viceCaptainUserId.equals(getUserId())){
             return R.fail("不可以将自己添加为副队长!");
         }
-        userWithTeamVo.setUserId(getCurrentUser().getUser().getId());
+        userWithTeamVo.setUserId(getUserId());
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
@@ -244,4 +310,39 @@ public class UserWithTeamController extends BaseController {
         userWithTeamService.addViceCaptain(userWithTeamVo);
         return R.success("副队长添加成功!");
     }
+
+    @GetMapping("/searchValidTeamInfo")
+    public R searchValidTeamInfo(Page page, UserWithTeamVo userWithTeamVo){
+        HashMap<String,Object> result=new HashMap<>();
+        userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
+        userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
+        userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+        userWithTeamVo.setCreditScore(100);
+        result.put("data",userWithTeamService.searchValidTeamInfo(page,userWithTeamVo));
+        if(!Objects.equals(page.getSize(),null)){
+            result.put("totalPage",Math.ceil(userWithTeamService.searchValidTeamInfo(null,userWithTeamVo).size()*1.0/page.getSize()));
+        }
+        return R.success(result);
+    }
+
+    @PostMapping("/teamTransfer")
+    public R teamTransfer(@RequestBody UserWithTeamVo userWithTeamVo){
+        if(Objects.equals(userWithTeamVo.getUserId(), getUserId())){
+            return R.fail("不可以选择自己!");
+        }
+        if(userService.findById(userWithTeamVo.getNewUserId())==null){
+            return R.fail("该用户不存在!");
+        }
+        userWithTeamVo.setUserId(getUserId());
+        return userWithTeamService.teamTransfer(userWithTeamVo);
+
+    }
+
+    @PostMapping("/teamCreditScoreSave")
+    public R teamCreditScoreSave(@RequestBody UserWithTeamVo userWithTeamVo){
+        userWithTeamService.updateTeamCreditScore(userWithTeamVo);
+        return R.success("战队信誉积分修改成功!");
+
+    }
+
 }

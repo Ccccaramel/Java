@@ -23,7 +23,7 @@ public interface TeamWithPlayerService extends IService<TeamWithPlayer> {
      */
     void addNewTeamMember(TeamMemberVo teamMemberVo);
 
-    TeamWithPlayer findTeamMember(String playerScid);
+    TeamWithPlayer findTeamMember(TeamMemberVo teamMemberVo);
 
     List<TeamMemberCreditInfo> getAllValidTeamMember(CreditImportVo creditImportVo, Integer teamMemberStatusId);
 }

@@ -72,7 +72,7 @@
                 and uwp.checkStatus = #{userWithPlayerVo.checkStatus}
             </if>
         </where>
-        ORDER BY uwp.id
+        ORDER BY uwp.createTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
@@ -90,4 +90,8 @@
         update user_with_player set note=#{userWithPlayerVo.note},checkStatus=#{userWithPlayerVo.checkStatus}
         where id = #{userWithPlayerVo.id}
     </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from user_with_player
+        where id = #{id}
+    </select>
 </mapper>

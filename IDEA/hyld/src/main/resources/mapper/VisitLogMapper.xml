@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.VisitLogMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.VisitLog">
+        <id column="id" property="id"/>
+
+        <id column="userId" property="userId"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.VisitLogInfo">
+        <id column="id" property="id"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="user" column="userId" select="com.ding.hyld.mapper.UserMapper.fingById"/>
+    </resultMap>
+    <select id="searchVisitLog" resultMap="resultInfoMap">
+        select * from visit_log
+        <where>
+            <if test="visitLogVo.note != null and visitLogVo.note.trim() != null">
+                and note like concat('%',#{visitLogVo.note},'%')
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into visit_log(ip,address,userId,note)
+        values(#{visitLogVo.ip},#{visitLogVo.address},#{visitLogVo.userId},#{visitLogVo.note})
+    </insert>
+</mapper>

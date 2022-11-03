@@ -53,7 +53,7 @@ public class UserController extends BaseController {
     @PreAuthorize("hasAuthority('test')")
     @GetMapping("/getCurrentUserInfo")
     public R getCurrentUserInfo(){
-        return R.success(userService.findById(getCurrentUser().getUser().getId()));
+        return R.success(userService.findById(getUserId()));
     }
 
     @PostMapping("/updateUserInfo")
@@ -98,4 +98,10 @@ public class UserController extends BaseController {
         return R.success("用户密码修改成功!");
     }
 
+    @PostMapping("/saveHeadPortrait")
+    public R saveHeadPortrait(@RequestBody UserVo userVo){
+        userVo.setId(getUserId());
+        userService.saveHeadPortrait(userVo);
+        return R.success("已成功更换头像!");
+    }
 }

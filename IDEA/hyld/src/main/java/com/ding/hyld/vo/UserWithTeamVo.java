@@ -10,6 +10,7 @@ public class UserWithTeamVo {
     private Integer teamId;
     private String teamName;
     private String teamScid;
+    private Integer teamStatus;
     private Integer userWithTeamStatus;
     private Integer teamEliminationLine;
     private Integer teamExcellentLine;
@@ -20,10 +21,25 @@ public class UserWithTeamVo {
     private String userName;
     private Integer relationStatus;
     private Integer checkStatus;
-    private Integer oldCheckStatus; // 战队已被关联且验证通过,如果此时有用户提交验证且通过,那么之前验证通过的关联将置为待审核状态,需要提交验证信息,才可再次拥有该战队
     private Integer playerPosition; // 战队职位
     private boolean allRelieve; // 解除关联时,如果为 true ,则表明队长解除了关联,那么该战队所有副队长也同时解除
 
+    private String playerScid; // 游戏账号scid
+    private Integer teamMemberStatus; // 战队成员状态
+
+    private Integer parentId;
+
+    private Integer newUserId; // 用于交接战队
+
+    private Integer creditScore; // 信誉积分
+
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
 
     public Integer getId() {
         return id;
@@ -177,11 +193,43 @@ public class UserWithTeamVo {
         this.allRelieve = allRelieve;
     }
 
-    public Integer getOldCheckStatus() {
-        return oldCheckStatus;
+    public Integer getTeamStatus() {
+        return teamStatus;
     }
 
-    public void setOldCheckStatus(Integer oldCheckStatus) {
-        this.oldCheckStatus = oldCheckStatus;
+    public void setTeamStatus(Integer teamStatus) {
+        this.teamStatus = teamStatus;
+    }
+
+    public String getPlayerScid() {
+        return playerScid;
+    }
+
+    public void setPlayerScid(String playerScid) {
+        this.playerScid = playerScid;
+    }
+
+    public Integer getTeamMemberStatus() {
+        return teamMemberStatus;
+    }
+
+    public void setTeamMemberStatus(Integer teamMemberStatus) {
+        this.teamMemberStatus = teamMemberStatus;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public Integer getNewUserId() {
+        return newUserId;
+    }
+
+    public void setNewUserId(Integer newUserId) {
+        this.newUserId = newUserId;
     }
 }

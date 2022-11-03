@@ -12,13 +12,12 @@ import java.util.List;
 
 @Mapper
 public interface TeamMapper extends BaseMapper<Team> {
-    Team findBy(@Param("team") Team team);
 
-    Team findByScid(String scid);
+    TeamInfo findByScid(String scid);
 
-    Team findById(Integer id);
+    TeamInfo findById(Integer id);
 
-    void add(@Param("newTeam") Team newTeam);
+    void add(@Param("teamVo") TeamVo teamVo);
 
     void update(@Param("teamVo") TeamVo teamVo);
 

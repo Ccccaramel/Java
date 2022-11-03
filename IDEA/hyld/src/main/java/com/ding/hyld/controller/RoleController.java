@@ -34,7 +34,7 @@ public class RoleController {
 
     @GetMapping("/getRoleMenuTree")
     public R getRoleMenuTree(Integer roleId){
-        return R.success(TreeUtils.transformation(menuService.getRoleMenuTree(roleId)));
+        return R.success(TreeUtils.transformation(menuService.getRoleMenuTree(roleId),-1));
     }
 
     @PostMapping("/saveRolePower")

@@ -1,26 +1,28 @@
 package com.ding.hyld.vo;
 
-import com.ding.hyld.entity.Dictionary;
-import com.ding.hyld.utils.TimeUtils;
-
-import java.time.LocalDateTime;
-
 /**
  * 个人积分
  */
 public class TeamMemberCreditVo {
+    private Integer uwtId; // 用户战队关联id
     private Integer creditId; // 积分id
     private Integer teamMemberId; // 队员id
     private String scid; // 玩家scid
     private String playerName; // 玩家昵称
-    private LocalDateTime settlementTime; // 结算计算时间
-    private String settlementTimeStr; // 结算计算时间
+    private String settlementTime; // 结算计算时间
     private Integer credit; // 积分
     private Integer creditTypeId; // 积分类型Id
-    private Dictionary creditType; // 积分类型
     private String note; // 备注
     private String teamName; // 所属战队名称
-    private Integer teamCompetitionType; // 战队竞赛类型
+    private Integer teamCompetitionTypeId; // 战队竞赛类型
+
+    public Integer getUwtId() {
+        return uwtId;
+    }
+
+    public void setUwtId(Integer uwtId) {
+        this.uwtId = uwtId;
+    }
 
     public Integer getCreditId() {
         return creditId;
@@ -46,21 +48,12 @@ public class TeamMemberCreditVo {
         this.playerName = playerName;
     }
 
-    public LocalDateTime getSettlementTime() {
+    public String getSettlementTime() {
         return settlementTime;
     }
 
-    public void setSettlementTime(LocalDateTime settlementTime) {
+    public void setSettlementTime(String settlementTime) {
         this.settlementTime = settlementTime;
-        setSettlementTimeStr(TimeUtils.toString(settlementTime));
-    }
-
-    public String getSettlementTimeStr() {
-        return settlementTimeStr;
-    }
-
-    public void setSettlementTimeStr(String settlementTimeStr) {
-        this.settlementTimeStr = settlementTimeStr;
     }
 
     public Integer getCredit() {
@@ -77,14 +70,6 @@ public class TeamMemberCreditVo {
 
     public void setCreditTypeId(Integer creditTypeId) {
         this.creditTypeId = creditTypeId;
-    }
-
-    public Dictionary getCreditType() {
-        return creditType;
-    }
-
-    public void setCreditType(Dictionary creditType) {
-        this.creditType = creditType;
     }
 
     public String getNote() {
@@ -111,11 +96,12 @@ public class TeamMemberCreditVo {
         this.teamMemberId = teamMemberId;
     }
 
-    public Integer getTeamCompetitionType() {
-        return teamCompetitionType;
+    public Integer getTeamCompetitionTypeId() {
+        return teamCompetitionTypeId;
     }
 
-    public void setTeamCompetitionType(Integer teamCompetitionType) {
-        this.teamCompetitionType = teamCompetitionType;
+    public void setTeamCompetitionTypeId(Integer teamCompetitionTypeId) {
+        this.teamCompetitionTypeId = teamCompetitionTypeId;
     }
+
 }

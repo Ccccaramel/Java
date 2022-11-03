@@ -21,7 +21,9 @@ public class UserWithPlayerInfo{
     private String note;
     private Dictionary checkStatus;
     private String playerMainPage; // 个人主页
+    private String playerMainPageUrl; // 个人主页
     private String playerPreparePage; // 个人准备页
+    private String playerPreparePageUrl; // 个人准备页
     private LocalDateTime createTime;
     private String createTimeStr;
 
@@ -102,7 +104,8 @@ public class UserWithPlayerInfo{
     }
 
     public void setPlayerMainPage(String playerMainPage) {
-        this.playerMainPage = ResourcesPathUtils.getPhotoPath() + playerMainPage;
+        this.playerMainPage = playerMainPage;
+        setPlayerMainPageUrl(ResourcesPathUtils.getPhotoPath() + playerMainPage);
     }
 
     public String getPlayerPreparePage() {
@@ -110,7 +113,8 @@ public class UserWithPlayerInfo{
     }
 
     public void setPlayerPreparePage(String playerPreparePage) {
-        this.playerPreparePage = ResourcesPathUtils.getPhotoPath() + playerPreparePage;
+        this.playerPreparePage = playerPreparePage;
+        setPlayerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + playerPreparePage);
     }
 
     public LocalDateTime getCreateTime() {
@@ -119,7 +123,7 @@ public class UserWithPlayerInfo{
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-        setCreateTimeStr(TimeUtils.toString(this.createTime));
+        setCreateTimeStr(TimeUtils.toString(this.createTime,TimeUtils.FORMAT_1));
     }
 
     public String getCreateTimeStr() {
@@ -128,5 +132,21 @@ public class UserWithPlayerInfo{
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public String getPlayerMainPageUrl() {
+        return playerMainPageUrl;
+    }
+
+    public void setPlayerMainPageUrl(String playerMainPageUrl) {
+        this.playerMainPageUrl = playerMainPageUrl;
+    }
+
+    public String getPlayerPreparePageUrl() {
+        return playerPreparePageUrl;
+    }
+
+    public void setPlayerPreparePageUrl(String playerPreparePageUrl) {
+        this.playerPreparePageUrl = playerPreparePageUrl;
     }
 }

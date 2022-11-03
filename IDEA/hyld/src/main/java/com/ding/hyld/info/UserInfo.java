@@ -1,7 +1,7 @@
 package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
-import com.ding.hyld.mapper.DictionaryMapper;
+import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
@@ -17,6 +17,7 @@ public class UserInfo {
     private String note;
     private String name;
     private String qq;
+    private HeadPortraitInfo headPortrait; // 头像
 
     private Dictionary type;
     private Dictionary status;
@@ -43,7 +44,7 @@ public class UserInfo {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-        setCreateTimeStr(TimeUtils.toString(this.createTime));
+        setCreateTimeStr(TimeUtils.toString(this.createTime,TimeUtils.FORMAT_1));
     }
 
     public String getNote() {
@@ -92,5 +93,13 @@ public class UserInfo {
 
     public void setStatus(Dictionary status) {
         this.status = status;
+    }
+
+    public HeadPortraitInfo getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(HeadPortraitInfo headPortrait) {
+        this.headPortrait = headPortrait;
     }
 }

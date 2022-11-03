@@ -8,43 +8,34 @@
         <id column="settlementTime" property="settlementTime"/>
         <id column="credit" property="credit"/>
         <id column="creditType" property="creditType"/>
-        <id column="creditType" property="creditType"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
     </resultMap>
-
-    <resultMap id="CreditVoMap" type="com.ding.hyld.vo.CreditVo">
-        <id column="playerSCId" property="playerSCId"/>
-        <id column="playerName" property="playerName"/>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.CreditInfo">
+        <id column="playerScid" property="playerScid"/>
+        <id column="creditId" property="creditId"/>
         <id column="averageCreditRank" property="averageCreditRank"/>
-        <id column="averageCredit" property="averageCredit"/>
         <id column="matchSettlementTimes" property="matchSettlementTimes"/>
-        <id column="restTimes" property="restTimes"/>
+        <id column="averageCredit" property="averageCredit"/>
         <id column="matchTotalCredit" property="matchTotalCredit"/>
+        <id column="playerName" property="playerName"/>
         <id column="exCredit" property="exCredit"/>
         <id column="totalCredit" property="totalCredit"/>
-        <id column="teamCompetitionType" property="teamCompetitionType"/>
-        <id column="settlementTime" property="settlementTime"/>
-    </resultMap>
-
-    <resultMap id="TeamMemberCreditVoMap" type="com.ding.hyld.vo.TeamMemberCreditVo">
-        <id column="creditId" property="creditId"/>
-        <id column="scid" property="scid"/>
-        <id column="playerName" property="playerName"/>
+        <id column="restTimes" property="restTimes"/>
         <id column="settlementTime" property="settlementTime"/>
         <id column="credit" property="credit"/>
         <id column="creditTypeId" property="creditTypeId"/>
         <id column="note" property="note"/>
         <id column="teamName" property="teamName"/>
         <association property="creditType" column="creditTypeId" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="teamCompetitionType" column="teamCompetitionTypeId" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
     </resultMap>
-
     <!--  统计战队所有正常队员的战队赛积分并排名  -->
-    <select id="getTeamMemberScoreboard" resultMap="CreditVoMap">
+    <select id="getTeamMemberScoreboard" resultMap="resultInfoMap">
         select
             id as teamMemberId,
-            scid as scid,
+            scid as playerScid,
             name as playerName,
             rank() over(ORDER BY Round(ture_credit/times,2) desc) as averageCreditRank,
             if(times=0 , 0,Round(ture_credit/times,2)) as averageCredit,
@@ -67,23 +58,23 @@
                        left join team t on t.id=twp.teamId
                        left join credit c on c.teamPlayerId=twp.id
               <where>
-                  and t.id=#{searchTeamMemberScoreboardInfo.teamId}
+                  and c.uwtId=#{searchTeamMemberScoreboardInfo.uwtId}
                   and twp.teamMemberStatus=100
                   and c.teamCompetitionType=#{searchTeamMemberScoreboardInfo.teamCompetitionTypeId}
               </where>
               GROUP BY twp.id
               ORDER BY total_credit) as t;
     </select>
-
     <!--  获取所有队员的积分记录  -->
-    <select id="searchCreditBy" resultMap="TeamMemberCreditVoMap">
+    <select id="searchCreditBy" resultMap="resultInfoMap">
         select
             c.id creditId,
             c.settlementTime settlementTime,
             c.credit credit,
             c.creditType creditTypeId,
+            c.teamCompetitionType teamCompetitionTypeId,
             c.note note,
-            p.scid scid,
+            p.scid playerScid,
             p.name playerName,
             t.name teamName
         FROM team_with_player twp
@@ -94,6 +85,9 @@
             <if test="creditVo.teamId != null">
                 and t.id = #{creditVo.teamId}
             </if>
+            <if test="creditVo.uwtId != null">
+                and c.uwtId = #{creditVo.uwtId}
+            </if>
             <if test="creditVo.playerName != null and creditVo.playerName.trim() != ''">
                 and p.name like concat('%',#{creditVo.playerName},'%')
             </if>
@@ -103,14 +97,17 @@
             <if test="creditVo.teamMemberId != null">
                 and twp.id = #{creditVo.teamMemberId}
             </if>
-            <if test="creditVo.settlementTime != null">
+            <if test="creditVo.settlementTime != null and creditVo.settlementTime.trim() != ''">
                 and c.settlementTime = #{creditVo.settlementTime}
+            </if>
+            <if test="creditVo.teamCompetitionTypeId != null">
+                and c.teamCompetitionType = #{creditVo.teamCompetitionTypeId}
             </if>
             <if test="creditVo.playerId != null">
                 and twp.playerId = #{creditVo.playerId}
             </if>
         </where>
-        ORDER BY c.id
+        ORDER BY c.settlementTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
@@ -118,11 +115,12 @@
     </select>
     <update id="saveTeamMemberCredit">
         update credit
-        set credit=#{credit.credit},
-            creditType=#{credit.creditType},
-            settlementTime=#{credit.settlementTime},
-            note=#{credit.note}
-        where id=#{credit.id}
+        set credit=#{teamMemberCreditVo.credit},
+            creditType=#{teamMemberCreditVo.creditTypeId},
+            settlementTime=#{teamMemberCreditVo.settlementTime},
+            teamCompetitionType=#{teamMemberCreditVo.teamCompetitionTypeId},
+            note=#{teamMemberCreditVo.note}
+        where id=#{teamMemberCreditVo.creditId}
     </update>
     <insert id="add">
         insert into
@@ -131,27 +129,31 @@
                    credit,
                    creditType,
                    note,
+                   uwtId,
                    teamCompetitionType)
         values (#{teamMemberCreditVo.teamMemberId},
                 #{teamMemberCreditVo.settlementTime},
                 #{teamMemberCreditVo.credit},
                 #{teamMemberCreditVo.creditTypeId},
                 #{teamMemberCreditVo.note},
-                #{teamMemberCreditVo.teamCompetitionType});
+                #{teamMemberCreditVo.uwtId},
+                #{teamMemberCreditVo.teamCompetitionTypeId});
     </insert>
     <select id="getSettlementTimeList" resultType="java.time.LocalDateTime">
         SELECT c.settlementTime
         from credit c
         join team_with_player twp on twp.id=c.teamPlayerId
-        where twp.teamId=#{teamId}
-        GROUP BY c.settlementTime;
+        where c.uwtId=#{uwtId}
+        GROUP BY c.settlementTime
+        order by c.settlementTime desc;
     </select>
-    <select id="getTeamData" resultMap="CreditVoMap">
+    <select id="getTeamData" resultMap="resultInfoMap">
         SELECT SUM(c.credit) totalCredit,c.settlementTime settlementTime
         from credit c
         <where>
-            and EXISTS (SELECT 1 from team_with_player twp WHERE twp.id=c.teamPlayerId and twp.teamId=#{teamId} )
-            and c.creditType=200
+            and EXISTS (SELECT 1 from team_with_player twp WHERE twp.id=c.teamPlayerId)
+            and c.creditType!=201 -- 只统计正常积分和请假积分的数据
+            and c.uwtId=#{uwtId}
             and c.teamCompetitionType=#{teamCompetitionType}
         </where>
         GROUP BY c.settlementTime

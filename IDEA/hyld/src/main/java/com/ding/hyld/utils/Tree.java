@@ -1,12 +1,14 @@
 package com.ding.hyld.utils;
 
+import com.ding.hyld.info.TopicInfo;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Tree {
-    private int id;
-    private int parentId;
+public class Tree implements Comparable<Tree>{
+    private Integer id;
+    private Integer parentId;
     private List<Tree> children;
 
     public Tree(int id, int parentId) {
@@ -17,11 +19,11 @@ public class Tree {
     public Tree() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,11 +35,16 @@ public class Tree {
         this.children = children;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    @Override
+    public int compareTo(Tree o) {
+        return this.getId().compareTo(o.getId());
     }
 }

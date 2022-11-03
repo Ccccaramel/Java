@@ -15,23 +15,18 @@ import java.util.List;
 public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements TeamService {
 
     @Override
-    public Team findBy(Team team) {
-        return baseMapper.findBy(team);
-    }
-
-    @Override
-    public Team findById(Integer id) {
+    public TeamInfo findById(Integer id) {
         return baseMapper.findById(id);
     }
 
     @Override
-    public Team findByScid(String scid) {
+    public TeamInfo findByScid(String scid) {
         return baseMapper.findByScid(scid);
     }
 
     @Override
-    public void add(Team newTeam) {
-        baseMapper.add(newTeam);
+    public void add(TeamVo teamVo) {
+        baseMapper.add(teamVo);
     }
 
     @Override

@@ -2,7 +2,9 @@ package com.ding.hyld.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ding.hyld.entity.Credit;
+import com.ding.hyld.info.CreditInfo;
 import com.ding.hyld.info.SearchTeamMemberScoreboardInfo;
+import com.ding.hyld.info.TeamMemberCreditInfo;
 import com.ding.hyld.vo.CreditVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TeamMemberCreditVo;
@@ -16,13 +18,13 @@ import java.util.List;
 public interface CreditMapper extends BaseMapper<Credit> {
     List<CreditVo> getTeamMemberScoreboard(@Param("searchTeamMemberScoreboardInfo") SearchTeamMemberScoreboardInfo searchTeamMemberScoreboardInfo);
 
-    List<TeamMemberCreditVo> searchCreditBy(@Param("page") Page page, @Param("creditVo") CreditVo creditVo);
+    List<CreditInfo> searchCreditBy(@Param("page") Page page, @Param("creditVo") CreditVo creditVo);
 
-    void saveTeamMemberCredit(@Param("credit") Credit credit);
+    void saveTeamMemberCredit(@Param("teamMemberCreditVo") TeamMemberCreditVo teamMemberCreditVo);
 
     void add(@Param("teamMemberCreditVo") TeamMemberCreditVo teamMemberCreditVo);
 
-    List<LocalDateTime> getSettlementTimeList(Integer teamId);
+    List<LocalDateTime> getSettlementTimeList(Integer uwtId);
 
-    List<CreditVo> getTeamData(Integer teamId,Integer teamCompetitionType);
+    List<CreditInfo> getTeamData(Integer uwtId, Integer teamCompetitionType);
 }

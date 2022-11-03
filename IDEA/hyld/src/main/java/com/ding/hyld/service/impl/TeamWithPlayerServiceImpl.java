@@ -32,8 +32,8 @@ public class TeamWithPlayerServiceImpl extends ServiceImpl<TeamWithPlayerMapper,
     }
 
     @Override
-    public TeamWithPlayer findTeamMember(String playerScid) {
-        return baseMapper.findTeamMember(playerScid);
+    public TeamWithPlayer findTeamMember(TeamMemberVo teamMemberVo) {
+        return baseMapper.findTeamMember(teamMemberVo);
     }
 
     @Override

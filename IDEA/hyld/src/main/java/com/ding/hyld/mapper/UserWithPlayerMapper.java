@@ -3,6 +3,7 @@ package com.ding.hyld.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ding.hyld.entity.UserWithPlayer;
 import com.ding.hyld.info.UserWithPlayerInfo;
+import com.ding.hyld.info.UserWithTeamInfo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserWithPlayerVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +24,6 @@ public interface UserWithPlayerMapper extends BaseMapper<UserWithPlayer> {
     void saveCheckInfo(Integer relationId, String playerMainPageNewName, String playerPreparePageNewName, Integer checkStatus);
 
     void updateCheckInfo(@Param("userWithPlayerVo") UserWithPlayerVo userWithPlayerVo);
+
+    UserWithPlayerInfo findById(Integer id);
 }

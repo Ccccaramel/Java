@@ -9,13 +9,11 @@ import com.ding.hyld.vo.TeamVo;
 import java.util.List;
 
 public interface TeamService extends IService<Team> {
-    Team findBy(Team team);
+    TeamInfo findById(Integer id);
 
-    Team findById(Integer id);
+    TeamInfo findByScid(String scid);
 
-    Team findByScid(String scid);
-
-    void add(Team newTeam);
+    void add(TeamVo teamVo);
 
     void update(TeamVo teamVo);
 

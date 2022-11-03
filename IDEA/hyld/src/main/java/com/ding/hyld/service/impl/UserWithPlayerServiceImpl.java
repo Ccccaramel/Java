@@ -1,18 +1,27 @@
 package com.ding.hyld.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.entity.UserWithPlayer;
+import com.ding.hyld.entity.UserWithTeam;
 import com.ding.hyld.info.UserWithPlayerInfo;
+import com.ding.hyld.info.UserWithTeamInfo;
 import com.ding.hyld.mapper.UserWithPlayerMapper;
 import com.ding.hyld.service.UserWithPlayerService;
+import com.ding.hyld.service.UserWithTeamService;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserWithPlayerVo;
+import com.ding.hyld.vo.UserWithTeamVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserWithPlayerServiceImpl extends ServiceImpl<UserWithPlayerMapper,UserWithPlayer> implements UserWithPlayerService {
+    @Autowired
+    private UserWithTeamService userWithTeamService;
+
     @Override
     public UserWithPlayer findBy(UserWithPlayerVo userWithPlayerVo) {
         return baseMapper.findBy(userWithPlayerVo);
@@ -41,6 +50,11 @@ public class UserWithPlayerServiceImpl extends ServiceImpl<UserWithPlayerMapper,
     @Override
     public void updateCheckInfo(UserWithPlayerVo userWithPlayerVo) {
         baseMapper.updateCheckInfo(userWithPlayerVo);
+    }
+
+    @Override
+    public UserWithPlayerInfo findById(Integer id) {
+        return baseMapper.findById(id);
     }
 
 }

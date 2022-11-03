@@ -2,7 +2,9 @@ package com.ding.hyld.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ding.hyld.entity.Credit;
+import com.ding.hyld.info.CreditInfo;
 import com.ding.hyld.info.SearchTeamMemberScoreboardInfo;
+import com.ding.hyld.info.TeamMemberCreditInfo;
 import com.ding.hyld.mapper.CreditMapper;
 import com.ding.hyld.service.CreditService;
 import com.ding.hyld.vo.CreditVo;
@@ -21,13 +23,13 @@ public class CreditServiceImpl extends ServiceImpl<CreditMapper, Credit> impleme
     }
 
     @Override
-    public List<TeamMemberCreditVo> searchCreditBy(Page page, CreditVo creditVo) {
+    public List<CreditInfo> searchCreditBy(Page page, CreditVo creditVo) {
         return baseMapper.searchCreditBy(page,creditVo);
     }
 
     @Override
-    public void saveTeamMemberCredit(Credit credit) {
-        baseMapper.saveTeamMemberCredit(credit);
+    public void saveTeamMemberCredit(TeamMemberCreditVo teamMemberCreditVo) {
+        baseMapper.saveTeamMemberCredit(teamMemberCreditVo);
     }
 
     @Override
@@ -43,12 +45,12 @@ public class CreditServiceImpl extends ServiceImpl<CreditMapper, Credit> impleme
     }
 
     @Override
-    public List<LocalDateTime> getSettlementTimeList(Integer teamId) {
-        return baseMapper.getSettlementTimeList(teamId);
+    public List<LocalDateTime> getSettlementTimeList(Integer uwtId) {
+        return baseMapper.getSettlementTimeList(uwtId);
     }
 
     @Override
-    public List<CreditVo> getTeamData(Integer teamId,Integer teamCompetitionType) {
-        return baseMapper.getTeamData(teamId,teamCompetitionType);
+    public List<CreditInfo> getTeamData(Integer uwtId, Integer teamCompetitionType) {
+        return baseMapper.getTeamData(uwtId,teamCompetitionType);
     }
 }

@@ -5,6 +5,7 @@ public class Page {
     private Integer currentPage;
     private Integer totalPage;
     private Integer total;
+    private boolean asc;
 
     public Integer getSize() {
         return size;
@@ -36,5 +37,13 @@ public class Page {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public boolean isAsc() {
+        return asc;
+    }
+
+    public void setAsc(boolean asc) {
+        this.asc = asc;
     }
 }

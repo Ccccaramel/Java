@@ -8,6 +8,7 @@
         <id column="status" property="status"/>
         <id column="type" property="type"/>
         <id column="qq" property="qq"/>
+        <id column="headPortrait" property="headPortrait"/>
         <id column="password" property="password"/>
 
         <id column="createTime" property="createTime"/>
@@ -21,6 +22,7 @@
 
         <association property="type" column="type" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="headPortrait" column="headPortrait" select="com.ding.hyld.mapper.HeadPortraitMapper.findById"/>
     </resultMap>
     <select id="searchUser" resultMap="resultInfoMap">
         select * from user
@@ -32,7 +34,7 @@
                 and type = #{userVo.type}
             </if>
             <if test="userVo.status!=null">
-                and name = #{userVo.status}
+                and status = #{userVo.status}
             </if>
         </where>
         ORDER BY id desc
@@ -84,4 +86,17 @@
         set password = #{userVo.password}
         where id=#{userVo.id}
     </update>
+    <update id="saveHeadPortrait">
+        update user
+        set headPortrait = #{userVo.headPortraitId}
+        where id=#{userVo.id}
+    </update>
+    <select id="findByTopicId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from topic t where t.id = #{topicId} and t.userId=u.id);
+    </select>
+    <select id="findByGameRoleCommentId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from game_role_comment grc where grc.id = #{gameRoleCommentId} and grc.user=u.id);
+    </select>
 </mapper>

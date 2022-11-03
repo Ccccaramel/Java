@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.StarPowerMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.StarPower">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="gameRole" property="gameRole"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.StarPowerInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="gameRole" column="gameRole" select="com.ding.hyld.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <resultMap id="pithyResultInfoMap" type="com.ding.hyld.info.StarPowerInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchStarPower" resultMap="resultInfoMap">
+        select * from star_power
+        <where>
+            <if test="starPowerVo.name != null and starPowerVo.name.trim() != ''">
+                and name like concat('%',#{starPowerVo.name},'%')
+            </if>
+            <if test="starPowerVo.gameRoleName != null and starPowerVo.gameRoleName.trim() != ''">
+                and exists (select 1 from game_role gr where gr.name like concat('%',#{starPowerVo.gameRoleName},'%') and gameRole = gr.id )
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into star_power(gameRole,name,details,launchTime,note,image)
+        values(#{starPowerVo.gameRole},#{starPowerVo.name},#{starPowerVo.details},#{starPowerVo.launchTime},#{starPowerVo.note},#{starPowerVo.image})
+    </insert>
+    <update id="update">
+        update star_power
+        set gameRole = #{starPowerVo.gameRole},
+            name = #{starPowerVo.name},
+            image = #{starPowerVo.image},
+            details = #{starPowerVo.details},
+            launchTime = #{starPowerVo.launchTime},
+            note = #{starPowerVo.note}
+        where id = #{starPowerVo.id}
+    </update>
+    <select id="findPithyInfoByGameRoleId" resultMap="pithyResultInfoMap">
+        select * from star_power
+        where gameRole = #{id}
+    </select>
+</mapper>

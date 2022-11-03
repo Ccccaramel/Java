@@ -12,6 +12,7 @@ public class Credit extends BaseObject {
     private Integer credit;
     private Integer creditType;
     private Integer teamCompetitionType;
+    private Integer uwtId;
 
     public Integer getTeamPlayerId() {
         return teamPlayerId;
@@ -51,5 +52,13 @@ public class Credit extends BaseObject {
 
     public void setTeamCompetitionType(Integer teamCompetitionType) {
         this.teamCompetitionType = teamCompetitionType;
+    }
+
+    public Integer getUwtId() {
+        return uwtId;
+    }
+
+    public void setUwtId(Integer uwtId) {
+        this.uwtId = uwtId;
     }
 }

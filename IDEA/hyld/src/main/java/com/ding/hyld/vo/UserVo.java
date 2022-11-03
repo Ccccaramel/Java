@@ -12,6 +12,8 @@ public class UserVo {
     private Integer status;
     private Integer type;
     private String note;
+    private Integer headPortraitId; // 修改头像
+
 
     public Integer getId() {
         return id;
@@ -75,5 +77,13 @@ public class UserVo {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getHeadPortraitId() {
+        return headPortraitId;
+    }
+
+    public void setHeadPortraitId(Integer headPortraitId) {
+        this.headPortraitId = headPortraitId;
     }
 }

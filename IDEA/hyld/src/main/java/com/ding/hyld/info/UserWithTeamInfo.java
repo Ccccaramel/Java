@@ -17,6 +17,7 @@ public class UserWithTeamInfo {
     private Integer relationStatus; // 关联状态
     private Integer playerPosition; // 职位
     private Dictionary checkStatus; // 验证状态
+    private Integer parentId; // 队长关联战队id
 
     private String teamName;
 
@@ -28,12 +29,24 @@ public class UserWithTeamInfo {
 
     private UserInfo user;
 
-    private Team team;
+    private TeamInfo team;
 
     private Dictionary playerPositionType;
 
     private String controllerPreparePage; // 管理者准备界面
+    private String controllerPreparePageUrl; // 管理者准备界面
     private String teamMainPage; // 战队界面
+    private String teamMainPageUrl; // 战队界面
+
+    private Integer creditScore; //信誉积分
+
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
 
     public Integer getId() {
         return id;
@@ -49,7 +62,7 @@ public class UserWithTeamInfo {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-        setCreateTimeStr(TimeUtils.toString(this.createTime));
+        setCreateTimeStr(TimeUtils.toString(this.createTime,TimeUtils.FORMAT_1));
     }
 
     public String getNote() {
@@ -124,11 +137,11 @@ public class UserWithTeamInfo {
         this.user = user;
     }
 
-    public Team getTeam() {
+    public TeamInfo getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(TeamInfo team) {
         this.team = team;
     }
 
@@ -161,7 +174,8 @@ public class UserWithTeamInfo {
     }
 
     public void setControllerPreparePage(String controllerPreparePage) {
-        this.controllerPreparePage = ResourcesPathUtils.getPhotoPath() + controllerPreparePage;
+        this.controllerPreparePage =  controllerPreparePage;
+        setControllerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + controllerPreparePage);
     }
 
     public String getTeamMainPage() {
@@ -169,7 +183,8 @@ public class UserWithTeamInfo {
     }
 
     public void setTeamMainPage(String teamMainPage) {
-        this.teamMainPage = ResourcesPathUtils.getPhotoPath() + teamMainPage;
+        this.teamMainPage = teamMainPage;
+        setTeamMainPageUrl(ResourcesPathUtils.getPhotoPath() + teamMainPage);
     }
 
     public String getCreateTimeStr() {
@@ -178,5 +193,29 @@ public class UserWithTeamInfo {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getControllerPreparePageUrl() {
+        return controllerPreparePageUrl;
+    }
+
+    public void setControllerPreparePageUrl(String controllerPreparePageUrl) {
+        this.controllerPreparePageUrl = controllerPreparePageUrl;
+    }
+
+    public String getTeamMainPageUrl() {
+        return teamMainPageUrl;
+    }
+
+    public void setTeamMainPageUrl(String teamMainPageUrl) {
+        this.teamMainPageUrl = teamMainPageUrl;
     }
 }

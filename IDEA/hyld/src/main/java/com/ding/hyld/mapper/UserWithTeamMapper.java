@@ -17,7 +17,7 @@ public interface UserWithTeamMapper extends BaseMapper<UserWithTeam> {
 
     List<UserWithTeamInfo> findBy(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
-    void add(@Param("userWithTeam") UserWithTeam userWithTeam);
+    void add(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
     /**
      * 直接解除关联
@@ -34,8 +34,25 @@ public interface UserWithTeamMapper extends BaseMapper<UserWithTeam> {
     void allRelieveTeam(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 
     /**
-     * 更改关联的验证状态
+     * 更改关联状态
      * @param userWithTeamVo
      */
-    void changeCheckStatus(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+    void changeRelationStatus(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    /**
+     * 主页 > 站队搜索
+     * @param page
+     * @param userWithTeamVo
+     * @return
+     */
+    List<UserWithTeamInfo> searchValidTeamInfo(@Param("page") Page page,@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    List<UserWithTeamInfo> playerFindTeamBy(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    void teamTransfer(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    UserWithTeamInfo findById(Integer id);
+
+    void updateTeamCreditScore(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 }
+

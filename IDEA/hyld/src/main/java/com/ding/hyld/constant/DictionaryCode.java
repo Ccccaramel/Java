@@ -15,6 +15,11 @@ public interface DictionaryCode {
      */
     Integer TEAM_STATUS_1 = 0;
 
+    /**
+     * 正常 value
+     */
+    Integer TEAM_STATUS_1_value = 0;
+
     // 关联状态
     /**
      * 冻结中
@@ -60,6 +65,11 @@ public interface DictionaryCode {
     Integer CHECK_STATUS_4 = 1403;
 
     /**
+     * 无需审核
+     */
+    Integer CHECK_STATUS_5 = 1404;
+
+    /**
      * 队长
      */
     Integer PLAYER_POSITION_1 = 1200;
@@ -68,4 +78,72 @@ public interface DictionaryCode {
      * 副队长
      */
     Integer PLAYER_POSITION_2 = 1201;
+
+    /**
+     * 副队长 value
+     */
+    Integer PLAYER_POSITION_2_value = 1;
+
+    /**
+     * 队员
+     */
+    Integer PLAYER_POSITION_3 = 1202;
+
+    // 言论状态
+    /**
+     * 正常
+     */
+    Integer SPEECH_STATUS_1 =1500;
+    /**
+     * 冻结
+     */
+    Integer SPEECH_STATUS_2 =1501;
+    /**
+     * 删除
+     */
+    Integer SPEECH_STATUS_3 =1502;
+
+    // 反馈信息状态
+    /**
+     * 正常
+     */
+    Integer POINTER_STATUS_1 = 1600;
+    /**
+     * 删除
+     */
+    Integer POINTER_STATUS_2 = 1601;
+
+    // 用户角色
+    /**
+     * 平台管理员
+     */
+    Integer USER_TYPE_1 = 500;
+    /**
+     * 普通用户
+     */
+    Integer USER_TYPE_2 = 501;
+
+    // 用户状态
+    /**
+     * 正常
+     */
+    Integer USER_STATUS_1 = 400;
+    /**
+     * 冻结
+     */
+    Integer USER_STATUS_2 = 401;
+    /**
+     * 注销
+     */
+    Integer USER_STATUS_3 = 402;
+
+    // 人气类型
+    /**
+     * 喜欢
+     */
+    Integer POPULARITY_TYPE_1 = 1900;
+    /**
+     * 不喜欢
+     */
+    Integer POPULARITY_TYPE_2 = 1901;
 }

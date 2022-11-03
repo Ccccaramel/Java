@@ -1,6 +1,7 @@
 package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
+import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ public class PlayerInfo {
     private String name;
     private String note;
     private String type;
-    private LocalDateTime createTime;
+    private String createTime;
     private Dictionary playerType;
 //    private String playerType;
 
@@ -46,12 +47,12 @@ public class PlayerInfo {
         this.note = note;
     }
 
-    public LocalDateTime getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+        this.createTime = TimeUtils.toString(createTime,TimeUtils.FORMAT_1);
     }
 
     public String getType() {

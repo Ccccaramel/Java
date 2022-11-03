@@ -13,6 +13,7 @@ public class TeamWithPlayer extends BaseObject {
     private LocalDateTime joinTime;
     private Integer joinWay;
     private LocalDateTime leaveTime;
+    private Integer uwtId;
 
     public Integer getPlayerId() {
         return playerId;
@@ -60,5 +61,13 @@ public class TeamWithPlayer extends BaseObject {
 
     public void setLeaveTime(LocalDateTime leaveTime) {
         this.leaveTime = leaveTime;
+    }
+
+    public Integer getUwtId() {
+        return uwtId;
+    }
+
+    public void setUwtId(Integer uwtId) {
+        this.uwtId = uwtId;
     }
 }

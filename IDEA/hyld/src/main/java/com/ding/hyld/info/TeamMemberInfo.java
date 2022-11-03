@@ -94,7 +94,7 @@ public class TeamMemberInfo {
     }
 
     public void setJoinTime(LocalDateTime joinTime) {
-        this.joinTime = TimeUtils.toString(joinTime);
+        this.joinTime = TimeUtils.toString(joinTime,TimeUtils.FORMAT_1);
     }
 
     public void setJoinTime(String joinTime) {

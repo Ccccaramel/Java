@@ -17,16 +17,16 @@ public class TeamController {
     @Autowired
     private TeamService teamService;
 
-    @GetMapping("/searchTeamInfo")
-    public R searchTeamInfo(Page page, TeamVo teamVo){
-        HashMap<String,Object> result=new HashMap<>();
-        teamVo.setStatus(DictionaryCode.TEAM_STATUS_1);
-        result.put("data",teamService.searchTeamInfo(page,teamVo));
-        if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(teamService.searchTeamInfo(null,teamVo).size()*1.0/page.getSize()));
-        }
-        return R.success(result);
-    }
+//    @GetMapping("/searchTeamInfo")
+//    public R searchTeamInfo(Page page, TeamVo teamVo){
+//        HashMap<String,Object> result=new HashMap<>();
+//        teamVo.setStatus(DictionaryCode.TEAM_STATUS_1);
+//        result.put("data",teamService.searchTeamInfo(page,teamVo));
+//        if(!Objects.equals(page.getSize(),null)){
+//            result.put("totalPage",Math.ceil(teamService.searchTeamInfo(null,teamVo).size()*1.0/page.getSize()));
+//        }
+//        return R.success(result);
+//    }
 
     /**
      * 管理员查询所有战队信息

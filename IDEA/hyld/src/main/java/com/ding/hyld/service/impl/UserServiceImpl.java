@@ -9,6 +9,7 @@ import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.R;
+import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.LoginUserVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserVo;
@@ -83,7 +84,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
     @Override
     public void saveUserPassword(UserVo userVo) {
-        userVo.setPassword(new BCryptPasswordEncoder().encode(userVo.getPassword()+ CommonCode.SLAT));
+        try {
+            userVo.setPassword(new BCryptPasswordEncoder().encode(RsaUtils.decryptByPrivateKey(userVo.getPassword())+ CommonCode.SLAT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         baseMapper.saveUserPassword(userVo);
+    }
+
+    @Override
+    public void saveHeadPortrait(UserVo userVo) {
+        baseMapper.saveHeadPortrait(userVo);
     }
 }

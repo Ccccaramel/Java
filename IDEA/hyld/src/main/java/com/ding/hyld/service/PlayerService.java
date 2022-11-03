@@ -7,16 +7,21 @@ import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.PlayerVo;
 import com.ding.hyld.vo.TeamMemberVo;
+import com.ding.hyld.vo.UserWithPlayerVo;
 
 import java.util.List;
 
 public interface PlayerService extends IService<Player> {
 
-    Player addPlayer(TeamMemberVo teamMemberVo);
+    Integer addPlayer(PlayerVo playerVo);
 
     List<PlayerInfo> searchPlayerInfo(Page page, PlayerVo playerVo);
 
-    R userRelationPlayer(PlayerVo playerVo, Integer userId);
+    Integer userRelationPlayer(PlayerVo playerVo);
 
-    R updateRelationPlayer(PlayerVo playerVo, Integer userId);
+    void updateRelationPlayer(PlayerVo playerVo);
+
+    void updatePlayer(PlayerVo playerVo);
+
+    PlayerInfo findBy(PlayerVo playerVo);
 }

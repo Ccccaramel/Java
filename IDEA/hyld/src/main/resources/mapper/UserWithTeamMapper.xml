@@ -8,6 +8,8 @@
         <id column="note" property="note"/>
         <id column="controllerPreparePage" property="controllerPreparePage"/>
         <id column="teamMainPage" property="teamMainPage"/>
+        <id column="parentId" property="parentId"/>
+        <id column="creditScore" property="creditScore"/>
 
         <association column="relationStatus" property="relation" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
         <association column="teamStatus" property="teamStatus" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
@@ -28,6 +30,8 @@
         uwt.checkStatus checkStatus,
         uwt.controllerPreparePage controllerPreparePage,
         uwt.teamMainPage teamMainPage,
+        uwt.parentId parentId,
+        uwt.creditScore creditScore,
         t.status teamStatus
         from user_with_team uwt
         join team t on t.id = uwt.teamId
@@ -67,7 +71,7 @@
                 and uwt.playerPosition = #{userWithTeamVo.playerPosition}
             </if>
         </where>
-        order by t.id
+        order by uwt.createTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
                 limit #{start},#{page.size}
@@ -80,6 +84,7 @@
         <id column="teamId" property="teamId"/>
         <id column="relationStatus" property="relationStatus"/>
         <id column="playerPosition" property="playerPosition"/>
+        <id column="creditScore" property="creditScore"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
@@ -102,11 +107,14 @@
             <if test="userWithTeamVo.checkStatus!=null">
                 and checkStatus = #{userWithTeamVo.checkStatus}
             </if>
+            <if test="userWithTeamVo.playerPosition!=null">
+                and playerPosition = #{userWithTeamVo.playerPosition}
+            </if>
         </where>
     </select>
     <insert id="add">
         insert into user_with_team(userId,teamId,relationStatus,checkStatus,note,playerPosition)
-        values(#{userWithTeam.userId},#{userWithTeam.teamId},#{userWithTeam.relationStatus},#{userWithTeam.checkStatus},#{userWithTeam.note},#{userWithTeam.playerPosition});
+        values(#{userWithTeamVo.userId},#{userWithTeamVo.teamId},#{userWithTeamVo.relationStatus},#{userWithTeamVo.checkStatus},#{userWithTeamVo.note},#{userWithTeamVo.playerPosition});
     </insert>
     <!--  解除单个战队关联  -->
     <update id="relieveTeam">
@@ -126,12 +134,12 @@
         </where>
     </update>
     <!--  更改关联状态  -->
-    <update id="changeCheckStatus">
+    <update id="changeRelationStatus">
         update user_with_team
-        set checkStatus=#{userWithTeamVo.checkStatus}
+        set relationStatus=#{userWithTeamVo.relationStatus}
         <where>
             and teamId = #{userWithTeamVo.teamId}
-            and checkStatus = #{userWithTeamVo.oldCheckStatus}
+            and checkStatus = #{userWithTeamVo.checkStatus}
         </where>
     </update>
     <update id="saveCheckInfo">
@@ -152,4 +160,40 @@
                #{userWithTeamVo.checkStatus},
                #{userWithTeamVo.playerPosition});
     </insert>
+    <select id="searchValidTeamInfo" resultMap="resultInfoMap">
+        select *
+        from user_with_team
+        where relationStatus = #{userWithTeamVo.relationStatus}
+        and checkStatus = #{userWithTeamVo.checkStatus}
+        and playerPosition = #{userWithTeamVo.playerPosition}
+        and creditScore = #{userWithTeamVo.creditScore}
+    </select>
+    <select id="playerFindTeamBy" resultMap="resultInfoMap">
+        select uwt.*
+        from user_with_team uwt
+        where EXISTS (
+            SELECT 1 from team_with_player twp
+            join player p on twp.playerId = p.id
+            where uwt.id = twp.uwtId
+              and twp.teamMemberStatus=#{userWithTeamVo.teamMemberStatus}
+              and p.scid = #{userWithTeamVo.playerScid})
+        and uwt.relationStatus=#{userWithTeamVo.relationStatus}
+        and uwt.checkStatus=#{userWithTeamVo.checkStatus}
+        and uwt.playerPosition=#{userWithTeamVo.playerPosition}
+    </select>
+    <update id="teamTransfer">
+        update user_with_team
+        set userId=#{userWithTeamVo.userId},note=#{userWithTeamVo.note}
+        where id = #{userWithTeamVo.id}
+    </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select *
+        from user_with_team
+        where id = #{id}
+    </select>
+    <update id="updateTeamCreditScore">
+        update user_with_team
+        set  creditScore= #{userWithTeamVo.creditScore}
+        where id = #{userWithTeamVo.id};
+    </update>
 </mapper>

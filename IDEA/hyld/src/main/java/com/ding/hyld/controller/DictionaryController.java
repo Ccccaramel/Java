@@ -1,5 +1,6 @@
 package com.ding.hyld.controller;
 
+import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.info.DictionaryInfo;
 import com.ding.hyld.service.DictionaryService;
 import com.ding.hyld.utils.R;
@@ -20,7 +21,7 @@ public class DictionaryController {
 
     @GetMapping("findLeaveType")
     public R findLeaveType(){
-        return R.success(dictionaryService.findByType("teamMemberStatus", List.of(0))); // 排除"正常队员"项
+        return R.success(dictionaryService.findByType("teamMemberStatus", List.of(DictionaryCode.TEAM_STATUS_1_value))); // 排除"正常队员"项
     }
 
     @GetMapping("findJoinWayType")
@@ -93,6 +94,28 @@ public class DictionaryController {
     public R getRelationStatus(){
         return R.success(dictionaryService.findByType("relationStatus", null));
     }
+
+    @GetMapping("/getTeamMemberPositionTypeExcludeViceCaptain")
+    public R getTeamMemberPositionTypeExcludeViceCaptain(){
+        return R.success(dictionaryService.findByType("teamMemberPositionType", List.of(DictionaryCode.PLAYER_POSITION_2_value)));
+    }
+
+    @GetMapping("/getGameRoleRarity")
+    public R getGameRoleRarity(){
+        return R.success(dictionaryService.findByType("gameRoleRarity", null));
+    }
+
+    @GetMapping("/getGameRolePosition")
+    public R getGameRolePosition(){
+        return R.success(dictionaryService.findByType("gameRolePosition", null));
+    }
+
+    @GetMapping("/getGearRarity")
+    public R getGearRarity(){
+        return R.success(dictionaryService.findByType("gearRarity", null));
+    }
+
+
 
     @GetMapping("searchDictionary")
     public R searchDictionary(Page page, DictionaryInfo dictionaryInfo){

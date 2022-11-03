@@ -30,27 +30,19 @@
         <association property="type" column="type" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
     </resultMap>
-    <select id="findById" resultMap="resultMap">
+    <select id="findById" resultMap="resultInfoMap">
         select * from team
         <where>
             id = #{id}
         </where>
     </select>
-    <select id="findBy" resultMap="resultMap">
-        select * from team
-        <where>
-            <if test="team.scid!=null and team.scid.trim()!=''">
-                scid = #{team.scid}
-            </if>
-        </where>
-    </select>
-    <select id="findByScid" resultMap="resultMap">
+    <select id="findByScid" resultMap="resultInfoMap">
         select * from team
         where scid = #{scid}
     </select>
-    <insert id="add" parameterType="com.ding.hyld.entity.Team" useGeneratedKeys="true" keyProperty="id">
+    <insert id="add" parameterType="com.ding.hyld.vo.TeamVo" useGeneratedKeys="true" keyProperty="id">
         insert into team(name,scid,note,status,eliminationLine,excellentLine,type)
-        values (#{newTeam.name},#{newTeam.scid},#{newTeam.note},#{newTeam.status},#{newTeam.eliminationLine},#{newTeam.excellentLine},#{newTeam.type});
+        values (#{teamVo.name},#{teamVo.scid},#{teamVo.note},#{teamVo.status},#{teamVo.eliminationLine},#{teamVo.excellentLine},#{teamVo.type});
     </insert>
     <update id="update">
         update team

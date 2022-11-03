@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.SuperSkillMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.SuperSkill">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="gameRole" property="gameRole"/>
+        <id column="details" property="details"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.SuperSkillInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="gameRole" column="gameRole" select="com.ding.hyld.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <resultMap id="pithyResultInfoMap" type="com.ding.hyld.info.SuperSkillInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="superSkillAttributeInfoList" column="id" select="com.ding.hyld.mapper.SuperSkillAttributeMapper.findPithyInfoBySuperSkillId"/>
+    </resultMap>
+    <select id="searchSuperSkill" resultMap="resultInfoMap">
+        select * from super_skill
+        <where>
+            <if test="superSkillVo.name != null and superSkillVo.name.trim() != ''">
+                and name like concat('%',#{superSkillVo.name},'%')
+            </if>
+            <if test="superSkillVo.gameRoleId != null">
+                and gameRole = #{superSkillVo.gameRoleId}
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into super_skill(gameRole,name,details,note)
+        values(#{superSkillVo.gameRoleId},#{superSkillVo.name},#{superSkillVo.details},#{superSkillVo.note})
+    </insert>
+    <update id="update">
+        update super_skill
+        set gameRole = #{superSkillVo.gameRoleId},
+            name = #{superSkillVo.name},
+            details = #{superSkillVo.details},
+            note = #{superSkillVo.note}
+        where id = #{superSkillVo.id}
+    </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from super_skill
+        where id = #{id}
+    </select>
+    <delete id="delete">
+        delete from super_skill
+        where id = #{superSkillVo.id}
+    </delete>
+    <select id="findPithyInfoByGameRoleId" resultMap="pithyResultInfoMap">
+        select * from super_skill
+        where gameRole = #{id}
+    </select>
+</mapper>

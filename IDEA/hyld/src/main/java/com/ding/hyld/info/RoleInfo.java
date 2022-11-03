@@ -34,7 +34,7 @@ public class RoleInfo {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-        setCreateTimeStr(TimeUtils.toString(createTime));
+        setCreateTimeStr(TimeUtils.toString(createTime,TimeUtils.FORMAT_1));
     }
 
     public String getCreateTimeStr() {

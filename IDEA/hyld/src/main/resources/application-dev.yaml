@@ -6,8 +6,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/hyld
-    username: root
-    password: root
+    username: caramel(SQzOXNDSfDrVvVRAdGUTI/sfAkV3XN+bMYEwBwjRTeSRoQj+zVwGsdkEqPJvPBHH)
+    password: caramel(WfVDUPYIngICicX/xtJm3EV+pIT+AOTDWjDnoj+S/30ZCGqd/ATFw3BTqOyouoqW)
   web:
     resources:
       static-locations: classpath:/static/,file:D:/hyldResources/

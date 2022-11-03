@@ -1,11 +1,14 @@
 package com.ding.hyld.controller;
 
 import com.ding.hyld.constant.DictionaryCode;
+import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.entity.Credit;
+import com.ding.hyld.info.CreditInfo;
 import com.ding.hyld.info.SearchTeamMemberScoreboardInfo;
 import com.ding.hyld.info.TeamMemberCreditInfo;
 import com.ding.hyld.service.CreditService;
 import com.ding.hyld.utils.R;
+import com.ding.hyld.utils.TimeUtils;
 import com.ding.hyld.vo.CreditVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TeamMemberCreditVo;
@@ -17,7 +20,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/credit")
-public class CreditController {
+public class CreditController extends BaseController {
     @Autowired
     private CreditService creditService;
 
@@ -41,27 +44,21 @@ public class CreditController {
     }
 
     @PostMapping("/saveTeamMemberCreditInfo")  // 修改队员积分信息
-    public R saveTeamMemberCreditInfo(@RequestBody TeamMemberCreditInfo teamMemberCreditInfo){
-        Credit credit=new Credit();
-        credit.setId(teamMemberCreditInfo.getCreditId());
-        credit.setCredit(teamMemberCreditInfo.getCredit());
-        credit.setCreditType(teamMemberCreditInfo.getCreditType().getId());
-        credit.setSettlementTime(teamMemberCreditInfo.getSettlementTime());
-        credit.setNote(teamMemberCreditInfo.getNote());
-        creditService.saveTeamMemberCredit(credit);
-        return R.success();
+    public R saveTeamMemberCreditInfo(@RequestBody TeamMemberCreditVo teamMemberCreditVo){
+        creditService.saveTeamMemberCredit(teamMemberCreditVo);
+        return R.success("积分修改成功!");
     }
 
-    @PostMapping("/batchCreditAddSave")  // 批量保存队员积分
+    @PostMapping("/batchCreditAddSave")  // 批量队员积分新增
     public R batchCreditAddSave(@RequestBody List<TeamMemberCreditVo> allValidTeamMemberList){
         creditService.batchCreditAddSave(allValidTeamMemberList);
-        return R.success();
+        return R.success("批量积分导入成功!");
     }
 
-    @PostMapping("/singleCreditAddSave")  // 批量保存队员积分
+    @PostMapping("/singleCreditAddSave")  // 单个队员积分新增
     public R singleCreditAddSave(@RequestBody TeamMemberCreditVo teamMemberCreditVo){
         creditService.singleCreditAddSave(teamMemberCreditVo);
-        return R.success();
+        return R.success("积分导入成功!");
     }
 
 
@@ -71,9 +68,9 @@ public class CreditController {
     }
 
     @GetMapping("/getSettlementTimeList")  // 获取结算时间集
-    public R getSettlementTimeList(Integer teamId){
+    public R getSettlementTimeList(Integer uwtId){
         List<TeamMemberCreditInfo> teamMemberCreditInfoList=new ArrayList<>();
-        for(LocalDateTime settlementTime:creditService.getSettlementTimeList(teamId)){
+        for(LocalDateTime settlementTime:creditService.getSettlementTimeList(uwtId)){
             TeamMemberCreditInfo teamMemberCreditInfo = new TeamMemberCreditInfo();
             teamMemberCreditInfo.setSettlementTime(settlementTime);
             teamMemberCreditInfoList.add(teamMemberCreditInfo);
@@ -82,18 +79,18 @@ public class CreditController {
     }
 
     @GetMapping("/getTeamData")  // 获取结算时间集
-    public R getTeamData(Integer teamId){
+    public R getTeamData(Integer uwtId){
         Map<String,Map<String,List>> res = new HashMap<>();
 
-        List<String> nameList1=new ArrayList<>();
-        List<Integer> creditList1=new ArrayList<>();
-        for(CreditVo creditVo:creditService.getTeamData(teamId, DictionaryCode.TEAM_COMPETITION_TYPE_1)){
-            nameList1.add(creditVo.getSettlementTimeDate());
-            creditList1.add(creditVo.getTotalCredit());
+        List<String> nameList=new ArrayList<>();
+        List<Integer> creditList=new ArrayList<>();
+        for(CreditInfo creditInfo:creditService.getTeamData(uwtId, DictionaryCode.TEAM_COMPETITION_TYPE_1)){
+            nameList.add(creditInfo.getSettlementTimeDate());
+            creditList.add(creditInfo.getTotalCredit());
         }
         Map<String,List> competitionMap = new HashMap<>();
-        competitionMap.put("nameList",nameList1);
-        competitionMap.put("creditList",creditList1);
+        competitionMap.put("nameList",nameList);
+        competitionMap.put("creditList",creditList);
         res.put("competition",competitionMap);
 
         // map只是引用
@@ -101,9 +98,9 @@ public class CreditController {
         // creditList.clear();
         List<String> nameList2=new ArrayList<>();
         List<Integer> creditList2=new ArrayList<>();
-        for(CreditVo creditVo:creditService.getTeamData(teamId, DictionaryCode.TEAM_COMPETITION_TYPE_2)){
-            nameList2.add(creditVo.getSettlementTimeDate());
-            creditList2.add(creditVo.getTotalCredit());
+        for(CreditInfo creditInfo:creditService.getTeamData(uwtId, DictionaryCode.TEAM_COMPETITION_TYPE_2)){
+            nameList2.add(creditInfo.getSettlementTimeDate());
+            creditList2.add(creditInfo.getTotalCredit());
         }
         Map<String,List> taskMap = new HashMap<>();
         taskMap.put("nameList",nameList2);

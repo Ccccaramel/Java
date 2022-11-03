@@ -7,18 +7,27 @@ import com.ding.hyld.utils.ResourcesPathUtils;
 import java.time.LocalDateTime;
 public class UserWithPlayerVo{
     private Integer id;
+    private boolean add;
     private LocalDateTime createTime;
     private String note;
     private Integer userId;
     private String userName;
     private Integer playerId;
-    private Integer playerScid;
+    private String playerScid;
     private String playerName;
     private String personalInterfaceUrl;
     private String preparationInterfaceUrl;
     private Integer relationStatus;
     private Integer checkStatus;
     private Integer playerType;
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -96,11 +105,11 @@ public class UserWithPlayerVo{
         return userName;
     }
 
-    public Integer getPlayerScid() {
+    public String getPlayerScid() {
         return playerScid;
     }
 
-    public void setPlayerScid(Integer playerScid) {
+    public void setPlayerScid(String playerScid) {
         this.playerScid = playerScid;
     }
 

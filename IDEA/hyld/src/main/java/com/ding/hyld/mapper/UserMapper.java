@@ -27,4 +27,10 @@ public interface UserMapper extends BaseMapper<User> {
     void saveUser(@Param("userVo") UserVo userVo);
 
     void saveUserPassword(@Param("userVo") UserVo userVo);
+
+    void saveHeadPortrait(@Param("userVo") UserVo userVo);
+
+    UserInfo findByTopicId(Integer topicId);
+
+    UserInfo findByGameRoleCommentId(Integer gameRoleCommentId);
 }

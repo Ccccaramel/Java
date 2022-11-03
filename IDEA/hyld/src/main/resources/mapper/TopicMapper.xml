@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.TopicMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Topic">
+        <id column="id" property="id"/>
+
+        <id column="rubric" property="rubric"/>
+        <id column="userId" property="userId"/>
+        <id column="text" property="text"/>
+        <id column="parentId" property="parentId"/>
+        <id column="floor" property="floor"/>
+        <id column="topicId" property="topicId"/>
+        <id column="status" property="status"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.TopicInfo">
+        <id column="id" property="id"/>
+        <id column="rubric" property="rubric"/>
+        <id column="text" property="text"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <id column="parentId" property="parentId"/>
+        <id column="address" property="address"/>
+        <id column="floor" property="floor"/>
+        <id column="belongToFloor" property="belongToFloor"/>
+        <id column="head" property="head"/>
+        <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="userInfo" column="userId" select="com.ding.hyld.mapper.UserMapper.findById"/>
+        <association property="replyUser" column="parentId" select="com.ding.hyld.mapper.UserMapper.findByTopicId"/>
+    </resultMap>
+
+    <resultMap id="replyMeResultInfoMap" type="com.ding.hyld.info.TopicInfo">
+        <id column="id" property="id"/>
+        <id column="rubric" property="rubric"/>
+        <id column="text" property="text"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <id column="address" property="address"/>
+        <id column="floor" property="floor"/>
+        <id column="belongToFloor" property="belongToFloor"/>
+        <id column="head" property="head"/>
+        <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="userInfo" column="userId" select="com.ding.hyld.mapper.UserMapper.findById"/>
+        <association property="parentInfo" column="parentId" select="com.ding.hyld.mapper.TopicMapper.findParentById"/>
+    </resultMap>
+    <!-- 仅搜话题第一楼 -->
+    <select id="searchTopic" resultMap="resultInfoMap">
+        select
+            *,
+            (select count(*) from topic t where t.id = id ) as head
+        from topic
+        <where>
+            <if test="topicVo.userId != null">
+                and userId = #{topicVo.userId}
+            </if>
+            <if test="topicVo.status != null">
+                and status = #{topicVo.status}
+            </if>
+            <if test="topicVo.rubric != null">
+                and rubric like concat('%',#{topicVo.rubric},'%')
+            </if>
+            <if test="topicVo.userName != null and topicVo.userName.trim() != ''">
+                and exists (select 1 from user u where u.id=userId and u.name like concat('%',#{topicVo.userName},'%'))
+            </if>
+            and parentId = -1
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <!-- 仅搜话题第一楼 -->
+    <select id="getTopicData" resultMap="resultInfoMap">
+        select * from topic
+        <where>
+            <if test="onlyFloor">
+                and (id = #{topicVo.id} or parentId = #{topicVo.id})
+            </if>
+            <if test="!onlyFloor and page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+                <bind name="start" value="(page.currentPage-1)*page.size+1"/>
+                <bind name="end" value="(page.currentPage)*page.size"/>
+                     and belongToFloor between #{start} and #{end}
+            </if>
+            <if test="!onlyFloor">
+                and (id = #{topicVo.id} or topicId = #{topicVo.id})
+            </if>
+            <if test="topicVo.status != null">
+                and status = #{topicVo.status}
+            </if>
+        </where>
+        ORDER BY floor
+        <if test="onlyFloor and page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into topic(userId,rubric,text,floor,status,ip,address,belongToFloor)
+        values(#{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.floor},#{topicVo.status},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor})
+    </insert>
+    <insert id="saveReplyTopicInfo">
+        insert into topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            userId,rubric,text,status,parentId,topicId,ip,address,belongToFloor
+            <if test="topicVo.floor!=null">
+                ,floor
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.status},#{topicVo.parentId},#{topicVo.topicId},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor}
+            <if test="topicVo.floor!=null">
+                ,#{topicVo.floor}
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update topic
+        set text = #{topicVoVo.text},note = #{topicVo.note}
+        where id = #{topicVo.id}
+    </update>
+    <select id="findBy" resultMap="resultInfoMap">
+        select * from topic
+        <where>
+            <if test="topicVo.userId!=null">
+                and userId = #{topicVo.userId}
+            </if>
+            <if test="topicVo.id!=null">
+                and id = #{topicVo.id}
+            </if>
+            <if test="topicVo.topicId!=null">
+                and topicId = #{topicVo.topicId}
+            </if>
+            <if test="topicVo.floor!=null">
+                and floor = #{topicVo.floor}
+            </if>
+            <if test="topicVo.status!=null">
+                and status = #{topicVo.status}
+            </if>
+        </where>
+    </select>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from topic
+        where id = #{topicId}
+    </select>
+    <select id="findParentById" resultMap="resultMap">
+        select * from topic
+        where id = #{id}
+    </select>
+    <update id="updateStatus">
+        update topic
+        set status = #{topicVo.status}
+        where id = #{topicVo.id}
+    </update>
+    <select id="getTopicReply" resultMap="resultInfoMap">
+        select * from topic
+        <where>
+            <if test="topicVo.id!=null">
+                and topicId = #{topicVo.id}
+            </if>
+            <if test="topicVo.status!=null">
+                and status = #{topicVo.status}
+            </if>
+            <if test="topicVo.userId!=null">
+                and userId = #{topicVo.userId}
+            </if>
+            <if test="topicVo.parentId!=null">
+                and parentId = #{topicVo.parentId}
+            </if>
+        </where>
+        ORDER BY floor ASC
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchReplyMe" resultMap="replyMeResultInfoMap">
+        select * from topic
+        <where>
+
+            <if test="topicVo.status!=null">
+                and status = #{topicVo.status}
+            </if>
+            <if test="topicVo.userId!=null">
+                and parentId in (select id from topic t where t.userId = #{topicVo.userId} )
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+</mapper>

@@ -12,6 +12,11 @@ import java.util.Calendar;
 public class main {
     public static void main(String[] args) {
 
+        System.out.println("date:"+LocalDateTime.now());
+
+        /**
+         * Calendar 自定义时间与格式化
+         */
         // 本月第一天
         Calendar calendar = Calendar.getInstance();
 //        calendar.set(2022,3,1,0,0,0);
@@ -24,6 +29,9 @@ public class main {
         System.out.println("Calendar 获取本月第一天的时间:" + calendar.getTime());
         System.out.println("Calendar 获取本月第一天的时间(Str):" + format.format(calendar.getTime()));
 
+        /**
+         * LocalDateTime 自定义时间与格式化
+         */
         LocalDateTime localDateTime=LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
         DateTimeFormatter dateTimeFormatter2=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -40,9 +48,19 @@ public class main {
         LocalDateTime localDateTime3 = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
         System.out.println("LocalDateTime 今天的结束日期(精确):"+localDateTime3+",(时间戳):"+localDateTime3.toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
-
+        /**
+         * LocalDateTime 转时间戳
+         */
         System.out.println("LocalDateTime转时间戳:"+localDateTime1.toInstant(ZoneOffset.ofHours(8)).toEpochMilli());
 
+        /**
+         * Calendar 转 LocalDateTime
+         */
         System.out.println("Calendar转LocalDateTime:" + LocalDateTime.ofInstant(calendar.toInstant(), ZoneOffset.systemDefault()));
+
+        /**
+         * String 转 LocalDateTime
+         */
+        System.out.println("String转LocalDateTime:" + LocalDateTime.parse("2020-01-01T12:12"));
     }
 }

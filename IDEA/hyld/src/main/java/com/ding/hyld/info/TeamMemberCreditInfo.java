@@ -12,15 +12,26 @@ public class TeamMemberCreditInfo {
     private Integer creditId; // 积分id
     private String scid; // 玩家scid
     private String playerName; // 玩家昵称
-    private LocalDateTime settlementTime; // 结算计算时间
+    private String settlementTime; // 结算计算时间
     private String settlementTimeStr; // 结算计算时间(字符串)
-    private String settlementTimeShowFormat; // 结算计算时间(显示格式)
     private Integer credit; // 积分
     private Integer creditTypeId; // 积分类型Id
     private Dictionary creditType; // 积分类型
     private String note; // 备注
     private String teamName; // 所属战队名称
-    private Integer teamMemberId;
+    private Integer teamId; // 战队id
+    private Integer teamMemberId; // 队员id
+    private String teamMemberName; // 队员name
+    private String playerScid; // 玩家scid
+    private Integer averageCreditRank; // 平均积分排名
+    private Double averageCredit; // 平均积分
+    private Integer matchSettlementTimes; // 战队赛结算次数
+    private Integer restTimes; // 战队赛请假次数
+    private Integer matchTotalCredit; // 战队赛总积分
+    private Integer exCredit; // 额外总积分
+    private Integer totalCredit; // 总积分
+    private Integer playerId; // 玩家id
+    private String settlementTimeDate; // 结算时间 yyyy-MM-dd
 
     public Integer getCreditId() {
         return creditId;
@@ -46,7 +57,7 @@ public class TeamMemberCreditInfo {
         this.playerName = playerName;
     }
 
-    public LocalDateTime getSettlementTime() {
+    public String getSettlementTime() {
         return settlementTime;
     }
 
@@ -59,17 +70,8 @@ public class TeamMemberCreditInfo {
     }
 
     public void setSettlementTime(LocalDateTime settlementTime) {
-        this.settlementTime = settlementTime;
-        setSettlementTimeShowFormat(TimeUtils.toString(settlementTime));
-        setSettlementTimeStr(settlementTime.toString());
-    }
-
-    public String getSettlementTimeShowFormat() {
-        return settlementTimeShowFormat;
-    }
-
-    public void setSettlementTimeShowFormat(String settlementTimeShowFormat) {
-        this.settlementTimeShowFormat = settlementTimeShowFormat;
+        setSettlementTimeStr(TimeUtils.toString(settlementTime,TimeUtils.FORMAT_1));
+        this.settlementTime = settlementTime.toString();
     }
 
     public Integer getCredit() {
@@ -118,5 +120,101 @@ public class TeamMemberCreditInfo {
 
     public void setTeamMemberId(Integer teamMemberId) {
         this.teamMemberId = teamMemberId;
+    }
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getTeamMemberName() {
+        return teamMemberName;
+    }
+
+    public void setTeamMemberName(String teamMemberName) {
+        this.teamMemberName = teamMemberName;
+    }
+
+    public String getPlayerScid() {
+        return playerScid;
+    }
+
+    public void setPlayerScid(String playerScid) {
+        this.playerScid = playerScid;
+    }
+
+    public Integer getAverageCreditRank() {
+        return averageCreditRank;
+    }
+
+    public void setAverageCreditRank(Integer averageCreditRank) {
+        this.averageCreditRank = averageCreditRank;
+    }
+
+    public Double getAverageCredit() {
+        return averageCredit;
+    }
+
+    public void setAverageCredit(Double averageCredit) {
+        this.averageCredit = averageCredit;
+    }
+
+    public Integer getMatchSettlementTimes() {
+        return matchSettlementTimes;
+    }
+
+    public void setMatchSettlementTimes(Integer matchSettlementTimes) {
+        this.matchSettlementTimes = matchSettlementTimes;
+    }
+
+    public Integer getRestTimes() {
+        return restTimes;
+    }
+
+    public void setRestTimes(Integer restTimes) {
+        this.restTimes = restTimes;
+    }
+
+    public Integer getMatchTotalCredit() {
+        return matchTotalCredit;
+    }
+
+    public void setMatchTotalCredit(Integer matchTotalCredit) {
+        this.matchTotalCredit = matchTotalCredit;
+    }
+
+    public Integer getExCredit() {
+        return exCredit;
+    }
+
+    public void setExCredit(Integer exCredit) {
+        this.exCredit = exCredit;
+    }
+
+    public Integer getTotalCredit() {
+        return totalCredit;
+    }
+
+    public void setTotalCredit(Integer totalCredit) {
+        this.totalCredit = totalCredit;
+    }
+
+    public Integer getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(Integer playerId) {
+        this.playerId = playerId;
+    }
+
+    public String getSettlementTimeDate() {
+        return settlementTimeDate;
+    }
+
+    public void setSettlementTimeDate(String settlementTimeDate) {
+        this.settlementTimeDate = settlementTimeDate;
     }
 }

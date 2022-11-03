@@ -10,6 +10,7 @@ public class User extends BaseObject {
     private Integer type;
     private String qq;
     private String password;
+    private Integer headPortrait;
 
     public String getName() {
         return name;
@@ -49,5 +50,13 @@ public class User extends BaseObject {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(Integer headPortrait) {
+        this.headPortrait = headPortrait;
     }
 }

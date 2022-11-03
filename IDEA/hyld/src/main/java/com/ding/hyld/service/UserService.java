@@ -27,4 +27,6 @@ public interface UserService extends IService<User> {
     void saveUser(UserVo userVo);
 
     void saveUserPassword(UserVo userVo);
+
+    void saveHeadPortrait(UserVo userVo);
 }

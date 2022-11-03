@@ -16,7 +16,7 @@ public class MenuController extends BaseController {
 
     @GetMapping("getMenuTree")
     public R getMenuTree(){
-        return R.success(TreeUtils.transformation(menuService.getAllMenu()));
+        return R.success(TreeUtils.transformation(menuService.getAllMenu(),-1));
     }
 
     @PostMapping("/saveMenu")

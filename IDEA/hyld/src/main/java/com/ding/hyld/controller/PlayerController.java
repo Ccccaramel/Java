@@ -33,13 +33,14 @@ public class PlayerController extends BaseController {
         return R.success(result);
     }
 
-    @PostMapping("/savePlayer")
-    public R savePlayer(@RequestBody PlayerVo playerVo){
-        if(playerVo.isAdd()){
-            return playerService.userRelationPlayer(playerVo,getCurrentUser().getUser().getId());
-        }else{
-            return playerService.updateRelationPlayer(playerVo,getCurrentUser().getUser().getId());
-        }
-
+    /**
+     * 管理员修改游戏账号的信息
+     * @param playerVo
+     * @return
+     */
+    @PostMapping("/updatePlayer")
+    public R updatePlayer(@RequestBody PlayerVo playerVo){
+        playerService.updatePlayer(playerVo);
+        return R.success("游戏账号信息修改成功!");
     }
 }

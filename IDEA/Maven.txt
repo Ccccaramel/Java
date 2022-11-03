@@ -109,7 +109,7 @@ POM
         </project>
       控制台进入 MVN/project 目录,执行下述命令
         mvn help:effective-pom
-       Maven 将会开始处理并显示 effective-pom
+      Maven 将会开始处理并显示 effective-pom
       
       创建
 

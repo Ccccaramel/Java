@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
  * 队员信息
  */
 public class TeamMemberVo {
+    private Integer uwtId;
     private Integer playerId;
     private Integer teamMemberId;
-    private String scid;
-    private String name;
+    private String playerScid;
+    private String playerName;
     private String joinTime;
     private String joinWay;
     private String status;
@@ -23,6 +24,14 @@ public class TeamMemberVo {
     private Integer teamMemberStatusId;
     private LocalDateTime time;
     private Integer type;
+
+    public Integer getUwtId() {
+        return uwtId;
+    }
+
+    public void setUwtId(Integer uwtId) {
+        this.uwtId = uwtId;
+    }
 
     public Integer getPlayerId() {
         return playerId;
@@ -40,20 +49,20 @@ public class TeamMemberVo {
         this.teamMemberId = teamMemberId;
     }
 
-    public String getScid() {
-        return scid;
+    public String getPlayerScid() {
+        return playerScid;
     }
 
-    public void setScid(String scid) {
-        this.scid = scid;
+    public void setPlayerScid(String playerScid) {
+        this.playerScid = playerScid;
     }
 
-    public String getName() {
-        return name;
+    public String getPlayerName() {
+        return playerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 
     public String getJoinTime() {
@@ -61,7 +70,7 @@ public class TeamMemberVo {
     }
 
     public void setJoinTime(LocalDateTime joinTime) {
-        this.joinTime = TimeUtils.toString(joinTime);
+        this.joinTime = TimeUtils.toString(joinTime,TimeUtils.FORMAT_1);
     }
 
     public String getJoinWay() {
@@ -93,7 +102,7 @@ public class TeamMemberVo {
     }
 
     public void setLeaveTime(LocalDateTime leaveTime) {
-        this.leaveTime = TimeUtils.toString(leaveTime);
+        this.leaveTime = TimeUtils.toString(leaveTime,TimeUtils.FORMAT_1);
     }
 
     public String getNote() {

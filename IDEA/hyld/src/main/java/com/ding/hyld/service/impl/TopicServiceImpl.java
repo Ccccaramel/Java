@@ -1,0 +1,106 @@
+package com.ding.hyld.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ding.hyld.entity.Topic;
+import com.ding.hyld.info.TopicInfo;
+import com.ding.hyld.mapper.TopicMapper;
+import com.ding.hyld.service.TopicService;
+import com.ding.hyld.utils.Tree;
+import com.ding.hyld.utils.TreeUtils;
+import com.ding.hyld.vo.Page;
+import com.ding.hyld.vo.TopicVo;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+
+@Service
+public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
+    @Override
+    public List<TopicInfo> searchTopic(Page page, TopicVo topicVo) {
+        return baseMapper.searchTopic(page, topicVo);
+    }
+
+    @Override
+    public void update(TopicVo topicVo) {
+        baseMapper.update(topicVo);
+    }
+
+    @Override
+    public void add(TopicVo topicVo) {
+        baseMapper.add(topicVo);
+    }
+
+    /**
+     * 话题分页数据
+     *
+     * 有一个问题
+     *   当不是第一页的时候, TreeUtils.transformation(topicInfoList) 内会出现"群龙无首"的问题从而报错
+     *   于是我只能先将"头"添加进去,再"砍掉"
+     * @param page
+     * @param topicVo
+     * @param onlyFloor
+     * @return
+     */
+    @Override
+    public List<TopicInfo> getTopicData(Page page, TopicVo topicVo, boolean onlyFloor) {
+        List<TopicInfo> topicInfoList = baseMapper.getTopicData(page, topicVo, onlyFloor);
+        if(page!=null && page.getCurrentPage()!=1){
+            topicInfoList.add(baseMapper.findById(topicVo.getId()));
+        }
+        if(!onlyFloor && topicInfoList!=null){
+            topicInfoList = TreeUtils.transformation(topicInfoList,-1);
+            for (Tree topicInfo:topicInfoList.get(0).getChildren()) {
+                topicInfoList.add((TopicInfo)topicInfo);
+                List<Tree> children = topicInfo.getChildren();
+                if(children!=null){
+                    List<Tree> treeList = TreeUtils.toList(topicInfo.getChildren());
+                    Collections.sort(treeList);
+                    topicInfo.setChildren(treeList);
+                }
+            }
+            topicInfoList.get(0).setChildren(null); // 把第一楼的 children 清空
+        }
+        return topicInfoList;
+    }
+
+
+
+    @Override
+    public void saveReplyTopicInfo(TopicVo topicVo) {
+        baseMapper.saveReplyTopicInfo(topicVo);
+    }
+
+    @Override
+    public TopicInfo findBy(TopicVo topicVo) {
+        return baseMapper.findBy(topicVo);
+    }
+
+    @Override
+    public TopicInfo findById(Integer topicId) {
+        return baseMapper.findById(topicId);
+    }
+
+    @Override
+    public List<TopicInfo> getAllReplyData(List<TopicInfo> topicInfoList) {
+        for(TopicInfo topicInfo : topicInfoList){
+
+        }
+        return topicInfoList;
+    }
+
+    @Override
+    public void updateStatus(TopicVo topicVo) {
+        baseMapper.updateStatus(topicVo);
+    }
+
+    @Override
+    public List<TopicInfo> getTopicReply(Page page, TopicVo topicVo) {
+        return baseMapper.getTopicReply(page,topicVo);
+    }
+
+    @Override
+    public List<TopicInfo> searchReplyMe(Page page, TopicVo topicVo) {
+        return baseMapper.searchReplyMe(page,topicVo);
+    }
+}

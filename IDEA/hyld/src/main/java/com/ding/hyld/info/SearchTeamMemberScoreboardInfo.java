@@ -1,8 +1,17 @@
 package com.ding.hyld.info;
 
 public class SearchTeamMemberScoreboardInfo {
+    private Integer uwtId;
     private Integer teamId;
-    private Integer teamCompetitionTypeId;
+    private Integer teamCompetitionTypeId; // 战队赛类型
+
+    public Integer getUwtId() {
+        return uwtId;
+    }
+
+    public void setUwtId(Integer uwtId) {
+        this.uwtId = uwtId;
+    }
 
     public Integer getTeamId() {
         return teamId;

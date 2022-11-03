@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.GameRoleMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.GameRole">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="headImg" property="headImg"/>
+        <id column="portrait" property="portrait"/>
+        <id column="rarity" property="rarity"/>
+        <id column="position" property="position"/>
+        <id column="profile" property="profile"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="hp" property="hp"/>
+        <id column="speed" property="speed"/>
+        <id column="inborn" property="inborn"/>
+        <id column="basicForm" property="basicForm"/>
+        <id column="sequence" property="sequence"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.GameRoleInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="headImg" property="headImg"/>
+        <id column="portrait" property="portrait"/>
+        <id column="profile" property="profile"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="hp" property="hp"/>
+        <id column="speed" property="speed"/>
+        <id column="inborn" property="inborn"/>
+        <id column="sequence" property="sequence"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="rarity" column="rarity" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="position" column="position" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="basicForm" column="basicForm" select="com.ding.hyld.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <resultMap id="completeResultInfoMap" type="com.ding.hyld.info.GameRoleInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="headImg" property="headImg"/>
+        <id column="portrait" property="portrait"/>
+        <id column="profile" property="profile"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="hp" property="hp"/>
+        <id column="speed" property="speed"/>
+        <id column="inborn" property="inborn"/>
+        <id column="sequence" property="sequence"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="rarity" column="rarity" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="position" column="position" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+
+        <association property="secondaryForm" column="id" select="com.ding.hyld.mapper.GameRoleMapper.findSecondaryFormById"/>
+        <association property="normalAttackInfo" column="id" select="com.ding.hyld.mapper.NormalAttackMapper.findPithyInfoByGameRoleId"/>
+        <association property="superSkillInfo" column="id" select="com.ding.hyld.mapper.SuperSkillMapper.findPithyInfoByGameRoleId"/>
+        <association property="gadgetInfoList" column="id" select="com.ding.hyld.mapper.GadgetMapper.findPithyInfoByGameRoleId"/>
+        <association property="starPowerInfoList" column="id" select="com.ding.hyld.mapper.StarPowerMapper.findPithyInfoByGameRoleId"/>
+    </resultMap>
+    <select id="searchGameRole" resultMap="resultInfoMap">
+        select * from game_role
+        <where>
+            <if test="gameRoleVo.name != null and gameRoleVo.name.trim() != ''">
+                and name like concat('%',#{gameRoleVo.name},'%')
+            </if>
+            <if test="gameRoleVo.rarity != null">
+                and rarity = gameRoleVo.rarity
+            </if>
+            <if test="gameRoleVo.basic">
+                and basicForm = -1
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into game_role(name,headImg,portrait,rarity,position,profile,launchTime,hp,speed,inborn,basicForm,sequence,note)
+        values(#{gameRoleVo.name},
+               #{gameRoleVo.headImg},
+               #{gameRoleVo.portrait},
+               #{gameRoleVo.rarity},
+               #{gameRoleVo.position},
+               #{gameRoleVo.profile},
+               #{gameRoleVo.launchTime},
+               #{gameRoleVo.hp},
+               #{gameRoleVo.speed},
+               #{gameRoleVo.inborn},
+               #{gameRoleVo.basicForm},
+               #{gameRoleVo.sequence},
+               #{gameRoleVo.note})
+    </insert>
+    <update id="update">
+        update game_role
+        set name= #{gameRoleVo.name},
+            headImg= #{gameRoleVo.headImg},
+            portrait= #{gameRoleVo.portrait},
+            rarity= #{gameRoleVo.rarity},
+            position= #{gameRoleVo.position},
+            profile= #{gameRoleVo.profile},
+            launchTime= #{gameRoleVo.launchTime},
+            hp= #{gameRoleVo.hp},
+            speed= #{gameRoleVo.speed},
+            inborn= #{gameRoleVo.inborn},
+            basicForm= #{gameRoleVo.basicForm},
+            sequence= #{gameRoleVo.sequence},
+            note = #{gameRoleVo.note}
+        where id = #{gameRoleVo.id}
+    </update>
+    <select id="getAllGameRole" resultMap="resultInfoMap">
+        select * from game_role
+    </select>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from game_role
+        where id = #{id}
+    </select>
+    <select id="getBasicForm" resultMap="resultInfoMap">
+        select * from game_role
+        <where>
+            <if test="gameRoleVo.rarity != null">
+                and rarity = #{gameRoleVo.rarity}
+            </if>
+            and basicForm = -1
+        </where>
+    </select>
+    <select id="searchGameRoleInfoById" resultMap="completeResultInfoMap">
+        select * from game_role
+        where id = #{gameRoleVo.id}
+    </select>
+    <select id="findSecondaryFormById" resultMap="completeResultInfoMap">
+        select * from game_role
+        where basicForm = #{id}
+    </select>
+
+</mapper>

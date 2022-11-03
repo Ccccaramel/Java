@@ -3,6 +3,7 @@ package com.ding.hyld.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ding.hyld.entity.UserWithPlayer;
 import com.ding.hyld.info.UserWithPlayerInfo;
+import com.ding.hyld.info.UserWithTeamInfo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserWithPlayerVo;
 
@@ -20,4 +21,6 @@ public interface UserWithPlayerService extends IService<UserWithPlayer> {
     void saveCheckInfo(Integer relationId, String controllerPreparePageNewName, String playerPreparePageNewName, Integer checkStatus2);
 
     void updateCheckInfo(UserWithPlayerVo userWithPlayerVo);
+
+    UserWithPlayerInfo findById(Integer id);
 }

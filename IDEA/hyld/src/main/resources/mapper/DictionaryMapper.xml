@@ -15,7 +15,7 @@
     <select id="findById" resultMap="resultMap">
         select *
         from dictionary
-            where id=#{id}
+        where id=#{id}
     </select>
 
     <select id="findByType" resultMap="resultMap">
@@ -31,6 +31,7 @@
                 </foreach>
             </if>
         </where>
+        order by id
     </select>
 
     <select id="searchDictionary" resultMap="resultMap">

@@ -38,6 +38,22 @@ public interface CommonCode {
 
             "/player/searchPlayerInfo",
 
+            "/updateLog/searchUpdateLog",
+
+            "/topic/searchTopic",
+            "/topic/getTopicData",
+
+            "/pointer/searchPointer",
+
+            "/gameRole/searchGameRoleByClass",
+            "/gameRole/searchGameRoleInfoById",
+
+            "/gameRolePopularity/searchGameRolePopularity",
+
+            "/vL/sVL",
+
+            "/common/getPublicKey",
+
 //            "/credit/getTeamData",
 //            "/credit/searchCreditBy"
 

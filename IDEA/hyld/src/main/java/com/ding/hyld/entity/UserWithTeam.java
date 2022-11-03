@@ -13,6 +13,15 @@ public class UserWithTeam extends BaseObject {
     private String controllerPreparePage; // 管理者准备界面
     private String teamMainPage; // 战队界面
 
+    private Integer creditScore; // 信誉积分
+
+    public Integer getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(Integer creditScore) {
+        this.creditScore = creditScore;
+    }
 
     public Integer getUserId() {
         return userId;

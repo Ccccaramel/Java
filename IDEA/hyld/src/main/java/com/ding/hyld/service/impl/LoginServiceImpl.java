@@ -2,12 +2,14 @@ package com.ding.hyld.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.ding.hyld.constant.CommonCode;
+import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.entity.User;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.JWTUtils;
 import com.ding.hyld.utils.R;
+import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.UserVo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,12 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public R login(UserVo userVo,long timeout,TimeUnit unit) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userVo.getAccount(),userVo.getPassword() + CommonCode.SLAT);
+        UsernamePasswordAuthenticationToken authenticationToken = null;
+        try {
+            authenticationToken = new UsernamePasswordAuthenticationToken(userVo.getAccount(), RsaUtils.decryptByPrivateKey(userVo.getPassword()) + CommonCode.SLAT); // 解密 > +盐
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Authentication authenticate;
         try{
             authenticate = authenticationManager.authenticate(authenticationToken);
@@ -62,8 +69,16 @@ public class LoginServiceImpl implements LoginService {
             return R.fail("用户名或密码错误!");
         }
 
-        // 认证通过,使用 userId 生成一个 jwt/token
         CurrentUser currentUser = (CurrentUser)authenticate.getPrincipal();
+        Integer status = currentUser.getUser().getStatus();
+        if(status.equals(DictionaryCode.USER_STATUS_2)){
+            return R.fail("用户已被冻结!");
+        }
+        else if(status.equals(DictionaryCode.USER_STATUS_3)){
+            return R.fail("用户不存在!");
+        }
+
+        // 认证通过,使用 userId 生成一个 jwt/token
         String token = JWTUtils.createToken(Long.valueOf(currentUser.getUser().getId()));
 
         // 把完整用户信息存入 redis , userId 作为 key

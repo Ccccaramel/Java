@@ -4,13 +4,11 @@ import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.entity.Player;
 import com.ding.hyld.entity.TeamWithPlayer;
 import com.ding.hyld.info.ChangeTeamMemberStatusInfo;
+import com.ding.hyld.info.PlayerInfo;
 import com.ding.hyld.service.PlayerService;
 import com.ding.hyld.service.TeamWithPlayerService;
 import com.ding.hyld.utils.R;
-import com.ding.hyld.vo.ChangeTeamMemberStatusVo;
-import com.ding.hyld.vo.CreditImportVo;
-import com.ding.hyld.vo.Page;
-import com.ding.hyld.vo.TeamMemberVo;
+import com.ding.hyld.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +33,25 @@ public class TeamWithPlayerController {
 
     @PostMapping("/addNewTeamMember")
     public R addNewTeamMember(@RequestBody TeamMemberVo teamMemberVo){
-        // 检查该玩家是否已经被战队关联
-        TeamWithPlayer teamWithPlayer=teamWithPlayerService.findTeamMember(teamMemberVo.getScid());
-        if(teamWithPlayer != null){
-            if(Objects.equals(teamWithPlayer.getTeamId(), teamMemberVo.getTeamId())){
-                return R.fail("该玩家已在战队中不可重复添加!请重新输入!");
-            }else{
-                return R.fail("该玩家已被其他战队绑定中!请加群(475765701)联系管理员!");
-            }
+        // 检查战队成员上限
+        TeamMemberVo searchCondition = new TeamMemberVo();
+        searchCondition.setUwtId(teamMemberVo.getUwtId());
+        searchCondition.setTeamMemberStatusId(DictionaryCode.TEAM_MEMBER_STATUS_1);
+        if(teamWithPlayerService.searchTeamMember(null,searchCondition).size()>30){
+            return R.fail("战队队员超过30人!请核实队员信息");
         }
 
-        Player player=playerService.addPlayer(teamMemberVo);
-        teamMemberVo.setPlayerId(player.getId());
+        // 检查该玩家是否已经被战队关联
+        teamMemberVo.setTeamMemberStatusId(DictionaryCode.TEAM_MEMBER_STATUS_1);
+        TeamWithPlayer teamWithPlayer=teamWithPlayerService.findTeamMember(teamMemberVo);
+        if(teamWithPlayer != null){
+            return R.fail("该玩家已在战队中不可重复添加!请重新输入!");
+        }
+        PlayerVo playerVo = new PlayerVo();
+        playerVo.setScid(teamMemberVo.getPlayerScid());
+        playerVo.setName(teamMemberVo.getPlayerName());
+        playerVo.setType(teamMemberVo.getType());
+        teamMemberVo.setPlayerId(playerService.addPlayer(playerVo));
         teamWithPlayerService.addNewTeamMember(teamMemberVo);
         return R.success("新队员添加成功!");
     }

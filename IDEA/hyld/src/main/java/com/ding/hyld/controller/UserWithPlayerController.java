@@ -16,6 +16,7 @@ import com.ding.hyld.vo.PlayerVo;
 import com.ding.hyld.vo.UserWithPlayerVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,12 +61,21 @@ public class UserWithPlayerController extends BaseController {
      * @param playerId
      * @return
      */
+    @PreAuthorize("hasAuthority('myGameAccount_cancel')")
     @GetMapping("/relievePlayer")
     public R relievePlayer(Integer playerId){
         userWithPlayerService.changeRelationStatus(playerId,getUserId(), DictionaryCode.RELATION_STATUS_3);
         return R.success("已解除关联!");
     }
 
+    /**
+     * 用户上传关联验证信息
+     * @param relationId
+     * @param playerMainPageFile
+     * @param playerPreparePageFile
+     * @return
+     */
+    @PreAuthorize("hasAuthority('myGameAccount_upVerificationInformation')")
     @PostMapping("/saveRelationPlayerInfoCheckData")
     public R saveRelationPlayerInfoCheckData(@RequestParam("relationId")Integer relationId,@RequestParam("playerMainPageFile") MultipartFile playerMainPageFile, @RequestParam("playerPreparePageFile") MultipartFile playerPreparePageFile){
         UserWithPlayerInfo userWithPlayerInfo = userWithPlayerService.findById(relationId);
@@ -95,6 +105,7 @@ public class UserWithPlayerController extends BaseController {
      * @param userWithPlayerVo
      * @return
      */
+    @PreAuthorize("hasAuthority('playerExamine_check')")
     @PostMapping("/playerExamineCheck")
     public R playerExamineCheck(@RequestBody UserWithPlayerVo userWithPlayerVo){
         userWithPlayerService.updateCheckInfo(userWithPlayerVo);
@@ -106,6 +117,7 @@ public class UserWithPlayerController extends BaseController {
      * @param userWithPlayerVo
      * @return
      */
+    @PreAuthorize("hasAnyAuthority('myGameAccount_relation','myGameAccount_update')")
     @PostMapping("/saveRelationPlayerInfo")
     public R saveRelationPlayerInfo(@RequestBody UserWithPlayerVo userWithPlayerVo){
         userWithPlayerVo.setUserId(getUserId());

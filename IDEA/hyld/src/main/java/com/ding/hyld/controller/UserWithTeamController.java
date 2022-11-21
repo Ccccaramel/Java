@@ -16,6 +16,7 @@ import com.ding.hyld.service.UserWithTeamService;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +42,7 @@ public class UserWithTeamController extends BaseController {
      *      <2>team 存在,新增 uwt
      * @return
      */
-
+    @PreAuthorize("hasAnyAuthority('myTeam_relation','myTeam_update')")
     @PostMapping("/saveTeamRelationInfo")
     public R saveTeamRelationInfo(@RequestBody UserWithTeamVo userWithTeamVo){
         Integer userId=getUserId();
@@ -144,7 +145,8 @@ public class UserWithTeamController extends BaseController {
         }
     }
 
-    // 队长解除副队长
+    // 解除关联
+    @PreAuthorize("hasAuthority('myTeam_cancel')")
     @PostMapping("/relieveTeam")
     public R relieveTeam(UserWithTeamVo userWithTeamVo){
 //        userWithTeamVo.setUserId(getUserId());
@@ -258,6 +260,7 @@ public class UserWithTeamController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('teamRelationManage_check')")
     @PostMapping("/teamExamineCheck")
     public R teamExamineCheck(@RequestBody UserWithTeamVo userWithTeamVo){
         TeamInfo teamInfo = teamService.findByScid(userWithTeamVo.getTeamScid());
@@ -338,6 +341,7 @@ public class UserWithTeamController extends BaseController {
 
     }
 
+    @PreAuthorize("hasAuthority('teamRelationManage_updateTeamCreditScore')")
     @PostMapping("/teamCreditScoreSave")
     public R teamCreditScoreSave(@RequestBody UserWithTeamVo userWithTeamVo){
         userWithTeamService.updateTeamCreditScore(userWithTeamVo);

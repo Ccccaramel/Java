@@ -8,6 +8,7 @@ import com.ding.hyld.vo.NormalAttackVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.SuperSkillVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class SuperSkillController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('gameRoleManage_superSkill')")
     @PostMapping("/saveSuperSkill")
     public R saveSuperSkill(@RequestBody SuperSkillVo superSkillVo){
         if(superSkillVo.isAdd()){

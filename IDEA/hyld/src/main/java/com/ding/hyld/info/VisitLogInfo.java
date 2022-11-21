@@ -7,11 +7,20 @@ import java.time.LocalDateTime;
 public class VisitLogInfo {
     private Integer id;
     private UserInfo user;
-    private Integer ip;
+    private String ip;
     private String address;
     private LocalDateTime createTime;
     private String createTimeStr;
     private String note;
+    private String trueAddress;
+
+    public String getTrueAddress() {
+        return trueAddress;
+    }
+
+    public void setTrueAddress(String trueAddress) {
+        this.trueAddress = trueAddress;
+    }
 
     public Integer getId() {
         return id;
@@ -46,11 +55,11 @@ public class VisitLogInfo {
         this.user = user;
     }
 
-    public Integer getIp() {
+    public String getIp() {
         return ip;
     }
 
-    public void setIp(Integer ip) {
+    public void setIp(String ip) {
         this.ip = ip;
     }
 

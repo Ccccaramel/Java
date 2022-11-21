@@ -13,6 +13,7 @@ import com.ding.hyld.vo.StarPowerVo;
 import com.ding.hyld.vo.UpdateLogVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,8 @@ public class StarPowerController extends BaseController {
         return R.success(result);
     }
 
+
+    @PreAuthorize("hasAnyAuthority('starPowerManage_add','starPowerManage_update')")
     @PostMapping("/saveStarPower")
     public R saveStarPower(@RequestParam("starPowerVoStr") String starPowerVoStr, MultipartFile image){
         // 解析

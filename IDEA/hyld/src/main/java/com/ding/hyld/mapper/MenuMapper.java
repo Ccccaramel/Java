@@ -19,5 +19,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<MenuInfo> getRoleMenuTree(Integer roleId);
 
-    List<String> getCurrentUserPower(Integer roleId);
+    List<String> getCurrentUserPower(String[] powerArray);
+
+    void deleteMenu(@Param("menuVo") MenuVo menuVo);
 }

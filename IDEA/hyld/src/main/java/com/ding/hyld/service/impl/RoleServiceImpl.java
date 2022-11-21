@@ -37,4 +37,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void deleteRolePower(Integer roleId) {
         baseMapper.deleteRolePower(roleId);
     }
+
+    @Override
+    public RoleInfo findById(Integer id) {
+        return baseMapper.findById(id);
+    }
 }

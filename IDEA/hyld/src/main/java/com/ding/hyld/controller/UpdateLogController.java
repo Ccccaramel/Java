@@ -6,6 +6,7 @@ import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UpdateLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class UpdateLogController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('updateLog_add','updateLog_update')")
     @PostMapping("/saveUpdateLog")
     public R saveUpdateLog(@RequestBody UpdateLogVo updateLogVo){
         if(updateLogVo.isAdd()){

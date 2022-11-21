@@ -1,5 +1,6 @@
 package com.ding.hyld.info;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 public class UpdateLogInfo {
     private Integer id;
     private String text;
+    @JSONField(format = "yyyy-MM-ddTHH:mm:ss")
     private LocalDateTime createTime;
     private String createTimeStr;
     private String note;
@@ -61,8 +63,8 @@ public class UpdateLogInfo {
         return "{" +
                 "id:" + id +
                 ", text:'" + text + '\'' +
-                ", createTime:" + createTime +
-                ", createTimeStr:'" + createTimeStr + '\'' +
+                ", createTime:'" + createTime +
+                "', createTimeStr:'" + createTimeStr + '\'' +
                 ", note:'" + note + '\'' +
                 '}';
     }

@@ -18,11 +18,11 @@ public interface CommonCode {
      */
     String[] OPEN_URL = {
             "/static/**", // 放行静态资源
-            "/photo/**", // 放行静态资源
+//            "/photo/**", // 放行静态资源
             "/hyld/**", // 放行静态资源
-            "/static/ppp.jpg",
-            "/ppp.jpg",
-            "/ppp",
+//            "/static/ppp.jpg",
+            "/upload/**", // 放行静态资源
+            "/api/**", // 放行静态资源
 
             "/dictionary/getTeamCompetitionType",
             "/dictionary/getTeamType",
@@ -35,6 +35,7 @@ public interface CommonCode {
             "/dictionary/getTeamStatusType",
 
             "/team/searchTeamInfo",
+            "/userWithTeam/searchValidTeamInfo",
 
             "/player/searchPlayerInfo",
 
@@ -48,14 +49,25 @@ public interface CommonCode {
             "/gameRole/searchGameRoleByClass",
             "/gameRole/searchGameRoleInfoById",
 
+            "/gameRoleComment/getGameRoleCommentData",
+
             "/gameRolePopularity/searchGameRolePopularity",
 
             "/vL/sVL",
 
             "/common/getPublicKey",
 
-//            "/credit/getTeamData",
-//            "/credit/searchCreditBy"
+            "/systemConfig/getHomeNotice",
+            "/systemConfig/getCommunityNotice",
+
+            "/credit/getTeamData",
+            "/credit/searchCreditBy",
+
+            "/gear/searchGear",
+
+            "/officialVersionUpdateLog/searchOfficialVersionUpdateLog",
+
+            "/pointer/searchPointer",
 
 //            "/user/getCurrentUserInfo",
 

@@ -37,4 +37,8 @@
     <delete id="deleteRolePower">
         delete from role where id=#{roleId}
     </delete>
+    <select id="findById" resultMap="roleInfoMap">
+        select * from role
+        where id = #{id}
+    </select>
 </mapper>

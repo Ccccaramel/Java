@@ -2,10 +2,13 @@ package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.entity.Topic;
+import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
 import com.ding.hyld.utils.Tree;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TopicInfo extends Tree {
@@ -22,6 +25,21 @@ public class TopicInfo extends Tree {
     private Integer head; // 热度/回复数量
     private UserInfo replyUser; // 回复对象
     private String address;
+    private List<String> images = new ArrayList<>();
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        if(images!=null && !images.isEmpty()){
+            for(String image:images.split(";")){
+                if(!image.isEmpty()){
+                    this.images.add(ResourcesPathUtils.getPhotoPath() + image);
+                }
+            }
+        }
+    }
 
     private List<TopicInfo> replyInfo;
 

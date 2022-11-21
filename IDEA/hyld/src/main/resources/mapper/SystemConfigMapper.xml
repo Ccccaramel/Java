@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.SystemConfigMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.SystemConfig">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="k" property="k"/>
+        <id column="v" property="v"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.SystemConfigInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="k" property="k"/>
+        <id column="v" property="v"/>
+        <id column="createTime" property="createTime"/>
+        <id column="updateTime" property="updateTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchSystemConfig" resultMap="resultInfoMap">
+        select * from system_config
+        <where>
+            <if test="systemConfigVo.name != null and systemConfigVo.name.trim() != ''">
+                and name like concat('%',#{systemConfigVo.name},'%')
+            </if>
+            <if test="systemConfigVo.k != null and systemConfigVo.k.trim() != ''">
+                and k like concat('%',#{systemConfigVo.k},'%')
+            </if>
+            <if test="systemConfigVo.v != null and systemConfigVo.v.trim() != ''">
+                and v like concat('%',#{systemConfigVo.v},'%')
+            </if>
+            <if test="systemConfigVo.note != null and systemConfigVo.note.trim() != ''">
+                and note like concat('%',#{systemConfigVo.note},'%')
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <insert id="add">
+        insert into system_config(name,k,v,note)
+        values(#{systemConfigVo.name},#{systemConfigVo.k},#{systemConfigVo.v},#{systemConfigVo.note})
+    </insert>
+    <update id="update">
+        update system_config
+        set name = #{systemConfigVo.name},k = #{systemConfigVo.k},v = #{systemConfigVo.v},note = #{systemConfigVo.note}
+        where id = #{systemConfigVo.id}
+    </update>
+    <select id="findByKey" resultMap="resultInfoMap">
+        select * from system_config
+        where k = #{key}
+    </select>
+</mapper>

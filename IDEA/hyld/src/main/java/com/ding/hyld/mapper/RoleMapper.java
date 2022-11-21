@@ -1,6 +1,7 @@
 package com.ding.hyld.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.entity.Role;
 import com.ding.hyld.info.MenuInfo;
 import com.ding.hyld.info.RoleInfo;
@@ -21,4 +22,6 @@ public interface RoleMapper extends BaseMapper<Role> {
     void saveRolePower(@Param("roleVo") RoleVo roleVo);
 
     void deleteRolePower(Integer roleId);
+
+    RoleInfo findById(Integer id);
 }

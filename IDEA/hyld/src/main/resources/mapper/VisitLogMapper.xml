@@ -7,6 +7,7 @@
         <id column="userId" property="userId"/>
         <id column="ip" property="ip"/>
         <id column="address" property="address"/>
+        <id column="trueAddress" property="trueAddress"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
@@ -15,15 +16,34 @@
         <id column="id" property="id"/>
         <id column="ip" property="ip"/>
         <id column="address" property="address"/>
+        <id column="trueAddress" property="trueAddress"/>
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
-        <association property="user" column="userId" select="com.ding.hyld.mapper.UserMapper.fingById"/>
+        <association property="user" column="userId" select="com.ding.hyld.mapper.UserMapper.findById"/>
     </resultMap>
     <select id="searchVisitLog" resultMap="resultInfoMap">
         select * from visit_log
         <where>
-            <if test="visitLogVo.note != null and visitLogVo.note.trim() != null">
+            <if test="visitLogVo.userId != null">
+                and userId = #{visitLogVo.userId}
+            </if>
+            <if test="visitLogVo.address != null and visitLogVo.address.trim() != ''">
+                and address like concat('%',#{visitLogVo.address},'%')
+            </if>
+            <if test="visitLogVo.trueAddress != null and visitLogVo.trueAddress.trim() != ''">
+                and trueAddress like concat('%',#{visitLogVo.trueAddress},'%')
+            </if>
+            <if test="visitLogVo.userName != null and visitLogVo.userName.trim() != ''">
+                and exists (select 1 from user u where userId = u.id and u.name like concat('%',#{visitLogVo.userName},'%'))
+            </if>
+            <if test="visitLogVo.note != null and visitLogVo.note.trim() != ''">
                 and note like concat('%',#{visitLogVo.note},'%')
+            </if>
+            <if test="visitLogVo.startDate != null and visitLogVo.startDate.trim() != ''">
+                and createTime  > #{visitLogVo.startDate}
+            </if>
+            <if test="visitLogVo.endDate != null and visitLogVo.endDate.trim() != ''">
+                and  #{visitLogVo.endDate} > createTime
             </if>
         </where>
         ORDER BY createTime desc
@@ -33,7 +53,7 @@
         </if>
     </select>
     <insert id="add">
-        insert into visit_log(ip,address,userId,note)
-        values(#{visitLogVo.ip},#{visitLogVo.address},#{visitLogVo.userId},#{visitLogVo.note})
+        insert into visit_log(ip,address,trueAddress,userId,note)
+        values(#{visitLogVo.ip},#{visitLogVo.address},#{visitLogVo.trueAddress},#{visitLogVo.userId},#{visitLogVo.note})
     </insert>
 </mapper>

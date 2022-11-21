@@ -15,4 +15,6 @@ public interface MenuService extends IService<Menu> {
     List<MenuInfo> getRoleMenuTree(Integer roleId);
 
     List<String> getCurrentUserPower(Integer roleId);
+
+    void deleteMenu(MenuVo menuVo);
 }

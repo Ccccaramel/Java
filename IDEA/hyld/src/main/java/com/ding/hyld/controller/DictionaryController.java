@@ -127,6 +127,7 @@ public class DictionaryController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('dictionaryManage_add','dictionaryManage_update')")
     @PostMapping("saveDictionaryInfo")
     public R saveDictionaryInfo(@RequestBody DictionaryInfo dictionaryInfo){
         if(dictionaryInfo.isAdd()){
@@ -138,7 +139,7 @@ public class DictionaryController {
         }
     }
 
-    @PreAuthorize("hasAuthority('test')")
+    @PreAuthorize("hasAuthority('dictionaryManage_delete')")
     @GetMapping("/deleteDictionary")
     public R deleteDictionary(Integer dictionaryId){
         if(dictionaryId==null){

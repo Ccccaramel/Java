@@ -25,12 +25,19 @@ public class TeamWithPlayerController {
     @Autowired
     private PlayerService playerService;
 
+    /**
+     * 踢出
+     * @param changeTeamMemberStatusVo
+     * @return
+     */
+    @PreAuthorize("hasAnyAuthority('myTeamMember_remove','teamMatchStatistics_remove')")
     @PostMapping("/changeTeamMemberStatus")
     public R changeTeamMemberStatus(@RequestBody ChangeTeamMemberStatusVo changeTeamMemberStatusVo){
         teamWithPlayerService.changeTeamMemberStatus(changeTeamMemberStatusVo);
         return R.success();
     }
 
+    @PreAuthorize("hasAuthority('myTeamMember_add')")
     @PostMapping("/addNewTeamMember")
     public R addNewTeamMember(@RequestBody TeamMemberVo teamMemberVo){
         // 检查战队成员上限
@@ -61,7 +68,6 @@ public class TeamWithPlayerController {
         return R.success(teamWithPlayerService.getAllValidTeamMember(creditImportVo, DictionaryCode.TEAM_MEMBER_STATUS_1));
     }
 
-    @PreAuthorize("hasAuthority('test')")
     @GetMapping("/searchTeamMember")
     public R searchTeamMember(Page page,TeamMemberVo teamMemberVo) {
         HashMap<String,Object> result=new HashMap<>();

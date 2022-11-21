@@ -66,7 +66,7 @@
                 and name like concat('%',#{gameRoleVo.name},'%')
             </if>
             <if test="gameRoleVo.rarity != null">
-                and rarity = gameRoleVo.rarity
+                and rarity = #{gameRoleVo.rarity}
             </if>
             <if test="gameRoleVo.basic">
                 and basicForm = -1

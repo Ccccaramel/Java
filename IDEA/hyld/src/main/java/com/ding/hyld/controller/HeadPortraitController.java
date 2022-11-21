@@ -10,6 +10,7 @@ import com.ding.hyld.vo.HeadPortraitVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UpdateLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class HeadPortraitController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('headPortraitManage_add','headPortraitManage_update')")
     @PostMapping("/saveHeadPortrait")
     public R saveHeadPortrait(HeadPortraitVo headPortraitVo, MultipartFile headPortraitFile){
         if(headPortraitFile!=null){
@@ -60,6 +62,7 @@ public class HeadPortraitController extends BaseController {
         }
     }
 
+    @PreAuthorize("hasAuthority('headPortraitManage_delete')")
     @PostMapping("/deleteHeadPortrait")
     public R deleteHeadPortrait(@RequestBody HeadPortraitVo headPortraitVo){
         // 1.删除旧资源

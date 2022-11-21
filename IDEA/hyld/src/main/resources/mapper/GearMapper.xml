@@ -30,7 +30,7 @@
     <select id="searchGear" resultMap="resultInfoMap">
         select * from gear
         <where>
-            <if test="gearVo.name != null and gearVo.name.trim() != null">
+            <if test="gearVo.name != null and gearVo.name.trim() != ''">
                 and name like concat('%',#{gearVo.name},'%')
             </if>
         </where>

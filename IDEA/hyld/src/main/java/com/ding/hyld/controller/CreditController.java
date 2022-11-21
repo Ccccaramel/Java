@@ -13,6 +13,7 @@ import com.ding.hyld.vo.CreditVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TeamMemberCreditVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -43,18 +44,21 @@ public class CreditController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('credit_update')")
     @PostMapping("/saveTeamMemberCreditInfo")  // 修改队员积分信息
     public R saveTeamMemberCreditInfo(@RequestBody TeamMemberCreditVo teamMemberCreditVo){
         creditService.saveTeamMemberCredit(teamMemberCreditVo);
         return R.success("积分修改成功!");
     }
 
+    @PreAuthorize("hasAuthority('credit_add')")
     @PostMapping("/batchCreditAddSave")  // 批量队员积分新增
     public R batchCreditAddSave(@RequestBody List<TeamMemberCreditVo> allValidTeamMemberList){
         creditService.batchCreditAddSave(allValidTeamMemberList);
         return R.success("批量积分导入成功!");
     }
 
+    @PreAuthorize("hasAuthority('credit_add')")
     @PostMapping("/singleCreditAddSave")  // 单个队员积分新增
     public R singleCreditAddSave(@RequestBody TeamMemberCreditVo teamMemberCreditVo){
         creditService.singleCreditAddSave(teamMemberCreditVo);

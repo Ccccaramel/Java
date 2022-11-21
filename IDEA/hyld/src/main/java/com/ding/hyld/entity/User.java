@@ -7,10 +7,20 @@ import com.ding.hyld.entity.base.BaseObject;
 public class User extends BaseObject {
     private String name;
     private Integer status;
-    private Integer type;
+    private Integer role;
     private String qq;
     private String password;
     private Integer headPortrait;
+    private Integer ex;
+    private String fingerprint; // 指纹
+
+    public String getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
+    }
 
     public String getName() {
         return name;
@@ -28,12 +38,12 @@ public class User extends BaseObject {
         this.status = status;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getRole() {
+        return role;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public String getQq() {
@@ -58,5 +68,13 @@ public class User extends BaseObject {
 
     public void setHeadPortrait(Integer headPortrait) {
         this.headPortrait = headPortrait;
+    }
+
+    public Integer getEx() {
+        return ex;
+    }
+
+    public void setEx(Integer ex) {
+        this.ex = ex;
     }
 }

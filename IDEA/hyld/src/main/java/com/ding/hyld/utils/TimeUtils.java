@@ -1,7 +1,10 @@
 package com.ding.hyld.utils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +30,14 @@ public class TimeUtils {
 
     public static LocalDateTime toLocalDateTime(String settlementTime) {
         return LocalDateTime.parse(settlementTime);
+    }
+
+    public static LocalDateTime getToday() {
+        LocalDateTime localDateTime=LocalDateTime.now();
+        return localDateTime.withHour(0).withMinute(0).withSecond(0);
+    }
+
+    public static LocalDateTime getFirstDayOfTheMonth() {
+        return LocalDateTime.of(LocalDate.from(LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth())), LocalTime.MIN);
     }
 }

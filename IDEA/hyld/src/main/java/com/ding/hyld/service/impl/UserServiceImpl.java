@@ -1,5 +1,6 @@
 package com.ding.hyld.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.entity.User;
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -53,7 +56,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
     @Override
     public void register(UserVo userVo) {
-        userVo.setPassword(DigestUtils.md2Hex(userVo.getPassword()+ CommonCode.SLAT));
+        try {
+            userVo.setPassword(new BCryptPasswordEncoder().encode(JSON.parseObject(RsaUtils.decryptByPrivateKey(userVo.getPassword()),String.class)+ CommonCode.SLAT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         baseMapper.register(userVo);
     }
 
@@ -85,7 +92,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public void saveUserPassword(UserVo userVo) {
         try {
-            userVo.setPassword(new BCryptPasswordEncoder().encode(RsaUtils.decryptByPrivateKey(userVo.getPassword())+ CommonCode.SLAT));
+            String s = JSON.parseObject(RsaUtils.decryptByPrivateKey(userVo.getPassword()),String.class)+ CommonCode.SLAT;
+            userVo.setPassword(new BCryptPasswordEncoder().encode(s));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,5 +103,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public void saveHeadPortrait(UserVo userVo) {
         baseMapper.saveHeadPortrait(userVo);
+    }
+
+    @Override
+    public void addEx(Integer userId, int i) {
+        baseMapper.addEx(userId,i);
     }
 }

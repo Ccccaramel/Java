@@ -48,8 +48,13 @@
         from menu m;
     </select>
     <select id="getCurrentUserPower" resultType="java.lang.String">
-        select
-            m.mark
-        from menu m;
+        select m.mark from menu m
+        where m.id in
+            <foreach collection="powerArray" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+            </foreach>
     </select>
+    <delete id="deleteMenu">
+        delete from menu where id = #{menuVo.id}
+    </delete>
 </mapper>

@@ -11,6 +11,15 @@ public class OfficialVersionUpdateLogVo {
     private String name;
     private String updateTime;
     private String details;
+    private String text;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public String getName() {
         return name;

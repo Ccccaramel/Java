@@ -10,6 +10,7 @@ import com.ding.hyld.vo.GadgetVo;
 import com.ding.hyld.vo.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class GadgetController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('gadgetManage_add','gadgetManage_update')")
     @PostMapping("/saveGadget")
     public R saveGadget(@RequestParam("gadgetVoStr") String gadgetVoStr, MultipartFile image){
         // 解析

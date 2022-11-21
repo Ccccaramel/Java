@@ -6,6 +6,7 @@ import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TeamVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class TeamController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('teamManage_update')")
     @PostMapping("/saveTeamInfo")
     public R saveTeamInfo(@RequestBody TeamVo teamVo){
         teamService.update(teamVo);

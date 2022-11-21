@@ -2,13 +2,12 @@ package com.ding.hyld.controller;
 
 import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
-import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.PointerService;
 import com.ding.hyld.utils.R;
-import com.ding.hyld.utils.TimeUtils;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.PointerVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -27,9 +26,8 @@ public class PointerController extends BaseController {
      * @return
      */
     @GetMapping("/searchPointer")
-    public R searchUpdateLog(Page page, PointerVo pointerVo){
-        CurrentUser currentUser = getCurrentUser();
-        if(pointerVo.isShow() || currentUser==null || currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_2)){
+    public R searchPointer(Page page, PointerVo pointerVo){
+        if(!(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
             pointerVo.setStatus(DictionaryCode.POINTER_STATUS_1);
         }
         HashMap<String,Object> result=new HashMap<>();
@@ -48,6 +46,7 @@ public class PointerController extends BaseController {
         return R.success("反馈已提交!");
     }
 
+    @PreAuthorize("hasAuthority('pointerManage_reply')")
     @PostMapping("/replyPointer")
     public R replyPointer(@RequestBody PointerVo pointerVo){
         pointerVo.setReplyTime(LocalDateTime.now());
@@ -55,6 +54,7 @@ public class PointerController extends BaseController {
         return R.success("反馈回复成功!");
     }
 
+    @PreAuthorize("hasAuthority('pointerManage_delete')")
     @PostMapping("/deletePointer")
     public R deletePointer(@RequestBody PointerVo pointerVo){
         pointerVo.setStatus(DictionaryCode.POINTER_STATUS_2);
@@ -62,6 +62,7 @@ public class PointerController extends BaseController {
         return R.success("反馈已删除!");
     }
 
+    @PreAuthorize("hasAuthority('pointerManage_return')")
     @PostMapping("/returnPointer")
     public R returnPointer(@RequestBody PointerVo pointerVo){
         pointerVo.setStatus(DictionaryCode.POINTER_STATUS_1);

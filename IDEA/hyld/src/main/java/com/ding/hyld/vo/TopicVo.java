@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class TopicVo {
     private Integer id;
     private boolean add;
+    private String title;
     private String rubric;
     private String text;
     private Integer parentId;
@@ -21,6 +22,23 @@ public class TopicVo {
     private Integer belongToFloor;
     private boolean show;
     private boolean manageMyTopic;
+    private String images;
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Integer getId() {
         return id;

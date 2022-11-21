@@ -2,6 +2,10 @@ package com.ding.hyld.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ding.hyld.entity.base.BaseObject;
+import com.ding.hyld.utils.ResourcesPathUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @TableName("topic")
 public class Topic extends BaseObject {
@@ -15,6 +19,21 @@ public class Topic extends BaseObject {
     private String ip;
     private String address;
     private Integer belongToFloor;
+    private List<String> images = new ArrayList<>();
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        if(images!=null && !images.isEmpty()){
+            for(String image:images.split(";")){
+                if(!image.isEmpty()){
+                    this.images.add(ResourcesPathUtils.getPhotoPath() + image);
+                }
+            }
+        }
+    }
 
     public String getRubric() {
         return rubric;

@@ -5,10 +5,31 @@ import java.time.LocalDateTime;
 public class VisitLogVo {
     private Integer id;
     private Integer userId;
+    private String userName;
     private String ip;
     private String address;
-    private LocalDateTime createTime;
+    private String trueAddress;
     private String note;
+    private String startDate;
+    private String endDate;
+
+    private LocalDateTime time;
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public String getTrueAddress() {
+        return trueAddress;
+    }
+
+    public void setTrueAddress(String trueAddress) {
+        this.trueAddress = trueAddress;
+    }
 
     public Integer getId() {
         return id;
@@ -42,19 +63,51 @@ public class VisitLogVo {
         this.address = address;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
     public String getNote() {
         return note;
     }
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id:" + id +
+                ", userId:" + userId +
+                ", userName:'" + userName + '\'' +
+                ", ip:'" + ip + '\'' +
+                ", address:'" + address + '\'' +
+                ", trueAddress;'" + trueAddress + '\'' +
+                ", note:'" + note + '\'' +
+                ", startDate:'" + startDate + '\'' +
+                ", endDate:'" + endDate + '\'' +
+                ", time:" + time +
+                '}';
     }
 }

@@ -38,6 +38,7 @@ public class PlayerController extends BaseController {
      * @param playerVo
      * @return
      */
+    @PreAuthorize("hasAuthority('playerManage_update')")
     @PostMapping("/updatePlayer")
     public R updatePlayer(@RequestBody PlayerVo playerVo){
         playerService.updatePlayer(playerVo);

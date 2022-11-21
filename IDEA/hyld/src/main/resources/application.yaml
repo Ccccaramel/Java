@@ -7,3 +7,5 @@ spring:
       max-request-size: 100MB
   main:
     allow-circular-references: true
+
+# 切换开发环境记得 clean !

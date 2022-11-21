@@ -28,6 +28,7 @@
         <id column="floor" property="floor"/>
         <id column="belongToFloor" property="belongToFloor"/>
         <id column="head" property="head"/>
+        <id column="images" property="images"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
         <association property="userInfo" column="userId" select="com.ding.hyld.mapper.UserMapper.findById"/>
         <association property="replyUser" column="parentId" select="com.ding.hyld.mapper.UserMapper.findByTopicId"/>
@@ -43,6 +44,7 @@
         <id column="floor" property="floor"/>
         <id column="belongToFloor" property="belongToFloor"/>
         <id column="head" property="head"/>
+        <id column="images" property="images"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
         <association property="userInfo" column="userId" select="com.ding.hyld.mapper.UserMapper.findById"/>
         <association property="parentInfo" column="parentId" select="com.ding.hyld.mapper.TopicMapper.findParentById"/>
@@ -50,25 +52,25 @@
     <!-- 仅搜话题第一楼 -->
     <select id="searchTopic" resultMap="resultInfoMap">
         select
-            *,
-            (select count(*) from topic t where t.id = id ) as head
-        from topic
+            t.*,
+            (select count(*) from topic where topicId = t.id ) as head
+        from topic t
         <where>
             <if test="topicVo.userId != null">
-                and userId = #{topicVo.userId}
+                and t.userId = #{topicVo.userId}
             </if>
             <if test="topicVo.status != null">
-                and status = #{topicVo.status}
+                and t.status = #{topicVo.status}
             </if>
             <if test="topicVo.rubric != null">
-                and rubric like concat('%',#{topicVo.rubric},'%')
+                and t.rubric like concat('%',#{topicVo.rubric},'%')
             </if>
             <if test="topicVo.userName != null and topicVo.userName.trim() != ''">
-                and exists (select 1 from user u where u.id=userId and u.name like concat('%',#{topicVo.userName},'%'))
+                and exists (select 1 from user where id=t.userId and name like concat('%',#{topicVo.userName},'%'))
             </if>
-            and parentId = -1
+            and t.parentId = -1
         </where>
-        ORDER BY id desc
+        ORDER BY t.id desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
@@ -100,19 +102,19 @@
         </if>
     </select>
     <insert id="add">
-        insert into topic(userId,rubric,text,floor,status,ip,address,belongToFloor)
-        values(#{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.floor},#{topicVo.status},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor})
+        insert into topic(parentId,userId,rubric,text,floor,status,ip,address,belongToFloor,images)
+        values(#{topicVo.parentId},#{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.floor},#{topicVo.status},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor},#{topicVo.images})
     </insert>
     <insert id="saveReplyTopicInfo">
         insert into topic
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            userId,rubric,text,status,parentId,topicId,ip,address,belongToFloor
+            userId,rubric,text,status,parentId,topicId,ip,address,belongToFloor,images
             <if test="topicVo.floor!=null">
                 ,floor
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.status},#{topicVo.parentId},#{topicVo.topicId},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor}
+            #{topicVo.userId},#{topicVo.rubric},#{topicVo.text},#{topicVo.status},#{topicVo.parentId},#{topicVo.topicId},#{topicVo.ip},#{topicVo.address},#{topicVo.belongToFloor},#{topicVo.images}
             <if test="topicVo.floor!=null">
                 ,#{topicVo.floor}
             </if>

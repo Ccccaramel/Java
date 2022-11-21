@@ -18,7 +18,7 @@
     <select id="searchUpdateLog" resultMap="resultInfoMap">
         select * from update_log
         <where>
-            <if test="updateLogVo.text != null and updateLogVo.text.trim() != null">
+            <if test="updateLogVo.text != null and updateLogVo.text.trim() != ''">
                 and text like concat('%',#{updateLogVo.text},'%')
             </if>
         </where>

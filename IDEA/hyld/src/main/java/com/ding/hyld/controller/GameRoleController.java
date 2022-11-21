@@ -13,6 +13,7 @@ import com.ding.hyld.vo.GameRoleVo;
 import com.ding.hyld.vo.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,7 @@ public class GameRoleController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('gameRoleManage_add','gameRoleManage_update')")
     @PostMapping("/saveGameRole")
     public R saveGameRole(@RequestParam("gameRoleVoStr") String gameRoleVoStr, MultipartFile headImg, MultipartFile portrait){
         // 解析

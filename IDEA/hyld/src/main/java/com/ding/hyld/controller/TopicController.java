@@ -1,15 +1,21 @@
 package com.ding.hyld.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.info.TopicInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.TopicService;
 import com.ding.hyld.utils.R;
+import com.ding.hyld.utils.ResourceUploadAndDownloadUtils;
+import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TopicVo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +36,7 @@ public class TopicController extends BaseController {
     @GetMapping("/searchTopic")
     public R searchTopic(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
-        CurrentUser currentUser = getCurrentUser();
-        if(topicVo.isShow() || currentUser==null || currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_2)){
+        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         result.put("data",topicService.searchTopic(page, topicVo));
@@ -69,7 +74,7 @@ public class TopicController extends BaseController {
     public R getTopicReply(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
         CurrentUser currentUser = getCurrentUser();
-        if(topicVo.isManageMyTopic() || currentUser==null || currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_2)){
+        if(topicVo.isManageMyTopic() || currentUser==null || currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_2)){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
             topicVo.setUserId(getUserId());
             topicVo.setFloor(1);
@@ -88,7 +93,7 @@ public class TopicController extends BaseController {
     }
 
     /**
-     * 获取制动话题的全部内容
+     * 获取指定话题的全部内容
      * @param page
      * @param topicVo
      * @return
@@ -97,8 +102,7 @@ public class TopicController extends BaseController {
     public R getTopicData(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
 
-        CurrentUser currentUser = getCurrentUser();
-        if(topicVo.isShow() || currentUser==null || currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_2)){
+        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         List<TopicInfo> topicInfoList = topicService.getTopicData(page, topicVo,false); // 仅所有楼层
@@ -111,12 +115,26 @@ public class TopicController extends BaseController {
 
     /**
      * 发表话题
-     * @param topicVo
      * @return
      */
     @PostMapping("/saveTopic")
-    public R saveTopic(@RequestBody TopicVo topicVo){
+    public R saveTopic(@RequestParam("topicVoStr")  String topicVoStr,@RequestParam("imageFiles") MultipartFile[] imageFiles){
+        // 解析
+        ObjectMapper objectMapper = new ObjectMapper();
+        TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(topicVoStr),TopicVo.class);
+
+        StringBuffer images = new StringBuffer();
+        // 将解析整理资源并存储,并返回资源信息
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        for(int i=0;i<imageFiles.length;i++){
+            String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
+            images.append(imageNewName+";");
+        }
+        topicVo.setImages(String.valueOf(images));
+
+        topicVo.setBelongToFloor(1);
         topicVo.setParentId(-1);
+        topicVo.setFloor(1);
         topicVo.setUserId(getUserId());
         topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         topicService.add(topicVo);
@@ -125,11 +143,26 @@ public class TopicController extends BaseController {
 
     /**
      * 保存回复话题
-     * @param topicVo
      * @return
      */
+    @PreAuthorize("hasAuthority('replyMe_reply')")
     @PostMapping("/saveReplyTopicInfo")
-    public R saveReplyTopicInfo(@RequestBody TopicVo topicVo){
+    public R saveReplyTopicInfo(@RequestParam("replyTopicVoStr") String replyTopicVoStr,@RequestParam("imageFiles") MultipartFile[] imageFiles){
+        // 解析
+        ObjectMapper objectMapper = new ObjectMapper();
+        TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(replyTopicVoStr),TopicVo.class);
+
+        StringBuffer images = new StringBuffer();
+        // 将解析整理资源并存储,并返回资源信息
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        for(int i=0;i<imageFiles.length;i++){
+            String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
+            images.append(imageNewName+";");
+        }
+        topicVo.setImages(String.valueOf(images));
+
+
+
         if(topicVo.isReplyTopic()){
             topicVo.setFloor(topicService.getTopicData(null,topicVo,true).size()+1); // 放在开头,所有状态的回复都统计
             topicVo.setBelongToFloor(topicVo.getFloor());
@@ -145,6 +178,7 @@ public class TopicController extends BaseController {
      * @param topicVo
      * @return
      */
+    @PreAuthorize("hasAuthority('myTopic_delete')")
     @PostMapping("/deleteTopic")
     public R deleteTopic(@RequestBody TopicVo topicVo){
         topicVo.setStatus(DictionaryCode.SPEECH_STATUS_3);
@@ -157,11 +191,12 @@ public class TopicController extends BaseController {
      * @param topicVo
      * @return
      */
+    @PreAuthorize("hasAuthority('topicManage_frozenTopic')")
     @PostMapping("/frozenTopic")
     public R frozenTopic(@RequestBody TopicVo topicVo){
         topicVo.setStatus(DictionaryCode.SPEECH_STATUS_2);
         topicService.updateStatus(topicVo);
-        return R.success("话题已冻结!");
+        return R.success("话题/回复已冻结!");
     }
 
     /**
@@ -169,11 +204,12 @@ public class TopicController extends BaseController {
      * @param topicVo
      * @return
      */
+    @PreAuthorize("hasAuthority('topicManage_returnTopic')")
     @PostMapping("/returnTopic")
     public R returnTopic(@RequestBody TopicVo topicVo){
         topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         topicService.updateStatus(topicVo);
-        return R.success("话题已恢复!");
+        return R.success("话题/回复已恢复!");
     }
 
     /**

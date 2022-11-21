@@ -9,6 +9,7 @@ import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.GameRoleCommentVo;
 import com.ding.hyld.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class GameRoleCommentController extends BaseController {
     private GameRoleCommentService gameRoleCommentService;
 
     /**
-     * 获取制动话题的全部内容
+     * 获取指定话题的全部内容
      * @param page
      * @param gameRoleCommentVo
      * @return
@@ -31,8 +32,7 @@ public class GameRoleCommentController extends BaseController {
     public R getGameRoleCommentData(Page page, GameRoleCommentVo gameRoleCommentVo){
         HashMap<String,Object> result=new HashMap<>();
 
-        CurrentUser currentUser = getCurrentUser();
-        if(gameRoleCommentVo.isShow() || currentUser==null || currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_2)){
+        if(gameRoleCommentVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_2))){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         List<GameRoleCommentInfo> gameRoleCommentInfoList = gameRoleCommentService.getGameRoleCommentData(page, gameRoleCommentVo,true); // 仅所有楼层
@@ -86,7 +86,7 @@ public class GameRoleCommentController extends BaseController {
     public R getAllGameRoleComment(Page page, GameRoleCommentVo gameRoleCommentVo){
         HashMap<String,Object> result=new HashMap<>();
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
             result.put("data",gameRoleCommentService.getAllGameRoleComment(page, gameRoleCommentVo));
             if(!Objects.equals(page.getSize(),null)){
                 result.put("totalPage",Math.ceil(gameRoleCommentService.getAllGameRoleComment(null,gameRoleCommentVo).size()*1.0/page.getSize()));
@@ -95,20 +95,22 @@ public class GameRoleCommentController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('gameRoleManage_gameRoleComment')")
     @PostMapping("/recoveryGameRoleComment")
     public R recoveryGameRoleComment(@RequestBody GameRoleCommentVo gameRoleCommentVo){
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
             gameRoleCommentService.update(gameRoleCommentVo);
         }
         return R.success("已成功恢复!");
     }
 
+    @PreAuthorize("hasAuthority('gameRoleManage_gameRoleComment')")
     @PostMapping("/deleteGameRoleComment")
     public R deleteGameRoleComment(@RequestBody GameRoleCommentVo gameRoleCommentVo){
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getType().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_3);
             gameRoleCommentService.update(gameRoleCommentVo);
         }

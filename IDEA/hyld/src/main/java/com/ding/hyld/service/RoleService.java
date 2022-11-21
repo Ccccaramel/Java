@@ -18,4 +18,6 @@ public interface RoleService extends IService<Role> {
     void saveRolePower(RoleVo roleVo);
 
     void deleteRolePower(Integer roleId);
+
+    RoleInfo findById(Integer id);
 }

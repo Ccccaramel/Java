@@ -8,6 +8,7 @@ import com.ding.hyld.vo.NormalAttackAttributeVo;
 import com.ding.hyld.vo.NormalAttackVo;
 import com.ding.hyld.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class NormalAttackAttributeController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('gameRoleManage_normalAttack')")
     @PostMapping("/saveNormalAttackAttribute")
     public R saveNormalAttackAttribute(@RequestBody NormalAttackAttributeVo normalAttackAttributeVo){
         if(normalAttackAttributeVo.isAdd()){

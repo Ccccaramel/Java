@@ -35,8 +35,8 @@ public class CurrentUserDetailsServiceImpl implements UserDetailsService {
         }
 
         // 获取当前用户权限
-        List<String> powerList = menuService.getCurrentUserPower(user.getId());
-        List<String> permissions = new ArrayList<>(Arrays.asList("test","admin"));
+        List<String> permissions = menuService.getCurrentUserPower(user.getRole());
+//        List<String> permissions = new ArrayList<>(Arrays.asList("test","admin"));
 
         // TODO 查询权限信息
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null,null);

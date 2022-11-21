@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public class PointerVo {
     private Integer id;
-    private boolean show;
     private String note;
     private String text;
     private String replyText;
@@ -13,14 +12,6 @@ public class PointerVo {
     private Integer userId;
     private Integer status;
     private LocalDateTime replyTime;
-
-    public boolean isShow() {
-        return show;
-    }
-
-    public void setShow(boolean show) {
-        this.show = show;
-    }
 
     public Integer getId() {
         return id;

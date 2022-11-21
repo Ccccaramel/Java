@@ -6,11 +6,11 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://121.36.141.65:3306/hyld
-    username: root
-    password: 211506164Ding!
+    username: caramel(SQzOXNDSfDrVvVRAdGUTI/sfAkV3XN+bMYEwBwjRTeSRoQj+zVwGsdkEqPJvPBHH)
+    password: caramel(txVHlG5vtWXu0AaPRbx30Z8Vp2CPhWmXwes+Zp0rXzFPBAlghzGffg6t29jxJqae)
   web:
     resources:
-      static-locations: classpath:/static/,file:/usr/local/myData/hyldData
+      static-locations: classpath:/static/,file:/usr/local/hyld/hyldData/upload
 
 # 数据库映射
 mybatis:
@@ -19,8 +19,8 @@ mybatis:
   typeAliasesPackage: com.ding.hyld.entity
 
 resourcespathutils:
-  url: http://121.36.141.65:8090
-  realpath: /usr/local/myData/hyldData
+  url: /api
+  realpath: /usr/local/hyld/hyldData/upload
   photopathprefix: /upload/photo
   videopathprefix: /upload/video
   audiopathprefix: /upload/audio

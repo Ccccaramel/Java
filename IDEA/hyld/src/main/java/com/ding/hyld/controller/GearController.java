@@ -10,6 +10,7 @@ import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.GearVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class GearController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAnyAuthority('gearManage_add','gearManage_update')")
     @PostMapping("/saveGear")
     public R saveGear(@RequestParam("gearVoStr") String gearVoStr, MultipartFile oneLevelImg, MultipartFile twoLevelImg, MultipartFile threeLevelImg){
         // 解析

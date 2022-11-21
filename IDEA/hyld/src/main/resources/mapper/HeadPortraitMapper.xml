@@ -22,7 +22,7 @@
     <select id="searchHeadPortrait" resultMap="resultInfoMap">
         select * from head_portrait
         <where>
-            <if test="headPortraitVo.name != null and headPortraitVo.name.trim() != null">
+            <if test="headPortraitVo.name != null and headPortraitVo.name.trim() != ''">
                 and name like concat('%',#{headPortraitVo.name},'%')
             </if>
         </where>

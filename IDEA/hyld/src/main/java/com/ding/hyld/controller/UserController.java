@@ -1,21 +1,30 @@
 package com.ding.hyld.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ding.hyld.constant.CommonCode;
+import com.ding.hyld.constant.DictionaryCode;
+import com.ding.hyld.constant.SystemConfigKey;
 import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.entity.User;
 import com.ding.hyld.info.DictionaryInfo;
+import com.ding.hyld.info.SystemConfigInfo;
 import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.service.LoginService;
+import com.ding.hyld.service.SystemConfigService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.R;
+import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserVo;
+import com.ding.hyld.vo.VisitLogVo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +36,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private SystemConfigService systemConfigService;
 
     @PostMapping("/login")
     public R login(UserVo userVo){
@@ -42,7 +54,22 @@ public class UserController extends BaseController {
 
     @PostMapping("/register")
     public R register(@RequestBody UserVo userVo){
-        User user=userService.findByName(userVo.getAccount());
+        SystemConfigInfo systemConfigInfo = systemConfigService.findByKey(SystemConfigKey.ALLOW_REGISTRATION);
+        if(systemConfigInfo.getV().equals("0")){
+            return R.fail("系统已禁止新用户注册!");
+        }
+
+        UserVo conditionVo = new UserVo();
+        try {
+            conditionVo.setFingerprint(RsaUtils.decryptByPrivateKey(userVo.getNo()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!userService.searchUser(null, conditionVo).isEmpty()){
+            return R.fail("注册超过限定次数!");
+        }
+
+        User user=userService.findByName(userVo.getAccount()); // searchUser 中是 like
         if(user!=null){
             return R.fail("该用户名已被注册!");
         }
@@ -50,14 +77,20 @@ public class UserController extends BaseController {
         return R.success("注册成功!");
     }
 
-    @PreAuthorize("hasAuthority('test')")
+//    @PreAuthorize("hasAuthority('test')")
     @GetMapping("/getCurrentUserInfo")
     public R getCurrentUserInfo(){
         return R.success(userService.findById(getUserId()));
     }
 
+    /**
+     * 用户修改自己的信息
+     * @param userVo
+     * @return
+     */
+    @PreAuthorize("hasAuthority('userInfoManage_update')")
     @PostMapping("/updateUserInfo")
-    public R updateUserInfo(@RequestBody UserVo userVo){ // 用户修改自己的信息
+    public R updateUserInfo(@RequestBody UserVo userVo){
         userService.updateUserInfo(userVo);
          return R.success("个人基本信息修改成功!");
     }
@@ -77,6 +110,7 @@ public class UserController extends BaseController {
      * @param userVo
      * @return
      */
+    @PreAuthorize("hasAuthority('userManage_update')")
     @PostMapping("/saveUser")
     public R saveUser(@RequestBody UserVo userVo){
         User user=userService.findByName(userVo.getName()); // 查询时发现结果忽略了大小写,相关内容详见 Database > mysql.txt
@@ -92,6 +126,7 @@ public class UserController extends BaseController {
         return R.success();
     }
 
+    @PreAuthorize("hasAnyAuthority('userInfoManage_updatePassword','userManage_updatePassword')")
     @PostMapping("/saveUserPassword")
     public R saveUserPassword(@RequestBody UserVo userVo){
         userService.saveUserPassword(userVo);

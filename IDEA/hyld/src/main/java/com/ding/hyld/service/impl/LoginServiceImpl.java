@@ -3,9 +3,13 @@ package com.ding.hyld.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.constant.DictionaryCode;
-import com.ding.hyld.entity.User;
+import com.ding.hyld.constant.SystemConfigKey;
+import com.ding.hyld.info.RoleInfo;
+import com.ding.hyld.info.SystemConfigInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.LoginService;
+import com.ding.hyld.service.RoleService;
+import com.ding.hyld.service.SystemConfigService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.JWTUtils;
 import com.ding.hyld.utils.R;
@@ -13,7 +17,6 @@ import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.UserVo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +28,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -37,6 +39,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SystemConfigService systemConfigService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Resource
     private RedisTemplate<String,String> redisTemplate;
@@ -78,13 +86,25 @@ public class LoginServiceImpl implements LoginService {
             return R.fail("用户不存在!");
         }
 
+        SystemConfigInfo systemConfigInfo = systemConfigService.findByKey(SystemConfigKey.ALLOW_LOGIN);
+        if(currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_2) && systemConfigInfo.getV().equals("0")){
+            return R.fail("系统已禁止用户登录!");
+        }
+
         // 认证通过,使用 userId 生成一个 jwt/token
         String token = JWTUtils.createToken(Long.valueOf(currentUser.getUser().getId()));
 
         // 把完整用户信息存入 redis , userId 作为 key
         redisTemplate.opsForValue().set("login_"+currentUser.getUser().getId(), JSON.toJSONString(currentUser)); // 1天后过期
 
-        return R.success(token,"欢迎回来!(*^▽^*)");
+        Map<String,Object> res = new HashMap<>();
+        res.put("token",token);
+        try {
+            res.put("power",currentUser.getPermissions());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.success(res,"欢迎回来!(*^▽^*)");
     }
 
     @Override

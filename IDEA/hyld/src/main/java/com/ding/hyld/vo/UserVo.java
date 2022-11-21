@@ -1,5 +1,7 @@
 package com.ding.hyld.vo;
 
+import java.time.LocalDateTime;
+
 public class UserVo {
     private Integer id;
     /**
@@ -10,10 +12,36 @@ public class UserVo {
     private String password;
     private String qq;
     private Integer status;
-    private Integer type;
+    private Integer role;
     private String note;
+    private String no; // 指纹
+    private String fingerprint; // 指纹
     private Integer headPortraitId; // 修改头像
+    private LocalDateTime time; // 今日起始时间
 
+    public String getNo() {
+        return no;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 
     public Integer getId() {
         return id;
@@ -71,12 +99,12 @@ public class UserVo {
         this.status = status;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getRole() {
+        return role;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public Integer getHeadPortraitId() {

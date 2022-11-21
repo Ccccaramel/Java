@@ -62,5 +62,6 @@ public class main {
          * String 转 LocalDateTime
          */
         System.out.println("String转LocalDateTime:" + LocalDateTime.parse("2020-01-01T12:12"));
+        System.out.println("String转LocalDateTime:" + LocalDateTime.parse("2022-11-10T19:40:51.657207"));
     }
 }

@@ -1,10 +1,12 @@
 package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
+import com.ding.hyld.utils.CommonUtils;
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class UserInfo {
     private Integer id;
@@ -18,9 +20,49 @@ public class UserInfo {
     private String name;
     private String qq;
     private HeadPortraitInfo headPortrait; // 头像
+    private Integer ex; // 经验
 
-    private Dictionary type;
+    private RoleInfo role;
     private Dictionary status;
+
+    private Integer grade;
+    private Integer exEx;
+    private Integer currentLvMaxEx;
+    private Integer proportion;
+    private String no; // 指纹
+
+    public Integer getProportion() {
+        return proportion;
+    }
+
+    public void setProportion(Integer proportion) {
+        this.proportion = proportion;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
+    }
+
+    public Integer getExEx() {
+        return exEx;
+    }
+
+    public void setExEx(Integer exEx) {
+        this.exEx = exEx;
+
+    }
+
+    public Integer getCurrentLvMaxEx() {
+        return currentLvMaxEx;
+    }
+
+    public void setCurrentLvMaxEx(Integer currentLvMaxEx) {
+        this.currentLvMaxEx = currentLvMaxEx;
+    }
 
     public Integer getId() {
         return id;
@@ -79,12 +121,12 @@ public class UserInfo {
         this.createTimeStr = createTimeStr;
     }
 
-    public Dictionary getType() {
-        return type;
+    public RoleInfo getType() {
+        return role;
     }
 
-    public void setType(Dictionary type) {
-        this.type = type;
+    public void setType(RoleInfo type) {
+        this.role = type;
     }
 
     public Dictionary getStatus() {
@@ -101,5 +143,19 @@ public class UserInfo {
 
     public void setHeadPortrait(HeadPortraitInfo headPortrait) {
         this.headPortrait = headPortrait;
+    }
+
+    public Integer getEx() {
+        return ex;
+    }
+
+    public void setEx(Integer ex) {
+        this.ex = ex;
+        Integer lv = 1,val = 0;
+        Map<String, Integer> dataMap = CommonUtils.exToLvTools(lv, val, ex);
+        setGrade(dataMap.get("grade"));
+        setExEx(dataMap.get("exEx"));
+        setCurrentLvMaxEx(dataMap.get("currentLvMaxEx"));
+        setProportion(dataMap.get("proportion"));
     }
 }

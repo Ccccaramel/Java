@@ -5,10 +5,12 @@ import com.ding.hyld.entity.Topic;
 import com.ding.hyld.info.TopicInfo;
 import com.ding.hyld.mapper.TopicMapper;
 import com.ding.hyld.service.TopicService;
+import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.Tree;
 import com.ding.hyld.utils.TreeUtils;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TopicVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,6 +18,9 @@ import java.util.List;
 
 @Service
 public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
+    @Autowired
+    UserService userService;
+
     @Override
     public List<TopicInfo> searchTopic(Page page, TopicVo topicVo) {
         return baseMapper.searchTopic(page, topicVo);
@@ -50,15 +55,18 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         }
         if(!onlyFloor && topicInfoList!=null){
             topicInfoList = TreeUtils.transformation(topicInfoList,-1);
-            for (Tree topicInfo:topicInfoList.get(0).getChildren()) {
-                topicInfoList.add((TopicInfo)topicInfo);
-                List<Tree> children = topicInfo.getChildren();
-                if(children!=null){
-                    List<Tree> treeList = TreeUtils.toList(topicInfo.getChildren());
-                    Collections.sort(treeList);
-                    topicInfo.setChildren(treeList);
+            if(topicInfoList.get(0).getChildren()!=null){
+                for (Tree topicInfo:topicInfoList.get(0).getChildren()) {
+                    topicInfoList.add((TopicInfo)topicInfo);
+                    List<Tree> children = topicInfo.getChildren();
+                    if(children!=null){
+                        List<Tree> treeList = TreeUtils.toList(topicInfo.getChildren());
+                        Collections.sort(treeList);
+                        topicInfo.setChildren(treeList);
+                    }
                 }
             }
+
             topicInfoList.get(0).setChildren(null); // 把第一楼的 children 清空
         }
         return topicInfoList;
@@ -68,6 +76,11 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
     @Override
     public void saveReplyTopicInfo(TopicVo topicVo) {
+        TopicInfo topicInfo = baseMapper.findById(topicVo.getParentId());
+        if(!topicInfo.getUserInfo().getId().equals(topicVo.getUserId())){
+            userService.addEx(topicVo.getUserId(),1); // 回复
+            userService.addEx(topicInfo.getUserInfo().getId(),2); // 被回复
+        }
         baseMapper.saveReplyTopicInfo(topicVo);
     }
 

@@ -167,6 +167,17 @@
         and checkStatus = #{userWithTeamVo.checkStatus}
         and playerPosition = #{userWithTeamVo.playerPosition}
         and creditScore = #{userWithTeamVo.creditScore}
+        <if test="userWithTeamVo.teamName!=null and userWithTeamVo.teamName.trim()!=''">
+            and exists (select 1 from team t where t.name like concat('%', #{userWithTeamVo.teamName},'%') and t.id = teamId)
+        </if>
+        <if test="userWithTeamVo.teamScid!=null and userWithTeamVo.teamScid.trim()!=''">
+            and exists (select 1 from team t where t.scid like concat('%', #{userWithTeamVo.teamScid},'%') and t.id = teamId)
+        </if>
+        order by createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
     </select>
     <select id="playerFindTeamBy" resultMap="resultInfoMap">
         select uwt.*

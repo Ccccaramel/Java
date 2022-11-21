@@ -12,6 +12,7 @@ import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.StarPowerVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,7 @@ public class NormalAttackController extends BaseController {
         return R.success(result);
     }
 
+    @PreAuthorize("hasAuthority('gameRoleManage_normalAttack')")
     @PostMapping("/saveNormalAttack")
     public R saveNormalAttack(@RequestBody NormalAttackVo normalAttackVo){
         if(normalAttackVo.isAdd()){

@@ -6,13 +6,16 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Component
 @ConfigurationProperties(prefix = "resourcespathutils")
 public class ResourcesPathUtils {
-    private static String url; // 生产环境资源根目录
-    private static String realPath; // 测试环境资源根目录
+    private static String url; // 开发/生产环境资源根目录
+    private static String realPath; // 开发/生产环境资源根目录
     private static String infactPath; // 根据配置设置最终使用的资源根目录
     private static String photoPathPrefix; // 图片资源目录
     private static String videoPathPrefix; // 视频资源目录
@@ -167,6 +170,14 @@ public class ResourcesPathUtils {
             fileDir.mkdirs();
         }
         return fileDir;
+    }
+
+    public static void main(String[] args) {
+        try {
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 }
 

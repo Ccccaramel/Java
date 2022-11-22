@@ -1,0 +1,4 @@
+2022/11/22
+整合第三方登录
+ALTER TABLE user add qqOpenId VARCHAR(70) COMMENT "qq openId";
+ALTER TABLE user add qqUnionId VARCHAR(70) COMMENT "qq unionId";

@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/dictionary")
@@ -21,7 +19,10 @@ public class DictionaryController {
 
     @GetMapping("findLeaveType")
     public R findLeaveType(){
-        return R.success(dictionaryService.findByType("teamMemberStatus", List.of(DictionaryCode.TEAM_STATUS_1_value))); // 排除"正常队员"项
+        List<Integer> excludeTypeValueList = new ArrayList<>();
+        excludeTypeValueList.add(DictionaryCode.TEAM_STATUS_1_value);
+//        return R.success(dictionaryService.findByType("teamMemberStatus", Arrays.asList(DictionaryCode.TEAM_STATUS_1_value))); // 排除"正常队员"项,本地有效，但云服务器上就报错(猜测与jdk版本有关)
+        return R.success(dictionaryService.findByType("teamMemberStatus", excludeTypeValueList)); // 排除"正常队员"项
     }
 
     @GetMapping("findJoinWayType")
@@ -97,7 +98,9 @@ public class DictionaryController {
 
     @GetMapping("/getTeamMemberPositionTypeExcludeViceCaptain")
     public R getTeamMemberPositionTypeExcludeViceCaptain(){
-        return R.success(dictionaryService.findByType("teamMemberPositionType", List.of(DictionaryCode.PLAYER_POSITION_2_value)));
+        List<Integer> e = new ArrayList<>();
+        e.add(DictionaryCode.PLAYER_POSITION_2_value);
+        return R.success(dictionaryService.findByType("teamMemberPositionType", e));
     }
 
     @GetMapping("/getGameRoleRarity")

@@ -72,23 +72,4 @@ class HyldApplicationTests {
 //        System.out.println("云 password 解密："+cloudPasswordDec);
 //    }
 
-
-    private class Test1 {
-        @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime localDateTime;
-
-        public LocalDateTime getLocalDateTime() {
-            return localDateTime;
-        }
-
-        public void setLocalDateTime(LocalDateTime localDateTime) {
-            this.localDateTime = localDateTime;
-        }
-    }
-
-    @Test
-    public void Test2(){
-
-    }
-
 }

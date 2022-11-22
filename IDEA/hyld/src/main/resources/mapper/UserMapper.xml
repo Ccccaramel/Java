@@ -79,7 +79,7 @@
     <!-- 1:管理员 2:普通用户   -->
     <insert id="register">
         insert into user(name,status,role,password,fingerprint)
-        values(#{userVo.account},400,2,#{userVo.password},#{userVo.no});
+        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint});
     </insert>
     <update id="updateUserInfo">
         update user

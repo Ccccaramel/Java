@@ -114,4 +114,22 @@ public class UserVo {
     public void setHeadPortraitId(Integer headPortraitId) {
         this.headPortraitId = headPortraitId;
     }
+
+    @Override
+    public String toString() {
+        return "UserVo{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", qq='" + qq + '\'' +
+                ", status=" + status +
+                ", role=" + role +
+                ", note='" + note + '\'' +
+                ", no='" + no + '\'' +
+                ", fingerprint='" + fingerprint + '\'' +
+                ", headPortraitId=" + headPortraitId +
+                ", time=" + time +
+                '}';
+    }
 }

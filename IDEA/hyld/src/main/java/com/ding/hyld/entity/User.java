@@ -13,6 +13,9 @@ public class User extends BaseObject {
     private Integer headPortrait;
     private Integer ex;
     private String fingerprint; // 指纹
+    private String qqOpenId;
+    private String qqUnionId;
+
 
     public String getFingerprint() {
         return fingerprint;
@@ -76,5 +79,21 @@ public class User extends BaseObject {
 
     public void setEx(Integer ex) {
         this.ex = ex;
+    }
+
+    public String getQqOpenId() {
+        return qqOpenId;
+    }
+
+    public void setQqOpenId(String qqOpenId) {
+        this.qqOpenId = qqOpenId;
+    }
+
+    public String getQqUnionId() {
+        return qqUnionId;
+    }
+
+    public void setQqUnionId(String qqUnionId) {
+        this.qqUnionId = qqUnionId;
     }
 }

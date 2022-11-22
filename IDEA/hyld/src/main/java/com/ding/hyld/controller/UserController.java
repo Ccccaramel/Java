@@ -17,6 +17,7 @@ import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserVo;
 import com.ding.hyld.vo.VisitLogVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
@@ -54,20 +56,31 @@ public class UserController extends BaseController {
 
     @PostMapping("/register")
     public R register(@RequestBody UserVo userVo){
+        log.info("传入参数 userVo:{}",userVo.toString());
         SystemConfigInfo systemConfigInfo = systemConfigService.findByKey(SystemConfigKey.ALLOW_REGISTRATION);
         if(systemConfigInfo.getV().equals("0")){
             return R.fail("系统已禁止新用户注册!");
         }
 
+        /**
+         * 限制一台机器只能注册一个账号
+         */
         UserVo conditionVo = new UserVo();
         try {
-            conditionVo.setFingerprint(RsaUtils.decryptByPrivateKey(userVo.getNo()));
+            String fingerprint = RsaUtils.decryptByPrivateKey(userVo.getNo());
+            log.info("fingerprint:{}",fingerprint);
+            conditionVo.setFingerprint(fingerprint);
+            userVo.setFingerprint(fingerprint);
+            log.info("userVo:{}",userVo.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(!userService.searchUser(null, conditionVo).isEmpty()){
-            return R.fail("注册超过限定次数!");
-        }
+//        List<UserInfo> userInfoList = userService.searchUser(null, conditionVo);
+//        log.info("userInfoList:{}",userInfoList);
+//        if(userInfoList.size()>0){
+//            return R.fail("注册超过限定次数!");
+//        }
+
 
         User user=userService.findByName(userVo.getAccount()); // searchUser 中是 like
         if(user!=null){

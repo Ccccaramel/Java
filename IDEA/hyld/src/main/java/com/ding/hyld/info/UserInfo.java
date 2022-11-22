@@ -121,12 +121,12 @@ public class UserInfo {
         this.createTimeStr = createTimeStr;
     }
 
-    public RoleInfo getType() {
+    public RoleInfo getRole() {
         return role;
     }
 
-    public void setType(RoleInfo type) {
-        this.role = type;
+    public void setRole(RoleInfo role) {
+        this.role = role;
     }
 
     public Dictionary getStatus() {
@@ -157,5 +157,27 @@ public class UserInfo {
         setExEx(dataMap.get("exEx"));
         setCurrentLvMaxEx(dataMap.get("currentLvMaxEx"));
         setProportion(dataMap.get("proportion"));
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", name='" + name + '\'' +
+                ", qq='" + qq + '\'' +
+                ", headPortrait=" + headPortrait +
+                ", ex=" + ex +
+                ", role=" + role +
+                ", status=" + status +
+                ", grade=" + grade +
+                ", exEx=" + exEx +
+                ", currentLvMaxEx=" + currentLvMaxEx +
+                ", proportion=" + proportion +
+                ", no='" + no + '\'' +
+                '}';
     }
 }

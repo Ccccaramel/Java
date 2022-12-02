@@ -32,7 +32,7 @@ public class GameRoleCommentController extends BaseController {
     public R getGameRoleCommentData(Page page, GameRoleCommentVo gameRoleCommentVo){
         HashMap<String,Object> result=new HashMap<>();
 
-        if(gameRoleCommentVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_2))){
+        if(gameRoleCommentVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_2))){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         List<GameRoleCommentInfo> gameRoleCommentInfoList = gameRoleCommentService.getGameRoleCommentData(page, gameRoleCommentVo,true); // 仅所有楼层
@@ -86,7 +86,7 @@ public class GameRoleCommentController extends BaseController {
     public R getAllGameRoleComment(Page page, GameRoleCommentVo gameRoleCommentVo){
         HashMap<String,Object> result=new HashMap<>();
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_ROLE_1)){
             result.put("data",gameRoleCommentService.getAllGameRoleComment(page, gameRoleCommentVo));
             if(!Objects.equals(page.getSize(),null)){
                 result.put("totalPage",Math.ceil(gameRoleCommentService.getAllGameRoleComment(null,gameRoleCommentVo).size()*1.0/page.getSize()));
@@ -99,7 +99,7 @@ public class GameRoleCommentController extends BaseController {
     @PostMapping("/recoveryGameRoleComment")
     public R recoveryGameRoleComment(@RequestBody GameRoleCommentVo gameRoleCommentVo){
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_ROLE_1)){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
             gameRoleCommentService.update(gameRoleCommentVo);
         }
@@ -110,7 +110,7 @@ public class GameRoleCommentController extends BaseController {
     @PostMapping("/deleteGameRoleComment")
     public R deleteGameRoleComment(@RequestBody GameRoleCommentVo gameRoleCommentVo){
         CurrentUser currentUser = getCurrentUser();
-        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_1)){
+        if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_ROLE_1)){
             gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_3);
             gameRoleCommentService.update(gameRoleCommentVo);
         }

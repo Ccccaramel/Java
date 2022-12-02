@@ -6,6 +6,7 @@ public class UserVo {
     private Integer id;
     /**
      * 用于登录,既可能是id也可能是name(昵称)
+     * 目前只可能是 name
      */
     private String account;
     private String name;
@@ -14,10 +15,20 @@ public class UserVo {
     private Integer status;
     private Integer role;
     private String note;
-    private String no; // 指纹
-    private String fingerprint; // 指纹
+    private String no; // 加密指纹
+    private String fingerprint; // 解密后指纹
     private Integer headPortraitId; // 修改头像
     private LocalDateTime time; // 今日起始时间
+    private String qqOpenId;// qq openId
+    private String qqUnionId;// qq unionId
+
+    public String getQqOpenId() {
+        return qqOpenId;
+    }
+
+    public void setQqOpenId(String qqOpenId) {
+        this.qqOpenId = qqOpenId;
+    }
 
     public String getNo() {
         return no;
@@ -115,6 +126,14 @@ public class UserVo {
         this.headPortraitId = headPortraitId;
     }
 
+    public String getQqUnionId() {
+        return qqUnionId;
+    }
+
+    public void setQqUnionId(String qqUnionId) {
+        this.qqUnionId = qqUnionId;
+    }
+
     @Override
     public String toString() {
         return "UserVo{" +
@@ -130,6 +149,8 @@ public class UserVo {
                 ", fingerprint='" + fingerprint + '\'' +
                 ", headPortraitId=" + headPortraitId +
                 ", time=" + time +
+                ", qqOpenId='" + qqOpenId + '\'' +
+                ", qqUnionId='" + qqUnionId + '\'' +
                 '}';
     }
 }

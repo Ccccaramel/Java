@@ -18,6 +18,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * 星徽之力
+ */
 @RestController
 @RequestMapping("/gadget")
 public class GadgetController extends BaseController {

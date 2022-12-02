@@ -109,4 +109,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public void addEx(Integer userId, int i) {
         baseMapper.addEx(userId,i);
     }
+
+    @Override
+    public User findByQqOpenId(String qqOpenId) {
+        return baseMapper.findByQqOpenId(qqOpenId);
+    }
 }

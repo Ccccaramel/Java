@@ -12,9 +12,11 @@ import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.service.SystemConfigService;
 import com.ding.hyld.service.UserService;
+import com.ding.hyld.service.VisitLogService;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.utils.RsaUtils;
 import com.ding.hyld.vo.Page;
+import com.ding.hyld.vo.QQUserVo;
 import com.ding.hyld.vo.UserVo;
 import com.ding.hyld.vo.VisitLogVo;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +44,33 @@ public class UserController extends BaseController {
     @Autowired
     private SystemConfigService systemConfigService;
 
+    @Autowired
+    private VisitLogService visitLogService;
+    /**
+     * 第三方(注册并)登录
+     * @param userVo
+     * @return
+     */
+    @PostMapping("/qqLogin")
+    public R qqLogin(UserVo userVo, String data,QQUserVo qqUserVo){
+        VisitLogVo visitLogVo = new VisitLogVo();
+        try {
+            visitLogVo = JSON.parseObject(RsaUtils.decryptByPrivateKey(data), VisitLogVo.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return loginService.qqLogin(userVo,visitLogVo, qqUserVo);
+    }
+
     @PostMapping("/login")
-    public R login(UserVo userVo){
-        return loginService.login(userVo, 1, TimeUnit.DAYS);
+    public R login(UserVo userVo, String data){
+        VisitLogVo visitLogVo = new VisitLogVo();
+        try {
+            visitLogVo = JSON.parseObject(RsaUtils.decryptByPrivateKey(data), VisitLogVo.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return loginService.login(userVo, 1, TimeUnit.DAYS,visitLogVo);
     }
 
 

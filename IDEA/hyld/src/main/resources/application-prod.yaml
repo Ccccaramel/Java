@@ -10,7 +10,7 @@ spring:
     password: caramel(txVHlG5vtWXu0AaPRbx30Z8Vp2CPhWmXwes+Zp0rXzFPBAlghzGffg6t29jxJqae)
   web:
     resources:
-      static-locations: classpath:/static/,file:/usr/local/hyld/hyldData/upload
+      static-locations: classpath:/static/,file:/usr/local/hyld/hyldData/upload/
 
 # 数据库映射
 mybatis:
@@ -21,7 +21,7 @@ mybatis:
 resourcespathutils:
   url: /api
   realpath: /usr/local/hyld/hyldData/upload
-  photopathprefix: /upload/photo
-  videopathprefix: /upload/video
-  audiopathprefix: /upload/audio
-  filepathprefix: /upload/file
+  photopathprefix: /photo
+  videopathprefix: /video
+  audiopathprefix: /audio
+  filepathprefix: /file

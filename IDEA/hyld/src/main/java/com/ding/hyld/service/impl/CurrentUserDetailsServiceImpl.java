@@ -31,7 +31,7 @@ public class CurrentUserDetailsServiceImpl implements UserDetailsService {
         // 查询用户信息
         User user = userService.findByName(username);
         if(Objects.isNull(user)){
-            throw  new RuntimeException("用户名或密码有误!");
+            throw new RuntimeException("用户名或密码有误!");
         }
 
         // 获取当前用户权限

@@ -27,7 +27,7 @@ public class PointerController extends BaseController {
      */
     @GetMapping("/searchPointer")
     public R searchPointer(Page page, PointerVo pointerVo){
-        if(!(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
+        if(!(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1))){
             pointerVo.setStatus(DictionaryCode.POINTER_STATUS_1);
         }
         HashMap<String,Object> result=new HashMap<>();

@@ -34,7 +34,7 @@
                 and name like concat('%',#{gearVo.name},'%')
             </if>
         </where>
-        ORDER BY launchTime desc
+        ORDER BY launchTime desc,rarity desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}

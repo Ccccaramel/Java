@@ -1,4 +1,40 @@
-2022/11/22
-整合第三方登录
+-- 2022/11/22
+-- 整合第三方登录
 ALTER TABLE user add qqOpenId VARCHAR(70) COMMENT "qq openId";
 ALTER TABLE user add qqUnionId VARCHAR(70) COMMENT "qq unionId";
+
+-- 2022/12/1
+-- 保存QQ用户的基本信息
+CREATE TABLE qq_user(
+	id INT auto_increment,
+
+	openId VARCHAR(100) COMMENT "当前应用中的唯一标示",
+	unionId VARCHAR(100) COMMENT "区分用户的唯一性，不同应用，unionID相同",
+
+	-- ret INT COMMENT "返回码,0: 正确返回,其它: 失败。错误码说明详见公共返回码说明",
+	-- msg VARCHAR(20) COMMENT "如果ret<0，会有相应的错误信息提示，返回数据全部用UTF-8编码",
+	-- is_lost INT COMMENT "已丢失",
+	nickname VARCHAR(20) COMMENT "qq昵称",
+	gender VARCHAR(20) COMMENT "性别。如果获取不到则默认返回男",
+	gender_type INT COMMENT "性别类型。2：男",
+	province VARCHAR(20) COMMENT "所在省市",
+	city VARCHAR(20) COMMENT "所在城市",
+	year VARCHAR(20) COMMENT "出生年份",
+	constellation VARCHAR(20) COMMENT "星座",
+	figureurl VARCHAR(100) COMMENT "30×30像素QQ空间头像",
+	figureurl_1 VARCHAR(100) COMMENT "50×50像素QQ空间头像",
+	figureurl_2 VARCHAR(100) COMMENT "100×100像素QQ空间头像",
+	figureurl_qq_1 VARCHAR(100) COMMENT "40×40像素QQ头像(一定有)",
+	figureurl_qq_2 VARCHAR(100) COMMENT "100×100像素QQ头像(不一定有)",
+	figureurl_qq VARCHAR(100) COMMENT "头像",
+	figureurl_type VARCHAR(20) COMMENT "头像类型",
+	is_yellow_vip VARCHAR(20) COMMENT "用户是否黄钻",
+	vip VARCHAR(20) COMMENT "vip",
+	yellow_vip_level VARCHAR(20) COMMENT "黄钻等级",
+	level VARCHAR(20) COMMENT "等级",
+	is_yellow_year_vip VARCHAR(20) COMMENT "用户是否年费黄钻",
+
+	createTime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT "数据创建时间",
+	note VARCHAR(100) COMMENT "备注",
+	PRIMARY KEY (id)
+)COMMENT "qq用户基本信息";

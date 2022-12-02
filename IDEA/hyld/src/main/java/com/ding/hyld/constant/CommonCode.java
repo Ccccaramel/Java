@@ -73,6 +73,7 @@ public interface CommonCode {
 
 
             "/user/register",
-            "/user/login"
+            "/user/login",
+            "/user/qqLogin",
     };
 }

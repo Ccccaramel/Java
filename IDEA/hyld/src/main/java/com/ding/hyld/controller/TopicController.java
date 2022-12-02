@@ -36,7 +36,7 @@ public class TopicController extends BaseController {
     @GetMapping("/searchTopic")
     public R searchTopic(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
-        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
+        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1))){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         result.put("data",topicService.searchTopic(page, topicVo));
@@ -74,7 +74,7 @@ public class TopicController extends BaseController {
     public R getTopicReply(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
         CurrentUser currentUser = getCurrentUser();
-        if(topicVo.isManageMyTopic() || currentUser==null || currentUser.getUser().getRole().equals(DictionaryCode.USER_TYPE_2)){
+        if(topicVo.isManageMyTopic() || currentUser==null || currentUser.getUser().getRole().equals(DictionaryCode.USER_ROLE_2)){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
             topicVo.setUserId(getUserId());
             topicVo.setFloor(1);
@@ -102,7 +102,7 @@ public class TopicController extends BaseController {
     public R getTopicData(Page page, TopicVo topicVo){
         HashMap<String,Object> result=new HashMap<>();
 
-        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_TYPE_1))){
+        if(topicVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1))){
             topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         }
         List<TopicInfo> topicInfoList = topicService.getTopicData(page, topicVo,false); // 仅所有楼层
@@ -118,19 +118,22 @@ public class TopicController extends BaseController {
      * @return
      */
     @PostMapping("/saveTopic")
-    public R saveTopic(@RequestParam("topicVoStr")  String topicVoStr,@RequestParam("imageFiles") MultipartFile[] imageFiles){
+    public R saveTopic(@RequestParam("topicVoStr")  String topicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles){
         // 解析
         ObjectMapper objectMapper = new ObjectMapper();
         TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(topicVoStr),TopicVo.class);
 
-        StringBuffer images = new StringBuffer();
-        // 将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
-        for(int i=0;i<imageFiles.length;i++){
-            String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
-            images.append(imageNewName+";");
+        if(imageFiles!=null){
+            StringBuffer images = new StringBuffer();
+            // 将解析整理资源并存储,并返回资源信息
+            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+            for(int i=0;i<imageFiles.length;i++){
+                String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
+                images.append(imageNewName+";");
+            }
+            topicVo.setImages(String.valueOf(images));
         }
-        topicVo.setImages(String.valueOf(images));
+
 
         topicVo.setBelongToFloor(1);
         topicVo.setParentId(-1);
@@ -147,19 +150,24 @@ public class TopicController extends BaseController {
      */
     @PreAuthorize("hasAuthority('replyMe_reply')")
     @PostMapping("/saveReplyTopicInfo")
-    public R saveReplyTopicInfo(@RequestParam("replyTopicVoStr") String replyTopicVoStr,@RequestParam("imageFiles") MultipartFile[] imageFiles){
+    public R saveReplyTopicInfo(@RequestParam("replyTopicVoStr") String replyTopicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles){
         // 解析
         ObjectMapper objectMapper = new ObjectMapper();
         TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(replyTopicVoStr),TopicVo.class);
 
-        StringBuffer images = new StringBuffer();
-        // 将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
-        for(int i=0;i<imageFiles.length;i++){
-            String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
-            images.append(imageNewName+";");
+
+        if(imageFiles!=null){
+            StringBuffer images = new StringBuffer();
+            // 将解析整理资源并存储,并返回资源信息
+            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+            for(int i=0;i<imageFiles.length;i++){
+                String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
+                images.append(imageNewName+";");
+            }
+            topicVo.setImages(String.valueOf(images));
         }
-        topicVo.setImages(String.valueOf(images));
+
+
 
 
 

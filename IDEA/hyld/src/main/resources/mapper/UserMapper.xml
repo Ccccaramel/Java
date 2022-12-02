@@ -12,6 +12,7 @@
         <id column="password" property="password"/>
         <id column="ex" property="ex"/>
         <id column="fingerprint" property="fingerprint"/>
+        <id column="qqOpenId" property="qqOpenId"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
@@ -78,8 +79,8 @@
     </select>
     <!-- 1:管理员 2:普通用户   -->
     <insert id="register">
-        insert into user(name,status,role,password,fingerprint)
-        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint});
+        insert into user(name,status,role,password,fingerprint,qqOpenId,qqUnionId)
+        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint},#{userVo.qqOpenId},#{userVo.qqUnionId});
     </insert>
     <update id="updateUserInfo">
         update user
@@ -114,4 +115,8 @@
         set ex = ex + #{i}
         where id = #{userId}
     </update>
+    <select id="findByQqOpenId" resultMap="resultMap">
+        select * from user
+        where qqOpenId = #{qqOpenId}
+    </select>
 </mapper>

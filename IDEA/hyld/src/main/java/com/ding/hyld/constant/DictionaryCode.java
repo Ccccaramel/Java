@@ -117,11 +117,11 @@ public interface DictionaryCode {
     /**
      * 平台管理员
      */
-    Integer USER_TYPE_1 = 500;
+    Integer USER_ROLE_1 = 1;
     /**
      * 普通用户
      */
-    Integer USER_TYPE_2 = 501;
+    Integer USER_ROLE_2 = 2;
 
     // 用户状态
     /**

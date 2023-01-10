@@ -22,4 +22,6 @@ public interface TeamMapper extends BaseMapper<Team> {
     void update(@Param("teamVo") TeamVo teamVo);
 
     List<TeamInfo> searchTeamInfo(@Param("page") Page page, @Param("teamVo") TeamVo teamVo);
+
+    Integer searchTeamInfoOfPage(@Param("teamVo") TeamVo teamVo);
 }

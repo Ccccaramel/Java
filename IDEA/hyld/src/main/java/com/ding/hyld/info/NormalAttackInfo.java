@@ -81,4 +81,18 @@ public class NormalAttackInfo {
     public void setNormalAttackAttributeInfoList(List<NormalAttackAttributeInfo> normalAttackAttributeInfoList) {
         this.normalAttackAttributeInfoList = normalAttackAttributeInfoList;
     }
+
+    @Override
+    public String toString() {
+        return "NormalAttackInfo{" +
+                "gameRole=" + gameRole +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", normalAttackAttributeInfoList=" + normalAttackAttributeInfoList +
+                '}';
+    }
 }

@@ -28,7 +28,7 @@ public class PlayerController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",playerService.searchPlayerInfo(page,playerVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(playerService.searchPlayerInfo(null,playerVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(playerService.searchPlayerInfoOfPage(playerVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

@@ -27,4 +27,9 @@ public class UpdateLogServiceImpl extends ServiceImpl<UpdateLogMapper, UpdateLog
     public void add(UpdateLogVo updateLogVo) {
         baseMapper.add(updateLogVo);
     }
+
+    @Override
+    public Integer searchUpdateLogOfPage(UpdateLogVo updateLogVo) {
+        return baseMapper.searchUpdateLogOfPage(updateLogVo);
+    }
 }

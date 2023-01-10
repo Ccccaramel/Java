@@ -74,7 +74,7 @@ public class TeamWithPlayerController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",teamWithPlayerService.searchTeamMember(page,teamMemberVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(teamWithPlayerService.searchTeamMember(null,teamMemberVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(teamWithPlayerService.searchTeamMemberOfPage(teamMemberVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

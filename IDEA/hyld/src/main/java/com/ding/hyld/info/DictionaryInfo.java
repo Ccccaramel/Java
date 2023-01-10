@@ -64,4 +64,17 @@ public class DictionaryInfo {
     public void setNote(String note) {
         this.note = note;
     }
+
+    @Override
+    public String toString() {
+        return "DictionaryInfo{" +
+                "add=" + add +
+                ", id=" + id +
+                ", value=" + value +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", typeName='" + typeName + '\'' +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

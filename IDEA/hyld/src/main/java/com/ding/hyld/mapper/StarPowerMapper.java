@@ -19,4 +19,6 @@ public interface StarPowerMapper extends BaseMapper<StarPower> {
     void add(@Param("starPowerVo") StarPowerVo starPowerVo);
 
     List<StarPowerInfo> findPithyInfoByGameRoleId(Integer id);
+
+    Integer searchStarPowerOfPage(@Param("starPowerVo") StarPowerVo starPowerVo);
 }

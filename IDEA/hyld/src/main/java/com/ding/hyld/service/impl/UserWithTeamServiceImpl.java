@@ -115,4 +115,14 @@ public class UserWithTeamServiceImpl extends ServiceImpl<UserWithTeamMapper, Use
         baseMapper.updateTeamCreditScore(userWithTeamVo);
     }
 
+    @Override
+    public Integer searchTeamOfPage(UserWithTeamVo userWithTeamVo) {
+        return baseMapper.searchTeamOfPage(userWithTeamVo);
+    }
+
+    @Override
+    public Integer searchValidTeamInfoOfPage(UserWithTeamVo userWithTeamVo) {
+        return baseMapper.searchValidTeamInfoOfPage(userWithTeamVo);
+    }
+
 }

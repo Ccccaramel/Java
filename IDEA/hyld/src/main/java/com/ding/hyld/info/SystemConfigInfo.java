@@ -88,4 +88,19 @@ public class SystemConfigInfo {
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
     }
+
+    @Override
+    public String toString() {
+        return "SystemConfigInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", k='" + k + '\'' +
+                ", v='" + v + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", updateTime=" + updateTime +
+                ", updateTimeStr='" + updateTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

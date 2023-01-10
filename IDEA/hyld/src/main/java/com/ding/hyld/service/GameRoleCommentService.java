@@ -31,4 +31,8 @@ public interface GameRoleCommentService extends IService<GameRoleComment> {
 
 
     List<GameRoleCommentInfo> getAllGameRoleComment(Page page, GameRoleCommentVo gameRoleCommentVo);
+
+    Integer getGameRoleCommentDataOfPage(GameRoleCommentVo gameRoleCommentVo, boolean onlyFloor);
+
+    Integer getAllGameRoleCommentOfPage(GameRoleCommentVo gameRoleCommentVo);
 }

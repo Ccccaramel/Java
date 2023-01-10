@@ -5,6 +5,7 @@ import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.info.DictionaryInfo;
 import com.ding.hyld.vo.Page;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface DictionaryService extends IService<Dictionary> {
@@ -17,4 +18,6 @@ public interface DictionaryService extends IService<Dictionary> {
     void updateDictionaryInfo(DictionaryInfo dictionaryInfo);
 
     void delete(Integer dictionaryId);
+
+    Integer searchDictionaryOfPage(DictionaryInfo dictionaryInfo);
 }

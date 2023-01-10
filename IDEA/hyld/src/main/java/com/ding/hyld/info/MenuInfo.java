@@ -68,4 +68,16 @@ public class MenuInfo extends Tree {
     public void setHave(boolean have) {
         this.have = have;
     }
+
+    @Override
+    public String toString() {
+        return "MenuInfo{" +
+                "name='" + name + '\'' +
+                ", createTime=" + createTime +
+                ", type=" + type +
+                ", note='" + note + '\'' +
+                ", mark='" + mark + '\'' +
+                ", have=" + have +
+                '}';
+    }
 }

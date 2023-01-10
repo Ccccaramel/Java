@@ -24,4 +24,6 @@ public interface SuperSkillAttributeMapper extends BaseMapper<SuperSkillAttribut
     void delete(@Param("superSkillAttributeVo") SuperSkillAttributeVo superSkillAttributeVo);
 
     List<SuperSkillAttributeInfo> findPithyInfoBySuperSkillId(Integer superSkillId);
+
+    Integer searchSuperSkillAttributeOfPage(@Param("superSkillAttributeVo") SuperSkillAttributeVo superSkillAttributeVo);
 }

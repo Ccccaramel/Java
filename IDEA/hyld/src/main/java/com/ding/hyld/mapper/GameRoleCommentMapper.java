@@ -29,4 +29,8 @@ public interface GameRoleCommentMapper extends BaseMapper<GameRoleComment> {
     List<GameRoleCommentInfo> findChildren(@Param("floor") Integer floor, @Param("status")Integer status,@Param("gameRoleId") Integer gameRoleId);
 
     List<GameRoleCommentInfo> getAllGameRoleComment(@Param("page") Page page, @Param("gameRoleCommentVo") GameRoleCommentVo gameRoleCommentVo);
+
+    Integer getGameRoleCommentDataOfPage(@Param("gameRoleCommentVo") GameRoleCommentVo gameRoleCommentVo, @Param("onlyFloor") boolean onlyFloor);
+
+    Integer getAllGameRoleCommentOfPage(@Param("gameRoleCommentVo") GameRoleCommentVo gameRoleCommentVo);
 }

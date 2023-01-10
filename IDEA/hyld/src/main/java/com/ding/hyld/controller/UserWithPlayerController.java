@@ -17,6 +17,7 @@ import com.ding.hyld.vo.UserWithPlayerVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +42,7 @@ public class UserWithPlayerController extends BaseController {
         userWithPlayerVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         result.put("data",userWithPlayerService.searchRelation(userWithPlayerVo,page));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userWithPlayerService.searchRelation(userWithPlayerVo,null).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userWithPlayerService.searchRelationOfPage(userWithPlayerVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -51,7 +52,7 @@ public class UserWithPlayerController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",userWithPlayerService.searchRelation(userWithPlayerVo,page));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userWithPlayerService.searchRelation(userWithPlayerVo,null).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userWithPlayerService.searchRelationOfPage(userWithPlayerVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -80,11 +81,11 @@ public class UserWithPlayerController extends BaseController {
     public R saveRelationPlayerInfoCheckData(@RequestParam("relationId")Integer relationId,@RequestParam("playerMainPageFile") MultipartFile playerMainPageFile, @RequestParam("playerPreparePageFile") MultipartFile playerPreparePageFile){
         UserWithPlayerInfo userWithPlayerInfo = userWithPlayerService.findById(relationId);
         // 1.删除旧资源
-        if(!userWithPlayerInfo.getPlayerMainPage().isEmpty()){
+        if(StringUtils.hasText(userWithPlayerInfo.getPlayerMainPage())){
             File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithPlayerInfo.getPlayerMainPage());
             oldFile.delete();
         }
-        if(!userWithPlayerInfo.getPlayerPreparePage().isEmpty()){
+        if(StringUtils.hasText(userWithPlayerInfo.getPlayerPreparePage())){
             File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithPlayerInfo.getPlayerPreparePage());
             oldFile.delete();
         }

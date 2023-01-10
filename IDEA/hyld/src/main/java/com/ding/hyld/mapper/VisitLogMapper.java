@@ -18,4 +18,6 @@ public interface VisitLogMapper extends BaseMapper<VisitLog> {
     List<VisitLogInfo> searchVisitLog(@Param("page") Page page, @Param("visitLogVo") VisitLogVo visitLogVo);
 
     void add(@Param("visitLogVo") VisitLogVo visitLogVo);
+
+    Integer searchVisitLogOfPage(@Param("visitLogVo") VisitLogVo visitLogVo);
 }

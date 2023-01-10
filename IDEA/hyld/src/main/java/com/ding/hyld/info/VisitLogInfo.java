@@ -78,4 +78,18 @@ public class VisitLogInfo {
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
     }
+
+    @Override
+    public String toString() {
+        return "VisitLogInfo{" +
+                "id=" + id +
+                ", user=" + user +
+                ", ip='" + ip + '\'' +
+                ", address='" + address + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", trueAddress='" + trueAddress + '\'' +
+                '}';
+    }
 }

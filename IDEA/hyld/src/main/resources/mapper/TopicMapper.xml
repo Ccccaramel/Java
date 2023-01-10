@@ -52,8 +52,8 @@
     <!-- 仅搜话题第一楼 -->
     <select id="searchTopic" resultMap="resultInfoMap">
         select
-            t.*,
-            (select count(*) from topic where topicId = t.id ) as head
+        t.*,
+        (select count(*) from topic where topicId = t.id ) as head
         from topic t
         <where>
             <if test="topicVo.userId != null">
@@ -75,6 +75,26 @@
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
         </if>
+    </select>
+    <select id="searchTopicOfPage" resultType="java.lang.Integer">
+        select
+        count(1)
+        from topic t
+        <where>
+            <if test="topicVo.userId != null">
+                and t.userId = #{topicVo.userId}
+            </if>
+            <if test="topicVo.status != null">
+                and t.status = #{topicVo.status}
+            </if>
+            <if test="topicVo.rubric != null">
+                and t.rubric like concat('%',#{topicVo.rubric},'%')
+            </if>
+            <if test="topicVo.userName != null and topicVo.userName.trim() != ''">
+                and exists (select 1 from user where id=t.userId and name like concat('%',#{topicVo.userName},'%'))
+            </if>
+            and t.parentId = -1
+        </where>
     </select>
     <!-- 仅搜话题第一楼 -->
     <select id="getTopicData" resultMap="resultInfoMap">
@@ -100,6 +120,20 @@
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
         </if>
+    </select>
+    <select id="getTopicDataOfPage" resultType="java.lang.Integer">
+        select count(1) from topic
+        <where>
+            <if test="onlyFloor">
+                and (id = #{topicVo.id} or parentId = #{topicVo.id})
+            </if>
+            <if test="!onlyFloor">
+                and (id = #{topicVo.id} or topicId = #{topicVo.id})
+            </if>
+            <if test="topicVo.status != null">
+                and status = #{topicVo.status}
+            </if>
+        </where>
     </select>
     <insert id="add">
         insert into topic(parentId,userId,rubric,text,floor,status,ip,address,belongToFloor,images)
@@ -180,6 +214,23 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="getTopicReplyOfPage" resultType="java.lang.Integer">
+        select count(1) from topic
+        <where>
+            <if test="topicVo.id!=null">
+                and topicId = #{topicVo.id}
+            </if>
+            <if test="topicVo.status!=null">
+                and status = #{topicVo.status}
+            </if>
+            <if test="topicVo.userId!=null">
+                and userId = #{topicVo.userId}
+            </if>
+            <if test="topicVo.parentId!=null">
+                and parentId = #{topicVo.parentId}
+            </if>
+        </where>
+    </select>
     <select id="searchReplyMe" resultMap="replyMeResultInfoMap">
         select * from topic
         <where>
@@ -196,5 +247,17 @@
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
         </if>
+    </select>
+    <select id="searchReplyMeOfPage" resultType="java.lang.Integer">
+        select count(1) from topic
+        <where>
+
+            <if test="topicVo.status!=null">
+                and status = #{topicVo.status}
+            </if>
+            <if test="topicVo.userId!=null">
+                and parentId in (select id from topic t where t.userId = #{topicVo.userId} )
+            </if>
+        </where>
     </select>
 </mapper>

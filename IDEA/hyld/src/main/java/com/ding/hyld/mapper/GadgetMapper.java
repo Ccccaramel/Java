@@ -19,4 +19,6 @@ public interface GadgetMapper extends BaseMapper<Gadget> {
     void add(@Param("gadgetVo") GadgetVo gadgetVo);
 
     List<GadgetInfo> findPithyInfoByGameRoleId(Integer id);
+
+    Integer searchGadgetOfPage(@Param("gadgetVo") GadgetVo gadgetVo);
 }

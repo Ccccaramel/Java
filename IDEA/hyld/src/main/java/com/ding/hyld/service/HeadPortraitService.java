@@ -19,4 +19,6 @@ public interface HeadPortraitService extends IService<HeadPortrait> {
     void add(HeadPortraitVo headPortraitVo);
 
     void del(HeadPortraitVo headPortraitVo);
+
+    Integer searchHeadPortraitOfPage(HeadPortraitVo headPortraitVo);
 }

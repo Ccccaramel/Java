@@ -2,7 +2,6 @@ package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.utils.CommonUtils;
-import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
@@ -30,6 +29,7 @@ public class UserInfo {
     private Integer currentLvMaxEx;
     private Integer proportion;
     private String no; // 指纹
+    private String email;
 
     public Integer getProportion() {
         return proportion;
@@ -159,6 +159,22 @@ public class UserInfo {
         setProportion(dataMap.get("proportion"));
     }
 
+    public String getNo() {
+        return no;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -178,6 +194,7 @@ public class UserInfo {
                 ", currentLvMaxEx=" + currentLvMaxEx +
                 ", proportion=" + proportion +
                 ", no='" + no + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

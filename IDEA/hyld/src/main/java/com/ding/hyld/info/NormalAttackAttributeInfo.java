@@ -69,4 +69,17 @@ public class NormalAttackAttributeInfo {
     public void setNote(String note) {
         this.note = note;
     }
+
+    @Override
+    public String toString() {
+        return "NormalAttackAttributeInfo{" +
+                "normalAttack=" + normalAttack +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

@@ -24,4 +24,6 @@ public interface HeadPortraitMapper extends BaseMapper<HeadPortrait> {
     HeadPortraitInfo findById(Integer id);
 
     void del(@Param("headPortraitVo") HeadPortraitVo headPortraitVo);
+
+    Integer searchHeadPortraitOfPage(@Param("headPortraitVo") HeadPortraitVo headPortraitVo);
 }

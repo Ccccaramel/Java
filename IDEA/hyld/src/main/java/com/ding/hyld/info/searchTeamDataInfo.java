@@ -28,4 +28,13 @@ public class searchTeamDataInfo {
     public void setTeamCompetitionType(Integer teamCompetitionType) {
         this.teamCompetitionType = teamCompetitionType;
     }
+
+    @Override
+    public String toString() {
+        return "searchTeamDataInfo{" +
+                "teamId=" + teamId +
+                ", settlementTime='" + settlementTime + '\'' +
+                ", teamCompetitionType=" + teamCompetitionType +
+                '}';
+    }
 }

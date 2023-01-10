@@ -5,6 +5,7 @@ import com.ding.hyld.entity.Topic;
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
 import com.ding.hyld.utils.Tree;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class TopicInfo extends Tree {
     }
 
     public void setImages(String images) {
-        if(images!=null && !images.isEmpty()){
+        if(StringUtils.hasText(images)){
             for(String image:images.split(";")){
-                if(!image.isEmpty()){
+                if(StringUtils.hasText(image)){
                     this.images.add(ResourcesPathUtils.getPhotoPath() + image);
                 }
             }
@@ -164,5 +165,27 @@ public class TopicInfo extends Tree {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "TopicInfo{" +
+                "rubric='" + rubric + '\'' +
+                ", text='" + text + '\'' +
+                ", floor=" + floor +
+                ", belongToFloor=" + belongToFloor +
+                ", topicId=" + topicId +
+                ", userInfo=" + userInfo +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", head=" + head +
+                ", replyUser=" + replyUser +
+                ", address='" + address + '\'' +
+                ", images=" + images +
+                ", replyInfo=" + replyInfo +
+                ", parentInfo=" + parentInfo +
+                '}';
     }
 }

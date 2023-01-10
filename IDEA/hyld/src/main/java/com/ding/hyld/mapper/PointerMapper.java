@@ -21,4 +21,6 @@ public interface PointerMapper extends BaseMapper<Pointer> {
     void reply(@Param("pointerVo") PointerVo pointerVo);
 
     void updateStatus(@Param("pointerVo") PointerVo pointerVo);
+
+    Integer searchPointerOfPage(@Param("pointerVo") PointerVo pointerVo);
 }

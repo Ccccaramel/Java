@@ -71,9 +71,14 @@ public interface CommonCode {
 
 //            "/user/getCurrentUserInfo",
 
+            "/emailCode/sendEmailCode",
+            "/emailCode/emailVerify",
 
             "/user/register",
             "/user/login",
             "/user/qqLogin",
+            "/user/updatePassword",
     };
+
+    String FORM_EMAIL = "by164office@163.com"; // 平台发送验证码专用邮箱
 }

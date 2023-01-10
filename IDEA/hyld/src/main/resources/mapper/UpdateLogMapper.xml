@@ -28,6 +28,14 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchUpdateLogOfPage" resultType="java.lang.Integer">
+        select count(1) from update_log
+        <where>
+            <if test="updateLogVo.text != null and updateLogVo.text.trim() != ''">
+                and text like concat('%',#{updateLogVo.text},'%')
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into update_log(text,note)
         values(#{updateLogVo.text},#{updateLogVo.note})

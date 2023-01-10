@@ -23,4 +23,8 @@ public class BaseController {
     protected Integer getUserId(){
         return getCurrentUser().getUser().getId();
     }
+
+    protected String getUserName(){
+        return getCurrentUser().getUser().getName();
+    }
 }

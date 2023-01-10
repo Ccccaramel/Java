@@ -116,4 +116,24 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public List<TopicInfo> searchReplyMe(Page page, TopicVo topicVo) {
         return baseMapper.searchReplyMe(page,topicVo);
     }
+
+    @Override
+    public Integer searchTopicOfPage(TopicVo topicVo) {
+        return baseMapper.searchTopicOfPage(topicVo);
+    }
+
+    @Override
+    public Integer getTopicReplyOfPage(TopicVo topicVo) {
+        return baseMapper.getTopicReplyOfPage(topicVo);
+    }
+
+    @Override
+    public Integer getTopicDataOfPage(TopicVo topicVo, boolean onlyFloor) {
+        return baseMapper.getTopicDataOfPage(topicVo, onlyFloor);
+    }
+
+    @Override
+    public Integer searchReplyMeOfPage(TopicVo topicVo) {
+        return baseMapper.searchReplyMeOfPage(topicVo);
+    }
 }

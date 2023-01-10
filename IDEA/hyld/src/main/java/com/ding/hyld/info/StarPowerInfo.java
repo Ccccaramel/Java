@@ -108,4 +108,21 @@ public class StarPowerInfo {
     public void setLaunchTimeStr(String launchTimeStr) {
         this.launchTimeStr = launchTimeStr;
     }
+
+    @Override
+    public String toString() {
+        return "StarPowerInfo{" +
+                "gameRole=" + gameRole +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", image='" + image + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", launchTime='" + launchTime + '\'' +
+                ", launchTimeStr='" + launchTimeStr + '\'' +
+                '}';
+    }
 }

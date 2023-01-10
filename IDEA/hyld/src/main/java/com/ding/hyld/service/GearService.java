@@ -14,4 +14,6 @@ public interface GearService extends IService<Gear> {
     void update(GearVo gearVo);
 
     void add(GearVo gearVo);
+
+    Integer searchGearOfPage(GearVo gearVo);
 }

@@ -217,4 +217,33 @@ public class TeamMemberCreditInfo {
     public void setSettlementTimeDate(String settlementTimeDate) {
         this.settlementTimeDate = settlementTimeDate;
     }
+
+    @Override
+    public String toString() {
+        return "TeamMemberCreditInfo{" +
+                "creditId=" + creditId +
+                ", scid='" + scid + '\'' +
+                ", playerName='" + playerName + '\'' +
+                ", settlementTime='" + settlementTime + '\'' +
+                ", settlementTimeStr='" + settlementTimeStr + '\'' +
+                ", credit=" + credit +
+                ", creditTypeId=" + creditTypeId +
+                ", creditType=" + creditType +
+                ", note='" + note + '\'' +
+                ", teamName='" + teamName + '\'' +
+                ", teamId=" + teamId +
+                ", teamMemberId=" + teamMemberId +
+                ", teamMemberName='" + teamMemberName + '\'' +
+                ", playerScid='" + playerScid + '\'' +
+                ", averageCreditRank=" + averageCreditRank +
+                ", averageCredit=" + averageCredit +
+                ", matchSettlementTimes=" + matchSettlementTimes +
+                ", restTimes=" + restTimes +
+                ", matchTotalCredit=" + matchTotalCredit +
+                ", exCredit=" + exCredit +
+                ", totalCredit=" + totalCredit +
+                ", playerId=" + playerId +
+                ", settlementTimeDate='" + settlementTimeDate + '\'' +
+                '}';
+    }
 }

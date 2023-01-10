@@ -40,6 +40,14 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchGearOfPage" resultType="java.lang.Integer">
+        select count(1) from gear
+        <where>
+            <if test="gearVo.name != null and gearVo.name.trim() != ''">
+                and name like concat('%',#{gearVo.name},'%')
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into gear(name,details,launchTime,note,oneLevelImg,twoLevelImg,threeLevelImg,rarity)
         values(#{gearVo.name},

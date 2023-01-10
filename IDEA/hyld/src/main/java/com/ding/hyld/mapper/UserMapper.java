@@ -37,4 +37,14 @@ public interface UserMapper extends BaseMapper<User> {
     void addEx(Integer userId, Integer i);
 
     User findByQqOpenId(String qqOpenId);
+
+    User findByEmail(String email);
+
+    void bindEmail(@Param("userVo") UserVo userVo);
+
+    void unbindEmail(Integer userId);
+
+    void updatePassword(@Param("user") User user);
+
+    Integer searchUserOfPage(@Param("userVo") UserVo userVo);
 }

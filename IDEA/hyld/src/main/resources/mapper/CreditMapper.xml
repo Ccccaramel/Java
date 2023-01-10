@@ -113,6 +113,42 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <!--  获取所有队员的积分记录  -->
+    <select id="searchCreditOfPageBy" resultType="java.lang.Integer">
+        select
+        count(1)
+        FROM team_with_player twp
+        join player p on p.id=twp.playerId
+        join team t on t.id=twp.teamId
+        join credit c on c.teamPlayerId=twp.id
+        <where>
+            <if test="creditVo.teamId != null">
+                and t.id = #{creditVo.teamId}
+            </if>
+            <if test="creditVo.uwtId != null">
+                and c.uwtId = #{creditVo.uwtId}
+            </if>
+            <if test="creditVo.playerName != null and creditVo.playerName.trim() != ''">
+                and p.name like concat('%',#{creditVo.playerName},'%')
+            </if>
+            <if test="creditVo.playerScid != null and creditVo.playerScid.trim() != ''">
+                and p.scid like concat('%',#{creditVo.playerScid},'%')
+            </if>
+            <if test="creditVo.teamMemberId != null">
+                and twp.id = #{creditVo.teamMemberId}
+            </if>
+            <if test="creditVo.settlementTime != null and creditVo.settlementTime.trim() != ''">
+                and c.settlementTime = #{creditVo.settlementTime}
+            </if>
+            <if test="creditVo.teamCompetitionTypeId != null">
+                and c.teamCompetitionType = #{creditVo.teamCompetitionTypeId}
+            </if>
+            <if test="creditVo.playerId != null">
+                and twp.playerId = #{creditVo.playerId}
+            </if>
+        </where>
+        ORDER BY c.settlementTime desc
+    </select>
     <update id="saveTeamMemberCredit">
         update credit
         set credit=#{teamMemberCreditVo.credit},

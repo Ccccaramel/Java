@@ -37,6 +37,14 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchHeadPortraitOfPage" resultType="java.lang.Integer">
+        select count(1) from head_portrait
+        <where>
+            <if test="headPortraitVo.name != null and headPortraitVo.name.trim() != ''">
+                and name like concat('%',#{headPortraitVo.name},'%')
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into head_portrait(name,image,note)
         values(#{headPortraitVo.name},#{headPortraitVo.image},#{headPortraitVo.note})

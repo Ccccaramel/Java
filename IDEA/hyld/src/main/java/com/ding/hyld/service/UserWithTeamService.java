@@ -41,4 +41,8 @@ public interface UserWithTeamService extends IService<UserWithTeam> {
     UserWithTeamInfo findById(Integer id);
 
     void updateTeamCreditScore(UserWithTeamVo userWithTeamVo);
+
+    Integer searchTeamOfPage(UserWithTeamVo userWithTeamVo);
+
+    Integer searchValidTeamInfoOfPage(UserWithTeamVo userWithTeamVo);
 }

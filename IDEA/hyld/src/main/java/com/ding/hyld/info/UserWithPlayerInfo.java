@@ -149,4 +149,25 @@ public class UserWithPlayerInfo{
     public void setPlayerPreparePageUrl(String playerPreparePageUrl) {
         this.playerPreparePageUrl = playerPreparePageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "UserWithPlayerInfo{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", user=" + user +
+                ", playerId=" + playerId +
+                ", player=" + player +
+                ", relationStatus=" + relationStatus +
+                ", relation=" + relation +
+                ", note='" + note + '\'' +
+                ", checkStatus=" + checkStatus +
+                ", playerMainPage='" + playerMainPage + '\'' +
+                ", playerMainPageUrl='" + playerMainPageUrl + '\'' +
+                ", playerPreparePage='" + playerPreparePage + '\'' +
+                ", playerPreparePageUrl='" + playerPreparePageUrl + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                '}';
+    }
 }

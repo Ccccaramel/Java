@@ -70,4 +70,17 @@ public class PlayerInfo {
     public void setPlayerType(Dictionary playerType) {
         this.playerType = playerType;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerInfo{" +
+                "id=" + id +
+                ", scid='" + scid + '\'' +
+                ", name='" + name + '\'' +
+                ", note='" + note + '\'' +
+                ", type='" + type + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", playerType=" + playerType +
+                '}';
+    }
 }

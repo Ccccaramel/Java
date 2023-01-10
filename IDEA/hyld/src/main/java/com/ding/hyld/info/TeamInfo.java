@@ -86,4 +86,19 @@ public class TeamInfo {
     public void setType(Dictionary type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "TeamInfo{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", note='" + note + '\'' +
+                ", name='" + name + '\'' +
+                ", scid='" + scid + '\'' +
+                ", status=" + status +
+                ", eliminationLine=" + eliminationLine +
+                ", excellentLine=" + excellentLine +
+                ", type=" + type +
+                '}';
+    }
 }

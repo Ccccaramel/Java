@@ -32,4 +32,9 @@ public class NormalAttackAttributeServiceImpl extends ServiceImpl<NormalAttackAt
     public void delete(NormalAttackAttributeVo normalAttackAttributeVo) {
         baseMapper.delete(normalAttackAttributeVo);
     }
+
+    @Override
+    public Integer searchNormalAttackAttributeOfPage(NormalAttackAttributeVo normalAttackAttributeVo) {
+        return baseMapper.searchNormalAttackAttributeOfPage(normalAttackAttributeVo);
+    }
 }

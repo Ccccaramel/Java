@@ -31,7 +31,7 @@ public class NormalAttackController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",normalAttackService.searchNormalAttack(page, normalAttackVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(normalAttackService.searchNormalAttack(null,normalAttackVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(normalAttackService.searchNormalAttackOfPage(normalAttackVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

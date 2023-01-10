@@ -77,6 +77,48 @@
                 limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchTeamOfPage" resultType="java.lang.Integer">
+        select
+        count(1)
+        from user_with_team uwt
+        join team t on t.id = uwt.teamId
+        join user u on u.id = uwt.userId
+        <where>
+            <if test="userWithTeamVo.id != null">
+                and uwt.id = #{userWithTeamVo.id}
+            </if>
+            <if test="userWithTeamVo.teamType != null">
+                and t.type = #{userWithTeamVo.teamType}
+            </if>
+            <if test="userWithTeamVo.teamScid != null and userWithTeamVo.teamScid.trim()!=''">
+                and t.scid like concat('%',#{userWithTeamVo.teamScid},'%')
+            </if>
+            <if test="userWithTeamVo.teamId != null">
+                and uwt.teamId = #{userWithTeamVo.teamId}
+            </if>
+            <if test="userWithTeamVo.teamName != null and userWithTeamVo.teamName.trim()!=''">
+                and t.name like concat('%',#{userWithTeamVo.teamName},'%')
+            </if>
+            <if test="userWithTeamVo.userId != null">
+                and u.id = #{userWithTeamVo.userId}
+            </if>
+            <if test="userWithTeamVo.userName != null and userWithTeamVo.userName.trim()!=''">
+                and u.name like concat('%',#{userWithTeamVo.userName},'%')
+            </if>
+            <if test="userWithTeamVo.relationStatus!=null">
+                and uwt.relationStatus = #{userWithTeamVo.relationStatus}
+            </if>
+            <if test="userWithTeamVo.userWithTeamStatus!=null">
+                and t.status = #{userWithTeamVo.userWithTeamStatus}
+            </if>
+            <if test="userWithTeamVo.checkStatus!=null">
+                and uwt.checkStatus = #{userWithTeamVo.checkStatus}
+            </if>
+            <if test="userWithTeamVo.playerPosition!=null">
+                and uwt.playerPosition = #{userWithTeamVo.playerPosition}
+            </if>
+        </where>
+    </select>
     <resultMap id="ResultMap" type="com.ding.hyld.entity.UserWithTeam">
         <id column="id" property="id"/>
 
@@ -177,6 +219,20 @@
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchValidTeamInfoOfPage" resultType="java.lang.Integer">
+        select count(1)
+        from user_with_team
+        where relationStatus = #{userWithTeamVo.relationStatus}
+        and checkStatus = #{userWithTeamVo.checkStatus}
+        and playerPosition = #{userWithTeamVo.playerPosition}
+        and creditScore = #{userWithTeamVo.creditScore}
+        <if test="userWithTeamVo.teamName!=null and userWithTeamVo.teamName.trim()!=''">
+            and exists (select 1 from team t where t.name like concat('%', #{userWithTeamVo.teamName},'%') and t.id = teamId)
+        </if>
+        <if test="userWithTeamVo.teamScid!=null and userWithTeamVo.teamScid.trim()!=''">
+            and exists (select 1 from team t where t.scid like concat('%', #{userWithTeamVo.teamScid},'%') and t.id = teamId)
         </if>
     </select>
     <select id="playerFindTeamBy" resultMap="resultInfoMap">

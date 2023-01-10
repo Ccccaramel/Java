@@ -19,4 +19,6 @@ public interface SystemConfigService extends IService<SystemConfig> {
     void add(SystemConfigVo systemConfigVo);
 
     SystemConfigInfo findByKey(String key);
+
+    Integer searchSystemConfigOfPage(SystemConfigVo systemConfigVo);
 }

@@ -25,7 +25,7 @@ public class SuperSkillController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",superSkillService.searchSuperSkill(page, superSkillVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(superSkillService.searchSuperSkill(null,superSkillVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(superSkillService.searchSuperSkillOfPage(superSkillVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

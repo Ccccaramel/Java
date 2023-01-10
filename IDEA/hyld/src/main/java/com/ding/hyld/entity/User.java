@@ -15,6 +15,7 @@ public class User extends BaseObject {
     private String fingerprint; // 指纹
     private String qqOpenId;
     private String qqUnionId;
+    private String email;
 
 
     public String getFingerprint() {
@@ -95,5 +96,13 @@ public class User extends BaseObject {
 
     public void setQqUnionId(String qqUnionId) {
         this.qqUnionId = qqUnionId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

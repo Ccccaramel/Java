@@ -12,10 +12,12 @@ import com.ding.hyld.service.VisitLogService;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UpdateLogVo;
 import com.ding.hyld.vo.VisitLogVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> implements VisitLogService {
     @Override
@@ -25,6 +27,12 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
 
     @Override
     public void add(VisitLogVo visitLogVo) {
+        log.info("visitLogVo:"+visitLogVo.toString());
         baseMapper.add(visitLogVo);
+    }
+
+    @Override
+    public Integer searchVisitLogOfPage(VisitLogVo visitLogVo) {
+        return baseMapper.searchVisitLogOfPage(visitLogVo);
     }
 }

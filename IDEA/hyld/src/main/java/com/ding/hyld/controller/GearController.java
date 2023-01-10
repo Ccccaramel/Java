@@ -11,6 +11,7 @@ import com.ding.hyld.vo.GearVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,7 @@ public class GearController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data", gearService.searchGear(page, gearVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(gearService.searchGear(null,gearVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(gearService.searchGearOfPage(gearVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -48,7 +49,7 @@ public class GearController extends BaseController {
         ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
         if(oneLevelImg!=null){
             // 1.删除旧资源
-            if(!gearVo.getOneLevelImg().isEmpty()){
+            if(StringUtils.hasText(gearVo.getOneLevelImg())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getOneLevelImg());
                 oldFile.delete();
             }
@@ -58,7 +59,7 @@ public class GearController extends BaseController {
         }
         if(twoLevelImg!=null){
             // 1.删除旧资源
-            if(!gearVo.getTwoLevelImg().isEmpty()){
+            if(StringUtils.hasText(gearVo.getTwoLevelImg())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getTwoLevelImg());
                 oldFile.delete();
             }
@@ -68,7 +69,7 @@ public class GearController extends BaseController {
         }
         if(threeLevelImg!=null){
             // 1.删除旧资源
-            if(!gearVo.getThreeLevelImg().isEmpty()){
+            if(StringUtils.hasText(gearVo.getThreeLevelImg())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getThreeLevelImg());
                 oldFile.delete();
             }

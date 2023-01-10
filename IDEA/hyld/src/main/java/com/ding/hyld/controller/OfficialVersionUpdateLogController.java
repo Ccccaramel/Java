@@ -25,7 +25,7 @@ public class OfficialVersionUpdateLogController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",officialVersionUpdateLogService.searchOfficialVersionUpdateLog(page, officialVersionUpdateLogVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(officialVersionUpdateLogService.searchOfficialVersionUpdateLog(null,officialVersionUpdateLogVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(officialVersionUpdateLogService.searchOfficialVersionUpdateLogOfPage(officialVersionUpdateLogVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

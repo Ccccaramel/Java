@@ -22,4 +22,6 @@ public interface OfficialVersionUpdateLogMapper extends BaseMapper<OfficialVersi
     void add(@Param("officialVersionUpdateLogVo") OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
 
     void delete(@Param("officialVersionUpdateLogVo") OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
+
+    Integer searchOfficialVersionUpdateLogOfPage(@Param("officialVersionUpdateLogVo") OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
 }

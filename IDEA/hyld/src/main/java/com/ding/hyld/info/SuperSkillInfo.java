@@ -80,4 +80,18 @@ public class SuperSkillInfo {
     public void setSuperSkillAttributeInfoList(List<SuperSkillAttributeInfo> superSkillAttributeInfoList) {
         this.superSkillAttributeInfoList = superSkillAttributeInfoList;
     }
+
+    @Override
+    public String toString() {
+        return "SuperSkillInfo{" +
+                "gameRole=" + gameRole +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", superSkillAttributeInfoList=" + superSkillAttributeInfoList +
+                '}';
+    }
 }

@@ -57,4 +57,9 @@ public class UserWithPlayerServiceImpl extends ServiceImpl<UserWithPlayerMapper,
         return baseMapper.findById(id);
     }
 
+    @Override
+    public Integer searchRelationOfPage(UserWithPlayerVo userWithPlayerVo) {
+        return baseMapper.searchRelationOfPage(userWithPlayerVo);
+    }
+
 }

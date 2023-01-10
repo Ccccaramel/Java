@@ -23,4 +23,6 @@ public interface UserWithPlayerService extends IService<UserWithPlayer> {
     void updateCheckInfo(UserWithPlayerVo userWithPlayerVo);
 
     UserWithPlayerInfo findById(Integer id);
+
+    Integer searchRelationOfPage(UserWithPlayerVo userWithPlayerVo);
 }

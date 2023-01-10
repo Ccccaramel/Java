@@ -62,4 +62,14 @@ public class GameRoleCommentServiceImpl extends ServiceImpl<GameRoleCommentMappe
     public List<GameRoleCommentInfo> getAllGameRoleComment(Page page, GameRoleCommentVo gameRoleCommentVo) {
         return baseMapper.getAllGameRoleComment(page,gameRoleCommentVo);
     }
+
+    @Override
+    public Integer getGameRoleCommentDataOfPage(GameRoleCommentVo gameRoleCommentVo, boolean onlyFloor) {
+        return baseMapper.getGameRoleCommentDataOfPage(gameRoleCommentVo, onlyFloor);
+    }
+
+    @Override
+    public Integer getAllGameRoleCommentOfPage(GameRoleCommentVo gameRoleCommentVo) {
+        return baseMapper.getAllGameRoleCommentOfPage(gameRoleCommentVo);
+    }
 }

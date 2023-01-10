@@ -17,6 +17,7 @@ import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -221,7 +222,7 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setUserWithTeamStatus(DictionaryCode.TEAM_STATUS_1);
         result.put("data",userWithTeamService.searchTeam(page, userWithTeamVo));
         if(!Objects.equals(page.getSize(),null)) {
-            result.put("totalPage", Math.ceil(userWithTeamService.searchTeam(null, userWithTeamVo).size() * 1.0 / page.getSize()));
+            result.put("totalPage", Math.ceil(userWithTeamService.searchTeamOfPage(userWithTeamVo) * 1.0 / page.getSize()));
         }
         return R.success(result);
     }
@@ -230,11 +231,11 @@ public class UserWithTeamController extends BaseController {
     public R saveTeamCheckData(@RequestParam("relationId")Integer relationId, @RequestParam("controllerPreparePageFile") MultipartFile controllerPreparePageFile, @RequestParam("teamMainPageFile") MultipartFile teamMainPageFile){
         UserWithTeamInfo userWithTeamInfo = userWithTeamService.findById(relationId);
         // 1.删除旧资源
-        if(!userWithTeamInfo.getControllerPreparePage().isEmpty()){
+        if(StringUtils.hasText(userWithTeamInfo.getControllerPreparePage())){
             File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getControllerPreparePage());
             oldFile.delete();
         }
-        if(!userWithTeamInfo.getTeamMainPage().isEmpty()){
+        if(StringUtils.hasText(userWithTeamInfo.getTeamMainPage())){
             File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getTeamMainPage());
             oldFile.delete();
         }
@@ -255,7 +256,7 @@ public class UserWithTeamController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",userWithTeamService.searchTeam(page,userWithTeamVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userWithTeamService.searchTeam(null,userWithTeamVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userWithTeamService.searchTeamOfPage(userWithTeamVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -275,7 +276,7 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
-        if(userWithTeamService.searchTeam(null,userWithTeamVo).size()==0){ // 查看该用户与该战队是否关联且验证通过
+        if(userWithTeamService.searchTeamOfPage(userWithTeamVo)==0){ // 查看该用户与该战队是否关联且验证通过
             return R.fail("非法请求!");
         }
         HashMap<String,Object> result=new HashMap<>();
@@ -284,7 +285,7 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_2);
         result.put("data",userWithTeamService.searchTeam(page,userWithTeamVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userWithTeamService.searchTeam(null,userWithTeamVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userWithTeamService.searchTeamOfPage(userWithTeamVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -302,12 +303,12 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
-        if(userWithTeamService.searchTeam(null,userWithTeamVo).size()==0){ // 查看该用户与该战队的关系(队长,关联中,验证通过)
+        if(userWithTeamService.searchTeamOfPage(userWithTeamVo)==0){ // 查看该用户与该战队的关系(队长,关联中,验证通过)
             return R.fail("非法请求!");
         }
         userWithTeamVo.setUserId(viceCaptainUserId);
         userWithTeamVo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_2);
-        if(userWithTeamService.searchTeam(null,userWithTeamVo).size()>0){ // 是否重复关联,查看该用户与该战队的关系(副队队长,关联中,验证通过)
+        if(userWithTeamService.searchTeamOfPage(userWithTeamVo)>0){ // 是否重复关联,查看该用户与该战队的关系(副队队长,关联中,验证通过)
             return R.fail("该用户已是副队长!请勿重复添加!");
         }
         userWithTeamService.addViceCaptain(userWithTeamVo);
@@ -323,7 +324,7 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setCreditScore(100);
         result.put("data",userWithTeamService.searchValidTeamInfo(page,userWithTeamVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userWithTeamService.searchValidTeamInfo(null,userWithTeamVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userWithTeamService.searchValidTeamInfoOfPage(userWithTeamVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

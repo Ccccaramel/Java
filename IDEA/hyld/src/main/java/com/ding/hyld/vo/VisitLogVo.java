@@ -14,6 +14,15 @@ public class VisitLogVo {
     private String endDate;
 
     private LocalDateTime time;
+    private boolean all;
+
+    public boolean isAll() {
+        return all;
+    }
+
+    public void setAll(boolean all) {
+        this.all = all;
+    }
 
     public LocalDateTime getTime() {
         return time;

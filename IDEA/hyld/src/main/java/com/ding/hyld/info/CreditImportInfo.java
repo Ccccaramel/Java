@@ -19,4 +19,12 @@ public class CreditImportInfo {
     public void setTeamCompetitionTypeId(Integer teamCompetitionTypeId) {
         this.teamCompetitionTypeId = teamCompetitionTypeId;
     }
+
+    @Override
+    public String toString() {
+        return "CreditImportInfo{" +
+                "teamId=" + teamId +
+                ", teamCompetitionTypeId=" + teamCompetitionTypeId +
+                '}';
+    }
 }

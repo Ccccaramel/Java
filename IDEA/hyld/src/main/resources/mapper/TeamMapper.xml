@@ -77,4 +77,22 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchTeamInfoOfPage" resultType="java.lang.Integer">
+        select count(1) from team
+        <where>
+            <if test="teamVo.name != null and teamVo.name.trim()!=''">
+                and name like concat('%',#{teamVo.name},'%')
+            </if>
+            <if test="teamVo.scid != null and teamVo.scid.trim()!=''">
+                and scid like concat('%',#{teamVo.scid},'%')
+            </if>
+            <if test="teamVo.status != null">
+                and status = #{teamVo.status}
+            </if>
+            <if test="teamVo.type != null">
+                and type = #{teamVo.type}
+            </if>
+        </where>
+        ORDER BY id
+    </select>
 </mapper>

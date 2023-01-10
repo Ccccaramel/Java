@@ -32,4 +32,9 @@ public class StarPowerServiceImpl extends ServiceImpl<StarPowerMapper, StarPower
     public void add(StarPowerVo starPowerVo) {
         baseMapper.add(starPowerVo);
     }
+
+    @Override
+    public Integer searchStarPowerOfPage(StarPowerVo starPowerVo) {
+        return baseMapper.searchStarPowerOfPage(starPowerVo);
+    }
 }

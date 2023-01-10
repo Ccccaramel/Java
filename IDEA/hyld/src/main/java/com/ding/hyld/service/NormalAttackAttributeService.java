@@ -19,4 +19,6 @@ public interface NormalAttackAttributeService extends IService<NormalAttackAttri
     void add(NormalAttackAttributeVo normalAttackAttributeVo);
 
     void delete(NormalAttackAttributeVo normalAttackAttributeVo);
+
+    Integer searchNormalAttackAttributeOfPage(NormalAttackAttributeVo normalAttackAttributeVo);
 }

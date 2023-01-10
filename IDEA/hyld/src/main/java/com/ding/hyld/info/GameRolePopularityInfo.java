@@ -100,4 +100,19 @@ public class GameRolePopularityInfo {
         this.note = note;
     }
 
+    @Override
+    public String toString() {
+        return "GameRolePopularityInfo{" +
+                "gameRole=" + gameRole +
+                ", gameRoleId=" + gameRoleId +
+                ", type=" + type +
+                ", user=" + user +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", total=" + total +
+                ", proportion=" + proportion +
+                '}';
+    }
 }

@@ -117,4 +117,22 @@ public class GadgetInfo {
     public void setDuraMax(Integer duraMax) {
         this.duraMax = duraMax;
     }
+
+    @Override
+    public String toString() {
+        return "GadgetInfo{" +
+                "gameRole=" + gameRole +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", image='" + image + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", launchTime='" + launchTime + '\'' +
+                ", launchTimeStr='" + launchTimeStr + '\'' +
+                ", duraMax=" + duraMax +
+                '}';
+    }
 }

@@ -125,7 +125,7 @@ public class DictionaryController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",dictionaryService.searchDictionary(page, dictionaryInfo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(dictionaryService.searchDictionary(null,dictionaryInfo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(dictionaryService.searchDictionaryOfPage(dictionaryInfo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

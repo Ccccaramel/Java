@@ -40,4 +40,12 @@ public interface TopicService extends IService<Topic> {
     List<TopicInfo> getTopicReply(Page page, TopicVo topicVo);
 
     List<TopicInfo> searchReplyMe(Page page, TopicVo topicVo);
+
+    Integer searchTopicOfPage(TopicVo topicVo);
+
+    Integer getTopicReplyOfPage(TopicVo topicVo);
+
+    Integer getTopicDataOfPage(TopicVo topicVo, boolean onlyFloor);
+
+    Integer searchReplyMeOfPage(TopicVo topicVo);
 }

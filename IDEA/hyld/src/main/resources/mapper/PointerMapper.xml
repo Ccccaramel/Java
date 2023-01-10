@@ -39,6 +39,14 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchPointerOfPage" resultType="java.lang.Integer">
+        select count(1) from pointer
+        <where>
+            <if test="pointerVo.status != null">
+                and status = #{pointerVo.status}
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into pointer(text,ip,address,userId,status)
         values(#{pointerVo.text},#{pointerVo.ip},#{pointerVo.address},#{pointerVo.userId},#{pointerVo.status})

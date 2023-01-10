@@ -4,12 +4,24 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.MailMessage;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 
 @SpringBootTest
 class HyldApplicationTests {
+
+    /**
+     * 由于数据库账号信息已被加密
+     * 在测试时编辑配置!
+     */
 
     @Autowired
     private StringEncryptor stringEncryptor;
@@ -70,6 +82,54 @@ class HyldApplicationTests {
 //        System.out.println("云 password 加密："+cloudPasswordEnc);
 //        String cloudPasswordDec = stringEncryptor.decrypt(cloudPasswordEnc);
 //        System.out.println("云 password 解密："+cloudPasswordDec);
+//    }
+
+//    @Autowired(required = false)
+//    private JavaMailSender javaMailSender; // 引入Spring Mail依赖后，会自动装配到IOC容器。用来发送邮件
+//    @Autowired(required = false)
+//    private MailProperties mailProperties;
+//
+//    @Test
+//    public void test1() {
+//        String code = "6760"; // 验证码
+//
+//        String from = "by164office@163.com";
+//        String to = "444543565@qq.com";
+//        String title = "【164office】用户邮箱验证";
+//        String userName = "麦克";
+//        String html = "<html>\n" +
+//                "\t<body>\n" +
+//                "\t\t<br>\n" +
+//                "\t\t<h1>以下是您的验证码：</h1>\n" +
+//                "\t\t<h2 style=\"color: #66ccff;\">&emsp;"+code+"</h2>\n" +
+//                "\t\t<hr/>\n" +
+//                "\t\t<h3>尊敬的用户"+userName+"，您好：</h3>\n" +
+//                "\t\t<h3>&emsp;我们（164office.cn-荒野社区平台）收到了来自您的绑定邮箱请求，请使用上面的验证码验证您的账号归属。</h3>\n" +
+//                "\t\t<h3>&emsp;该验证码将在1分钟后过期，请及时输入。</h3>\n" +
+//                "\t\t<br>\n" +
+//                "\t\t<h3>&emsp;为保证账号安全，请勿泄漏此验证码。</h3>\n" +
+//                "\t\t<h3>&emsp;祝在【164office】收获愉快！</h3>\n" +
+//                "\t\t<h3>&emsp;(〃￣︶￣)人(￣︶￣〃)</h3>\n" +
+//                "\t\t<hr/>\t\n" +
+//                "\t\t<h3>如果您有任何疑问请<a href='https://www.164office.cn'>访问平台</a>留言询问</h3>\n" +
+//                "\t</body>\n" +
+//                "</html>";
+//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//        MimeMessageHelper mimeMessageHelper = null;
+//        try {
+//            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//            // 邮件发送来源
+//            mimeMessageHelper.setFrom(from);
+//            // 邮件发送目标
+//            mimeMessageHelper.setTo(to);
+//            // 设置标题
+//            mimeMessageHelper.setSubject(title);
+//            // 设置内容，并设置内容 html 格式为 true
+//            mimeMessageHelper.setText(html, true);
+//            javaMailSender.send(mimeMessage);
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
 //    }
 
 }

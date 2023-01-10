@@ -151,4 +151,25 @@ public class GearInfo {
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
     }
+
+    @Override
+    public String toString() {
+        return "GearInfo{" +
+                "id=" + id +
+                ", note='" + note + '\'' +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", oneLevelImg='" + oneLevelImg + '\'' +
+                ", oneLevelImgUrl='" + oneLevelImgUrl + '\'' +
+                ", twoLevelImg='" + twoLevelImg + '\'' +
+                ", twoLevelImgUrl='" + twoLevelImgUrl + '\'' +
+                ", threeLevelImg='" + threeLevelImg + '\'' +
+                ", threeLevelImgUrl='" + threeLevelImgUrl + '\'' +
+                ", launchTime='" + launchTime + '\'' +
+                ", launchTimeStr='" + launchTimeStr + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", rarity=" + rarity +
+                '}';
+    }
 }

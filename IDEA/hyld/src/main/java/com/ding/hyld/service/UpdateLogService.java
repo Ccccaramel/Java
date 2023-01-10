@@ -14,4 +14,6 @@ public interface UpdateLogService extends IService<UpdateLog> {
     void update(UpdateLogVo updateLogVo);
 
     void add(UpdateLogVo updateLogVo);
+
+    Integer searchUpdateLogOfPage(UpdateLogVo updateLogVo);
 }

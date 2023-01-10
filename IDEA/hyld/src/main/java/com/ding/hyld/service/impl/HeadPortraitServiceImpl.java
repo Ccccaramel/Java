@@ -32,4 +32,9 @@ public class HeadPortraitServiceImpl extends ServiceImpl<HeadPortraitMapper,Head
     public void del(HeadPortraitVo headPortraitVo) {
         baseMapper.del(headPortraitVo);
     }
+
+    @Override
+    public Integer searchHeadPortraitOfPage(HeadPortraitVo headPortraitVo) {
+        return baseMapper.searchHeadPortraitOfPage(headPortraitVo);
+    }
 }

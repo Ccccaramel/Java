@@ -38,3 +38,32 @@ CREATE TABLE qq_user(
 	note VARCHAR(100) COMMENT "备注",
 	PRIMARY KEY (id)
 )COMMENT "qq用户基本信息";
+
+-- 2022/12/3
+-- ip字段长度太短,没有考虑IPV6的长度 2409:894c:c3a:7f2f:95d3:199:8d34:57ac
+-- 涉及的表 topic pointer game_role_comment visit_log
+ALTER TABLE topic MODIFY ip VARCHAR(64) COMMENT "ip";
+ALTER TABLE pointer MODIFY ip VARCHAR(64) COMMENT "ip";
+ALTER TABLE game_role_comment MODIFY ip VARCHAR(64) COMMENT "ip";
+ALTER TABLE visit_log MODIFY ip VARCHAR(64) COMMENT "ip";
+
+-- 2022/12/9
+ALTER TABLE user add email VARCHAR(40) COMMENT "邮箱";
+-- 邮箱验证信息
+create table email_code(
+	id INT auto_increment,
+
+	ip VARCHAR(20) COMMENT "ip",
+	userId INT COMMENT "用户id",
+	address VARCHAR(20) COMMENT "地址",
+	code VARCHAR(10) COMMENT "验证码",
+	email VARCHAR(40) COMMENT "目标邮箱",
+	subject VARCHAR(40) COMMENT "邮件标题",
+	text VARCHAR(4000) COMMENT "邮件内容",
+	fingerprint VARCHAR(40) COMMENT "设备指纹",
+
+	createTime DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT "数据创建时间",
+	note VARCHAR(100) COMMENT "备注",
+	PRIMARY KEY (id),
+	FOREIGN KEY (userId) REFERENCES user(id)
+)COMMENT "邮箱验证信息";

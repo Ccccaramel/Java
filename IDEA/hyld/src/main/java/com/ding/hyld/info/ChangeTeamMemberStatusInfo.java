@@ -40,4 +40,14 @@ public class ChangeTeamMemberStatusInfo {
     public void setTime(LocalDateTime time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "ChangeTeamMemberStatusInfo{" +
+                "teamMemberId=" + teamMemberId +
+                ", teamMemberStatusId=" + teamMemberStatusId +
+                ", note='" + note + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

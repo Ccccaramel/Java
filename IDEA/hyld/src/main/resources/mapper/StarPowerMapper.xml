@@ -48,6 +48,17 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchStarPowerOfPage" resultType="java.lang.Integer">
+        select count(1) from star_power
+        <where>
+            <if test="starPowerVo.name != null and starPowerVo.name.trim() != ''">
+                and name like concat('%',#{starPowerVo.name},'%')
+            </if>
+            <if test="starPowerVo.gameRoleName != null and starPowerVo.gameRoleName.trim() != ''">
+                and exists (select 1 from game_role gr where gr.name like concat('%',#{starPowerVo.gameRoleName},'%') and gameRole = gr.id )
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into star_power(gameRole,name,details,launchTime,note,image)
         values(#{starPowerVo.gameRole},#{starPowerVo.name},#{starPowerVo.details},#{starPowerVo.launchTime},#{starPowerVo.note},#{starPowerVo.image})

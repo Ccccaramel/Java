@@ -37,4 +37,9 @@ public class OfficialVersionUpdateLogServiceImpl extends ServiceImpl<OfficialVer
     public void delete(OfficialVersionUpdateLogVo officialVersionUpdateLogVo) {
         baseMapper.delete(officialVersionUpdateLogVo);
     }
+
+    @Override
+    public Integer searchOfficialVersionUpdateLogOfPage(OfficialVersionUpdateLogVo officialVersionUpdateLogVo) {
+        return baseMapper.searchOfficialVersionUpdateLogOfPage(officialVersionUpdateLogVo);
+    }
 }

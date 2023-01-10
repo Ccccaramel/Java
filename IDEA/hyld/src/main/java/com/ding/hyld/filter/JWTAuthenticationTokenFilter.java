@@ -30,6 +30,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean isAsyncStarted(HttpServletRequest request) {
+        logger.info(" >>> JWTAuthenticationTokenFilter : isAsyncStarted()");
         return super.isAsyncStarted(request);
     }
 
@@ -60,7 +61,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 解析,从 redis 中获取用户信息
         CurrentUser currentUser= loginService.checkToken(token);
-         if(Objects.isNull(currentUser)){
+        if(Objects.isNull(currentUser)){
             response.setContentType("text/html; charset=UTF-8");
             response.getWriter().println(JSON.toJSONString(R.fail("token 非法,请先登录!")));
             return;

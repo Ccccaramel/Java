@@ -35,7 +35,7 @@ public class VisitLogController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",visitLogService.searchVisitLog(page, visitLogVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(visitLogService.searchVisitLog(null,visitLogVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(visitLogService.searchVisitLogOfPage(visitLogVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -54,14 +54,14 @@ public class VisitLogController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         UserVo userVo = new UserVo();
         userVo.setTime(TimeUtils.getFirstDayOfTheMonth());
-        result.put("numberOfRegistrantsInThisMonth",userService.searchUser(null, userVo).size());
+        result.put("numberOfRegistrantsInThisMonth",userService.searchUserOfPage( userVo));
         VisitLogVo visitLogVo = new VisitLogVo();
-        visitLogVo.setTime(TimeUtils.getFirstDayOfTheMonth());
-        visitLogVo.setNote("登录");
-        result.put("numberOfLoginInThisMonth",visitLogService.searchVisitLog(null, visitLogVo).size());
         visitLogVo.setNote("访问首页");
-        result.put("numberOfVisitInThisMonth",visitLogService.searchVisitLog(null, visitLogVo).size());
-        result.put("totalVisits",visitLogService.searchVisitLog(null, new VisitLogVo()).size());
+        result.put("totalVisits",visitLogService.searchVisitLogOfPage( new VisitLogVo()));
+        visitLogVo.setStartDate(TimeUtils.getFirstDayOfTheMonthStr());
+        result.put("numberOfVisitInThisMonth",visitLogService.searchVisitLogOfPage( visitLogVo));
+        visitLogVo.setNote("登录");
+        result.put("numberOfLoginInThisMonth",visitLogService.searchVisitLogOfPage( visitLogVo));
         return R.success(result);
     }
 

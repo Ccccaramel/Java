@@ -60,4 +60,16 @@ public class RoleInfo {
     public void setPower(String power) {
         this.power = power;
     }
+
+    @Override
+    public String toString() {
+        return "RoleInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", power='" + power + '\'' +
+                '}';
+    }
 }

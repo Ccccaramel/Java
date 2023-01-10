@@ -15,4 +15,6 @@ public interface VisitLogService extends IService<VisitLog> {
     List<VisitLogInfo> searchVisitLog(Page page, VisitLogVo visitLogVo);
 
     void add(VisitLogVo visitLogVo);
+
+    Integer searchVisitLogOfPage(VisitLogVo visitLogVo);
 }

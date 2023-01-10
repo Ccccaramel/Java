@@ -17,14 +17,17 @@ public class main {
         /**
          * Calendar 自定义时间与格式化
          */
-        // 本月第一天
+        // //默认是当前日期
         Calendar calendar = Calendar.getInstance();
 //        calendar.set(2022,3,1,0,0,0);
-        calendar.add(Calendar.MONTH, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.MONTH, 1); // 以当前时间进行计算
+        calendar.add(Calendar.DAY_OF_MONTH, 1); // 以当前时间进行计算
+//        calendar.add(Calendar.MONTH, 1); // 一个月后
+//        calendar.add(Calendar.MONTH, -1); // 一个月前
+//        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0); // 设置为指定值
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Calendar 获取本月第一天的时间:" + calendar.getTime());
         System.out.println("Calendar 获取本月第一天的时间(Str):" + format.format(calendar.getTime()));

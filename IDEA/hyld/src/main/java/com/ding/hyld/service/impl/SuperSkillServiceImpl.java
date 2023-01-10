@@ -37,4 +37,9 @@ public class SuperSkillServiceImpl extends ServiceImpl<SuperSkillMapper, SuperSk
     public void delete(SuperSkillVo superSkillVo) {
         baseMapper.delete(superSkillVo);
     }
+
+    @Override
+    public Integer searchSuperSkillOfPage(SuperSkillVo superSkillVo) {
+        return baseMapper.searchSuperSkillOfPage(superSkillVo);
+    }
 }

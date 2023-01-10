@@ -12,6 +12,7 @@ public class PointerVo {
     private Integer userId;
     private Integer status;
     private LocalDateTime replyTime;
+    private boolean show;
 
     public Integer getId() {
         return id;
@@ -83,5 +84,13 @@ public class PointerVo {
 
     public void setReplyTime(LocalDateTime replyTime) {
         this.replyTime = replyTime;
+    }
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
     }
 }

@@ -27,13 +27,13 @@ public class PointerController extends BaseController {
      */
     @GetMapping("/searchPointer")
     public R searchPointer(Page page, PointerVo pointerVo){
-        if(!(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1))){
+        if(pointerVo.isShow() || !(isLogin() && getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1))){
             pointerVo.setStatus(DictionaryCode.POINTER_STATUS_1);
         }
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",pointerService.searchPointer(page, pointerVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(pointerService.searchPointer(null,pointerVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(pointerService.searchPointerOfPage(pointerVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

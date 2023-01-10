@@ -19,4 +19,6 @@ public interface PointerService extends IService<Pointer> {
     void reply(PointerVo pointerVo);
 
     void updateStatus(PointerVo pointerVo);
+
+    Integer searchPointerOfPage(PointerVo pointerVo);
 }

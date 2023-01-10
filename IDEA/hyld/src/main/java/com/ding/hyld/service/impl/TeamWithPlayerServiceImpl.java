@@ -40,4 +40,9 @@ public class TeamWithPlayerServiceImpl extends ServiceImpl<TeamWithPlayerMapper,
     public List<TeamMemberCreditInfo> getAllValidTeamMember(CreditImportVo creditImportVo, Integer teamMemberStatusId) {
         return baseMapper.getAllValidTeamMember(creditImportVo,teamMemberStatusId);
     }
+
+    @Override
+    public Integer searchTeamMemberOfPage(TeamMemberVo teamMemberVo) {
+        return baseMapper.searchTeamMemberOfPage(teamMemberVo);
+    }
 }

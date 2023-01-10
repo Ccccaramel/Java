@@ -28,4 +28,13 @@ public class SearchTeamMemberScoreboardInfo {
     public void setTeamCompetitionTypeId(Integer teamCompetitionTypeId) {
         this.teamCompetitionTypeId = teamCompetitionTypeId;
     }
+
+    @Override
+    public String toString() {
+        return "SearchTeamMemberScoreboardInfo{" +
+                "uwtId=" + uwtId +
+                ", teamId=" + teamId +
+                ", teamCompetitionTypeId=" + teamCompetitionTypeId +
+                '}';
+    }
 }

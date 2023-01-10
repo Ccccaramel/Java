@@ -144,4 +144,25 @@ public class TeamMemberInfo {
     public void setTeamMemberStatusId(Integer teamMemberStatusId) {
         this.teamMemberStatusId = teamMemberStatusId;
     }
+
+    @Override
+    public String toString() {
+        return "TeamMemberInfo{" +
+                "playerId=" + playerId +
+                ", teamMemberId=" + teamMemberId +
+                ", scid='" + scid + '\'' +
+                ", name='" + name + '\'' +
+                ", joinTime='" + joinTime + '\'' +
+                ", joinWay='" + joinWay + '\'' +
+                ", status='" + status + '\'' +
+                ", statusId=" + statusId +
+                ", leaveTime='" + leaveTime + '\'' +
+                ", note='" + note + '\'' +
+                ", teamScid='" + teamScid + '\'' +
+                ", teamId=" + teamId +
+                ", teamMemberStatusId=" + teamMemberStatusId +
+                ", time=" + time +
+                ", type=" + type +
+                '}';
+    }
 }

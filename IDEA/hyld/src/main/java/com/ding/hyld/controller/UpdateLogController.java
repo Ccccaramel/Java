@@ -23,7 +23,7 @@ public class UpdateLogController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",updateLogService.searchUpdateLog(page, updateLogVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(updateLogService.searchUpdateLog(null,updateLogVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(updateLogService.searchUpdateLogOfPage(updateLogVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

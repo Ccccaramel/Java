@@ -17,4 +17,6 @@ public interface GadgetService extends IService<Gadget> {
     void update(GadgetVo gadgetVo);
 
     void add(GadgetVo gadgetVo);
+
+    Integer searchGadgetOfPage(GadgetVo gadgetVo);
 }

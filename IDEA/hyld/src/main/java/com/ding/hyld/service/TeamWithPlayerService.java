@@ -26,4 +26,6 @@ public interface TeamWithPlayerService extends IService<TeamWithPlayer> {
     TeamWithPlayer findTeamMember(TeamMemberVo teamMemberVo);
 
     List<TeamMemberCreditInfo> getAllValidTeamMember(CreditImportVo creditImportVo, Integer teamMemberStatusId);
+
+    Integer searchTeamMemberOfPage(TeamMemberVo teamMemberVo);
 }

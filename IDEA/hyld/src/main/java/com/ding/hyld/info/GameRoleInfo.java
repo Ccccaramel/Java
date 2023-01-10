@@ -32,7 +32,7 @@ public class GameRoleInfo {
     private String note;
 
     private NormalAttackInfo normalAttackInfo; // 普通攻击
-    private SuperSkillInfo superSkillInfo; // 超级技能
+    private List<SuperSkillInfo> superSkillInfo; // 超级技能
     private List<GadgetInfo> gadgetInfoList; // 随身妙具
     private List<StarPowerInfo> starPowerInfoList; // 星徽之力
 
@@ -224,11 +224,11 @@ public class GameRoleInfo {
         this.normalAttackInfo = normalAttackInfo;
     }
 
-    public SuperSkillInfo getSuperSkillInfo() {
+    public List<SuperSkillInfo> getSuperSkillInfo() {
         return superSkillInfo;
     }
 
-    public void setSuperSkillInfo(SuperSkillInfo superSkillInfo) {
+    public void setSuperSkillInfo(List<SuperSkillInfo> superSkillInfo) {
         this.superSkillInfo = superSkillInfo;
     }
 
@@ -246,5 +246,37 @@ public class GameRoleInfo {
 
     public void setStarPowerInfoList(List<StarPowerInfo> starPowerInfoList) {
         this.starPowerInfoList = starPowerInfoList;
+    }
+
+    @Override
+    public String toString() {
+        return "GameRoleInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", headImg='" + headImg + '\'' +
+                ", portrait='" + portrait + '\'' +
+                ", headImgUrl='" + headImgUrl + '\'' +
+                ", portraitUrl='" + portraitUrl + '\'' +
+                ", rarity=" + rarity +
+                ", position=" + position +
+                ", profile='" + profile + '\'' +
+                ", launchTime='" + launchTime + '\'' +
+                ", launchTimeStr='" + launchTimeStr + '\'' +
+                ", hp='" + hp + '\'' +
+                ", speed='" + speed + '\'' +
+                ", inborn='" + inborn + '\'' +
+                ", basicForm=" + basicForm +
+                ", secondaryForm=" + secondaryForm +
+                ", sequence=" + sequence +
+                ", popular=" + popular +
+                ", unpopular=" + unpopular +
+                ", createTime='" + createTime + '\'' +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", normalAttackInfo=" + normalAttackInfo +
+                ", superSkillInfo=" + superSkillInfo +
+                ", gadgetInfoList=" + gadgetInfoList +
+                ", starPowerInfoList=" + starPowerInfoList +
+                '}';
     }
 }

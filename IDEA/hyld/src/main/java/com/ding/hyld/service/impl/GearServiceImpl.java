@@ -27,4 +27,9 @@ public class GearServiceImpl extends ServiceImpl<GearMapper, Gear> implements Ge
     public void add(GearVo gearVo) {
         baseMapper.add(gearVo);
     }
+
+    @Override
+    public Integer searchGearOfPage(GearVo gearVo) {
+        return baseMapper.searchGearOfPage(gearVo);
+    }
 }

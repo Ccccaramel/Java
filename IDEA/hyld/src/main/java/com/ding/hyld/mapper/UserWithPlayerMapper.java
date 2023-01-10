@@ -26,4 +26,6 @@ public interface UserWithPlayerMapper extends BaseMapper<UserWithPlayer> {
     void updateCheckInfo(@Param("userWithPlayerVo") UserWithPlayerVo userWithPlayerVo);
 
     UserWithPlayerInfo findById(Integer id);
+
+    Integer searchRelationOfPage(@Param("userWithPlayerVo") UserWithPlayerVo userWithPlayerVo);
 }

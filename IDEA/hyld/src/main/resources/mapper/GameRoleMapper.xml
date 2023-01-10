@@ -78,6 +78,20 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchGameRoleOfPage" resultType="java.lang.Integer">
+        select count(1) from game_role
+        <where>
+            <if test="gameRoleVo.name != null and gameRoleVo.name.trim() != ''">
+                and name like concat('%',#{gameRoleVo.name},'%')
+            </if>
+            <if test="gameRoleVo.rarity != null">
+                and rarity = #{gameRoleVo.rarity}
+            </if>
+            <if test="gameRoleVo.basic">
+                and basicForm = -1
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into game_role(name,headImg,portrait,rarity,position,profile,launchTime,hp,speed,inborn,basicForm,sequence,note)
         values(#{gameRoleVo.name},

@@ -43,4 +43,9 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
     public void delete(Integer dictionaryId) {
         baseMapper.deleteById(dictionaryId);
     }
+
+    @Override
+    public Integer searchDictionaryOfPage(DictionaryInfo dictionaryInfo) {
+        return baseMapper.searchDictionaryOfPage(dictionaryInfo);
+    }
 }

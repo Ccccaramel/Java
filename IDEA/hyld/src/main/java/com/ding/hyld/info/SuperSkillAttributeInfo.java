@@ -69,4 +69,17 @@ public class SuperSkillAttributeInfo {
     public void setNote(String note) {
         this.note = note;
     }
+
+    @Override
+    public String toString() {
+        return "SuperSkillAttributeInfo{" +
+                "superSkill=" + superSkill +
+                ", name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

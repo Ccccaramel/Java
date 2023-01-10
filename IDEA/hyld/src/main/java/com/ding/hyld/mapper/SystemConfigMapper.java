@@ -22,4 +22,6 @@ public interface SystemConfigMapper extends BaseMapper<SystemConfig> {
     void add(@Param("systemConfigVo") SystemConfigVo systemConfigVo);
 
     SystemConfigInfo findByKey(String key);
+
+    Integer searchSystemConfigOfPage(@Param("systemConfigVo") SystemConfigVo systemConfigVo);
 }

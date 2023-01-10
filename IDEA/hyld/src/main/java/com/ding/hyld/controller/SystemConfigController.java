@@ -26,7 +26,7 @@ public class SystemConfigController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data", systemConfigService.searchSystemConfig(page, systemConfigVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(systemConfigService.searchSystemConfig(null,systemConfigVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(systemConfigService.searchSystemConfigOfPage(systemConfigVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

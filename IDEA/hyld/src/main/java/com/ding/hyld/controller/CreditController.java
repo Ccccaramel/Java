@@ -39,7 +39,7 @@ public class CreditController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",creditService.searchCreditBy(page,creditVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(creditService.searchCreditBy(null,creditVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(creditService.searchCreditOfPageBy(creditVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

@@ -24,4 +24,6 @@ public interface NormalAttackAttributeMapper extends BaseMapper<NormalAttackAttr
     void delete(@Param("normalAttackAttributeVo") NormalAttackAttributeVo normalAttackAttributeVo);
 
     List<NormalAttackAttributeInfo> findPithyInfoByNormalAttackId(Integer normalAttackId);
+
+    Integer searchNormalAttackAttributeOfPage(@Param("normalAttackAttributeVo") NormalAttackAttributeVo normalAttackAttributeVo);
 }

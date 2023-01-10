@@ -25,7 +25,7 @@ public class NormalAttackAttributeController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",normalAttackAttributeService.searchNormalAttackAttribute(page, normalAttackAttributeVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(normalAttackAttributeService.searchNormalAttackAttribute(null,normalAttackAttributeVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(normalAttackAttributeService.searchNormalAttackAttributeOfPage(normalAttackAttributeVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

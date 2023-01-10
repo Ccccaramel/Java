@@ -37,4 +37,9 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
     public SystemConfigInfo findByKey(String key) {
         return baseMapper.findByKey(key);
     }
+
+    @Override
+    public Integer searchSystemConfigOfPage(SystemConfigVo systemConfigVo) {
+        return baseMapper.searchSystemConfigOfPage(systemConfigVo);
+    }
 }

@@ -19,4 +19,6 @@ public interface SuperSkillService extends IService<SuperSkill> {
     void add(SuperSkillVo superSkillVo);
 
     void delete(SuperSkillVo superSkillVo);
+
+    Integer searchSuperSkillOfPage(SuperSkillVo superSkillVo);
 }

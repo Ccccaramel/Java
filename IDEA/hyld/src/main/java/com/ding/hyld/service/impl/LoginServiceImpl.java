@@ -88,7 +88,7 @@ public class LoginServiceImpl implements LoginService {
             DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             searchVo.setStartDate(dateTimeFormatter.format(localDateTime.withHour(0).withMinute(0).withSecond(0)));
             searchVo.setIp(visitLogVo.getIp());
-            searchVo.setNote("登录失败");
+            searchVo.setNote("登录失败-用户名或密码错误");
             if(visitLogService.searchVisitLog(null,searchVo).size()>=3){
                 visitLogVo.setUserId(userInfo.getId());
                 visitLogVo.setNote("登录限制-登录失败次数已达3次");
@@ -205,6 +205,8 @@ public class LoginServiceImpl implements LoginService {
             qqUserService.qqUserInfoRecord(qqUserVo);// 保存用户的QQ账号基本信息
             user=userService.findByQqOpenId(userVo.getQqOpenId()); // 重新获取该用户信息
         }
+
+        visitLogVo.setUserId(user.getId());
 
         /**
          * 登录

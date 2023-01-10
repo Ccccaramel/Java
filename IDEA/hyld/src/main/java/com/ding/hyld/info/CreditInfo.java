@@ -218,4 +218,33 @@ public class CreditInfo {
     public void setTeamCompetitionType(Dictionary teamCompetitionType) {
         this.teamCompetitionType = teamCompetitionType;
     }
+
+    @Override
+    public String toString() {
+        return "CreditInfo{" +
+                "creditId=" + creditId +
+                ", credit=" + credit +
+                ", teamId=" + teamId +
+                ", teamMemberId=" + teamMemberId +
+                ", teamMemberName='" + teamMemberName + '\'' +
+                ", playerScid='" + playerScid + '\'' +
+                ", playerName='" + playerName + '\'' +
+                ", averageCreditRank=" + averageCreditRank +
+                ", averageCredit=" + averageCredit +
+                ", matchSettlementTimes=" + matchSettlementTimes +
+                ", restTimes=" + restTimes +
+                ", matchTotalCredit=" + matchTotalCredit +
+                ", exCredit=" + exCredit +
+                ", totalCredit=" + totalCredit +
+                ", settlementTime='" + settlementTime + '\'' +
+                ", playerId=" + playerId +
+                ", settlementTimeDate='" + settlementTimeDate + '\'' +
+                ", settlementTimeStr='" + settlementTimeStr + '\'' +
+                ", creditTypeId=" + creditTypeId +
+                ", creditType=" + creditType +
+                ", note='" + note + '\'' +
+                ", teamName='" + teamName + '\'' +
+                ", teamCompetitionType=" + teamCompetitionType +
+                '}';
+    }
 }

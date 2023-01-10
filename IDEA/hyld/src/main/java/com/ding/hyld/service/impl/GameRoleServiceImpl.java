@@ -47,4 +47,9 @@ public class GameRoleServiceImpl extends ServiceImpl<GameRoleMapper, GameRole> i
     public GameRoleInfo searchGameRoleInfoById(GameRoleVo gameRoleVo) {
         return baseMapper.searchGameRoleInfoById(gameRoleVo);
     }
+
+    @Override
+    public Integer searchGameRoleOfPage(GameRoleVo gameRoleVo) {
+        return baseMapper.searchGameRoleOfPage(gameRoleVo);
+    }
 }

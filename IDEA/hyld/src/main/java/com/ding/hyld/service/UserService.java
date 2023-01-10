@@ -33,4 +33,14 @@ public interface UserService extends IService<User> {
     void addEx(Integer userId, int i);
 
     User findByQqOpenId(String qqOpenId);
+
+    User findByEmail(String email);
+
+    R bindEmail(UserVo userVo);
+
+    void unbindEmail(Integer userId);
+
+    void updatePassword(User user);
+
+    Integer searchUserOfPage(UserVo userVo);
 }

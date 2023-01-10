@@ -33,4 +33,12 @@ public interface TopicMapper extends BaseMapper<Topic> {
     List<TopicInfo> getTopicReply(@Param("page") Page page, @Param("topicVo") TopicVo topicVo);
 
     List<TopicInfo> searchReplyMe(@Param("page") Page page, @Param("topicVo") TopicVo topicVo);
+
+    Integer searchTopicOfPage(@Param("topicVo") TopicVo topicVo);
+
+    Integer getTopicReplyOfPage(@Param("topicVo") TopicVo topicVo);
+
+    Integer getTopicDataOfPage(@Param("topicVo") TopicVo topicVo, @Param("onlyFloor") boolean onlyFloor);
+
+    Integer searchReplyMeOfPage(@Param("topicVo") TopicVo topicVo);
 }

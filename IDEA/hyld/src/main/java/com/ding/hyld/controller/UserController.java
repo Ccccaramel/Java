@@ -22,10 +22,13 @@ import com.ding.hyld.vo.VisitLogVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +49,10 @@ public class UserController extends BaseController {
 
     @Autowired
     private VisitLogService visitLogService;
+
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+
     /**
      * 第三方(注册并)登录
      * @param userVo
@@ -139,7 +146,7 @@ public class UserController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",userService.searchUser(page, userVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(userService.searchUser(null,userVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(userService.searchUserOfPage(userVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -177,5 +184,43 @@ public class UserController extends BaseController {
         userVo.setId(getUserId());
         userService.saveHeadPortrait(userVo);
         return R.success("已成功更换头像!");
+    }
+
+    /**
+     * 绑定邮箱
+     *   在一分钟之内,绑定后解绑再使用同一验证码绑定是允许的,没有限制,暂时没有想到这样会有什么问题
+     * @param userVo
+     * @return
+     */
+    @PostMapping("/bindEmail")
+    public R bindEmail(@RequestBody UserVo userVo){
+        userVo.setId(getUserId());
+        return userService.bindEmail(userVo);
+    }
+
+    @PostMapping("/unbindEmail")
+    public R unbindEmail(){
+        userService.unbindEmail(getUserId());
+        return R.success("已成功解绑邮箱!");
+    }
+
+    @PostMapping("/updatePassword")
+    public R updatePassword(@RequestBody UserVo userVo) {
+//        baseMapper.unbindEmail(userId);
+        String emailToken = userVo.getEmailToken();
+        if(StringUtils.hasText(emailToken) && Boolean.TRUE.equals(redisTemplate.hasKey("emailToken_" + emailToken))){ // emailToken 存在
+            User user=JSON.parseObject(redisTemplate.opsForValue().get("emailToken_" + emailToken),User.class);
+            try {
+                if(user==null){
+                    return R.fail("系统错误,请重新进行验证操作!");
+                }
+                user.setPassword(new BCryptPasswordEncoder().encode(RsaUtils.decryptByPrivateKey(userVo.getPassword()) + CommonCode.SLAT));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            userService.updatePassword(user);
+            return R.success("密码修改成功!");
+        }
+        return R.fail("密码修改失败!");
     }
 }

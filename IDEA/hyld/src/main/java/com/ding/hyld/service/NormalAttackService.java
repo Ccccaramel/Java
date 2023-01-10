@@ -19,4 +19,6 @@ public interface NormalAttackService extends IService<NormalAttack> {
     void add(NormalAttackVo normalAttackVo);
 
     void delete(NormalAttackVo normalAttackVo);
+
+    Integer searchNormalAttackOfPage(NormalAttackVo normalAttackVo);
 }

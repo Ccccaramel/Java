@@ -32,4 +32,9 @@ public class GadgetServiceImpl extends ServiceImpl<GadgetMapper, Gadget> impleme
     public void add(GadgetVo gadgetVo) {
         baseMapper.add(gadgetVo);
     }
+
+    @Override
+    public Integer searchGadgetOfPage(GadgetVo gadgetVo) {
+        return baseMapper.searchGadgetOfPage(gadgetVo);
+    }
 }

@@ -27,4 +27,6 @@ public interface SuperSkillMapper extends BaseMapper<SuperSkill> {
 
 
     SuperSkillInfo findPithyInfoByGameRoleId(Integer id);
+
+    Integer searchSuperSkillOfPage(@Param("superSkillVo") SuperSkillVo superSkillVo);
 }

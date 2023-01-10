@@ -14,6 +14,7 @@ import com.ding.hyld.vo.UpdateLogVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,7 @@ public class StarPowerController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",starPowerService.searchStarPower(page, starPowerVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(starPowerService.searchStarPower(null,starPowerVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(starPowerService.searchStarPowerOfPage(starPowerVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -49,7 +50,7 @@ public class StarPowerController extends BaseController {
         ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
         if(image!=null){
             // 1.删除旧资源
-            if(!starPowerVo.getImage().isEmpty()){
+            if(StringUtils.hasText(starPowerVo.getImage())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+starPowerVo.getImage());
                 oldFile.delete();
             }

@@ -10,6 +10,7 @@ import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.TeamMemberCreditVo;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface CreditService extends IService<Credit> {
@@ -26,4 +27,6 @@ public interface CreditService extends IService<Credit> {
     List<LocalDateTime> getSettlementTimeList(Integer uwtId);
 
     List<CreditInfo> getTeamData(Integer uwtId, Integer teamCompetitionType);
+
+    Integer searchCreditOfPageBy(CreditVo creditVo);
 }

@@ -20,4 +20,6 @@ public interface GameRoleService extends IService<GameRole> {
     List<GameRoleInfo> getBasicForm(GameRoleVo gameRoleVo);
 
     GameRoleInfo searchGameRoleInfoById(GameRoleVo gameRoleVo);
+
+    Integer searchGameRoleOfPage(GameRoleVo gameRoleVo);
 }

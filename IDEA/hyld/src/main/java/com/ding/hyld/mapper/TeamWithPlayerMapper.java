@@ -21,4 +21,6 @@ public interface TeamWithPlayerMapper extends BaseMapper<TeamWithPlayer> {
     TeamWithPlayer findTeamMember(@Param("teamMemberVo")TeamMemberVo teamMemberVo);
 
     List<TeamMemberCreditInfo> getAllValidTeamMember(@Param("creditImportVo") CreditImportVo creditImportVo, Integer teamMemberStatusId);
+
+    Integer searchTeamMemberOfPage(@Param("teamMemberVo") TeamMemberVo teamMemberVo);
 }

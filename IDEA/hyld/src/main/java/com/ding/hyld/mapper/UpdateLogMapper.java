@@ -17,4 +17,6 @@ public interface UpdateLogMapper extends BaseMapper<UpdateLog> {
     void update(@Param("updateLogVo") UpdateLogVo updateLogVo);
 
     void add(@Param("updateLogVo") UpdateLogVo updateLogVo);
+
+    Integer searchUpdateLogOfPage(@Param("updateLogVo") UpdateLogVo updateLogVo);
 }

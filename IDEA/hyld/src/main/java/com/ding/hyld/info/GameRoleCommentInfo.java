@@ -118,4 +118,22 @@ public class GameRoleCommentInfo extends Tree {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "GameRoleCommentInfo{" +
+                "text='" + text + '\'' +
+                ", floor=" + floor +
+                ", userInfo=" + userInfo +
+                ", gameRoleInfo=" + gameRoleInfo +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", replyUser=" + replyUser +
+                ", address='" + address + '\'' +
+                ", belongToFloor=" + belongToFloor +
+                ", replyInfo=" + replyInfo +
+                '}';
+    }
 }

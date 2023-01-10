@@ -1,5 +1,6 @@
 package com.ding.hyld;
 
+import com.ding.hyld.utils.SpringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

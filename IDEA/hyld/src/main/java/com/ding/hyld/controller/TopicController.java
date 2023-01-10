@@ -41,7 +41,7 @@ public class TopicController extends BaseController {
         }
         result.put("data",topicService.searchTopic(page, topicVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(topicService.searchTopic(null,topicVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(topicService.searchTopicOfPage(topicVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -59,7 +59,7 @@ public class TopicController extends BaseController {
         topicVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         result.put("data",topicService.searchTopic(page, topicVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(topicService.searchTopic(null,topicVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(topicService.searchTopicOfPage(topicVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -87,7 +87,7 @@ public class TopicController extends BaseController {
         }
         result.put("data",topicService.getTopicReply(page, topicVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(topicService.getTopicReply(null,topicVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(topicService.getTopicReplyOfPage(topicVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -108,7 +108,7 @@ public class TopicController extends BaseController {
         List<TopicInfo> topicInfoList = topicService.getTopicData(page, topicVo,false); // 仅所有楼层
         result.put("data",topicInfoList);
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(topicService.getTopicData(null,topicVo,true).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(topicService.getTopicDataOfPage(topicVo,true)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -233,7 +233,7 @@ public class TopicController extends BaseController {
         List<TopicInfo> topicInfoList = topicService.searchReplyMe(page, topicVo); // 仅所有楼层
         result.put("data",topicInfoList);
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(topicService.searchReplyMe(null,topicVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(topicService.searchReplyMeOfPage(topicVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }

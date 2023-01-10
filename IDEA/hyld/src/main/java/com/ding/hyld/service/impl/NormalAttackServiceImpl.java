@@ -37,4 +37,9 @@ public class NormalAttackServiceImpl extends ServiceImpl<NormalAttackMapper, Nor
     public void delete(NormalAttackVo normalAttackVo) {
         baseMapper.delete(normalAttackVo);
     }
+
+    @Override
+    public Integer searchNormalAttackOfPage(NormalAttackVo normalAttackVo) {
+        return baseMapper.searchNormalAttackOfPage(normalAttackVo);
+    }
 }

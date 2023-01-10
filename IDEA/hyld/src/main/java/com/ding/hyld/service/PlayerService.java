@@ -24,4 +24,6 @@ public interface PlayerService extends IService<Player> {
     void updatePlayer(PlayerVo playerVo);
 
     PlayerInfo findBy(PlayerVo playerVo);
+
+    Integer searchPlayerInfoOfPage(PlayerVo playerVo);
 }

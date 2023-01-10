@@ -17,4 +17,6 @@ public interface StarPowerService extends IService<StarPower> {
     void update(StarPowerVo starPowerVo);
 
     void add(StarPowerVo starPowerVo);
+
+    Integer searchStarPowerOfPage(StarPowerVo starPowerVo);
 }

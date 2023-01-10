@@ -3,6 +3,7 @@ package com.ding.hyld.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ding.hyld.entity.base.BaseObject;
 import com.ding.hyld.utils.ResourcesPathUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class Topic extends BaseObject {
     }
 
     public void setImages(String images) {
-        if(images!=null && !images.isEmpty()){
+        if(StringUtils.hasText(images)){
             for(String image:images.split(";")){
-                if(!image.isEmpty()){
+                if(StringUtils.hasText(image)){
                     this.images.add(ResourcesPathUtils.getPhotoPath() + image);
                 }
             }

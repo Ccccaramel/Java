@@ -27,4 +27,6 @@ public interface GameRoleMapper extends BaseMapper<GameRole> {
     GameRoleInfo searchGameRoleInfoById(@Param("gameRoleVo") GameRoleVo gameRoleVo);
 
     GameRoleInfo findSecondaryFormById(Integer id);
+
+    Integer searchGameRoleOfPage(@Param("gameRoleVo") GameRoleVo gameRoleVo);
 }

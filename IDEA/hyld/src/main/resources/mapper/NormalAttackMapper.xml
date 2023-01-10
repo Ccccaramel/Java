@@ -40,6 +40,14 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchNormalAttackOfPage" resultType="java.lang.Integer">
+        select count(1) from normal_attack
+        <where>
+            <if test="normalAttackVo.gameRoleId != null">
+                and gameRole = #{normalAttackVo.gameRoleId}
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into normal_attack(gameRole,name,details,note)
         values(#{normalAttackVo.gameRoleId},#{normalAttackVo.name},#{normalAttackVo.details},#{normalAttackVo.note})

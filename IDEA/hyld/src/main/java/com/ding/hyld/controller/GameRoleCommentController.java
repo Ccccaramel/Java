@@ -38,7 +38,7 @@ public class GameRoleCommentController extends BaseController {
         List<GameRoleCommentInfo> gameRoleCommentInfoList = gameRoleCommentService.getGameRoleCommentData(page, gameRoleCommentVo,true); // 仅所有楼层
         result.put("data",gameRoleCommentInfoList);
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(gameRoleCommentService.getGameRoleCommentData(null,gameRoleCommentVo,true).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(gameRoleCommentService.getGameRoleCommentDataOfPage(gameRoleCommentVo,true)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -89,7 +89,7 @@ public class GameRoleCommentController extends BaseController {
         if( currentUser!=null && currentUser.getUser().getRole().equals(DictionaryCode.USER_ROLE_1)){
             result.put("data",gameRoleCommentService.getAllGameRoleComment(page, gameRoleCommentVo));
             if(!Objects.equals(page.getSize(),null)){
-                result.put("totalPage",Math.ceil(gameRoleCommentService.getAllGameRoleComment(null,gameRoleCommentVo).size()*1.0/page.getSize()));
+                result.put("totalPage",Math.ceil(gameRoleCommentService.getAllGameRoleCommentOfPage(gameRoleCommentVo)*1.0/page.getSize()));
             }
         }
         return R.success(result);

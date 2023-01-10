@@ -27,4 +27,6 @@ public interface CreditMapper extends BaseMapper<Credit> {
     List<LocalDateTime> getSettlementTimeList(Integer uwtId);
 
     List<CreditInfo> getTeamData(Integer uwtId, Integer teamCompetitionType);
+
+    Integer searchCreditOfPageBy(@Param("creditVo") CreditVo creditVo);
 }

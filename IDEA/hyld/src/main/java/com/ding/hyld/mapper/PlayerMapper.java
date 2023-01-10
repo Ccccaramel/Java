@@ -35,4 +35,6 @@ public interface PlayerMapper extends BaseMapper<Player> {
      * @param playerVo
      */
     void updatePlayer(@Param("playerVo") PlayerVo playerVo);
+
+    Integer searchPlayerInfoOfPage(@Param("playerVo") PlayerVo playerVo);
 }

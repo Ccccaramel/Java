@@ -35,6 +35,17 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchOfficialVersionUpdateLogOfPage" resultType="java.lang.Integer">
+        select count(1) from official_version_update_log
+        <where>
+            <if test="officialVersionUpdateLogVo.details != null and officialVersionUpdateLogVo.details.trim() != ''">
+                and details like concat('%',#{officialVersionUpdateLogVo.details},'%')
+            </if>
+            <if test="officialVersionUpdateLogVo.text != null and officialVersionUpdateLogVo.text.trim() != ''">
+                and (name like concat('%',#{officialVersionUpdateLogVo.text},'%') or details like concat('%',#{officialVersionUpdateLogVo.text},'%'))
+            </if>
+        </where>
+    </select>
     <insert id="add">
         insert into official_version_update_log(name,updateTime,details,note)
         values(#{officialVersionUpdateLogVo.name},

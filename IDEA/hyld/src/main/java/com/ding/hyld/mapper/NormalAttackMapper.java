@@ -26,4 +26,6 @@ public interface NormalAttackMapper extends BaseMapper<NormalAttack> {
     void delete(@Param("normalAttackVo") NormalAttackVo normalAttackVo);
 
     NormalAttackInfo findPithyInfoByGameRoleId(Integer id);
+
+    Integer searchNormalAttackOfPage(@Param("normalAttackVo") NormalAttackVo normalAttackVo);
 }

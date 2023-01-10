@@ -38,4 +38,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements Te
     public List<TeamInfo> searchTeamInfo(Page page, TeamVo teamVo) {
         return baseMapper.searchTeamInfo(page, teamVo);
     }
+
+    @Override
+    public Integer searchTeamInfoOfPage(TeamVo teamVo) {
+        return baseMapper.searchTeamInfoOfPage(teamVo);
+    }
 }

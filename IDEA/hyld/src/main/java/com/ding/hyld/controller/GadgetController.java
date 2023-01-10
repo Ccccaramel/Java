@@ -11,6 +11,7 @@ import com.ding.hyld.vo.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * 星徽之力
+ * 随身妙具
  */
 @RestController
 @RequestMapping("/gadget")
@@ -32,7 +33,7 @@ public class GadgetController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",gadgetService.searchGadget(page, gadgetVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(gadgetService.searchGadget(null,gadgetVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(gadgetService.searchGadgetOfPage(gadgetVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -48,7 +49,7 @@ public class GadgetController extends BaseController {
         ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
         if(image!=null){
             // 1.删除旧资源
-            if(!gadgetVo.getImage().isEmpty()){
+            if(StringUtils.hasText(gadgetVo.getImage())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gadgetVo.getImage());
                 oldFile.delete();
             }

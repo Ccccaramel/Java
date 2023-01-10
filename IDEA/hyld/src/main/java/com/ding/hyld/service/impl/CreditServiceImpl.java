@@ -53,4 +53,9 @@ public class CreditServiceImpl extends ServiceImpl<CreditMapper, Credit> impleme
     public List<CreditInfo> getTeamData(Integer uwtId, Integer teamCompetitionType) {
         return baseMapper.getTeamData(uwtId,teamCompetitionType);
     }
+
+    @Override
+    public Integer searchCreditOfPageBy(CreditVo creditVo) {
+        return baseMapper.searchCreditOfPageBy(creditVo);
+    }
 }

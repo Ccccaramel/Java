@@ -4,30 +4,33 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.entity.User;
+import com.ding.hyld.info.EmailCodeInfo;
 import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.mapper.UserMapper;
 import com.ding.hyld.security.CurrentUser;
+import com.ding.hyld.service.EmailCodeService;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.utils.RsaUtils;
+import com.ding.hyld.utils.TimeUtils;
+import com.ding.hyld.vo.EmailCodeVo;
 import com.ding.hyld.vo.LoginUserVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserVo;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
     @Autowired
     LoginService loginService;
+    @Autowired
+    EmailCodeService emailCodeService;
 
     @Override
     public User login(String account, String password) {
@@ -113,5 +116,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public User findByQqOpenId(String qqOpenId) {
         return baseMapper.findByQqOpenId(qqOpenId);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return baseMapper.findByEmail(email);
+    }
+
+    @Override
+    public R bindEmail(UserVo userVo) {
+        EmailCodeVo emailCodeVo = new EmailCodeVo();
+        emailCodeVo.setUserId(userVo.getId());
+        emailCodeVo.setCode(userVo.getEmailCode());
+        emailCodeVo.setEmail(userVo.getEmail());
+        emailCodeVo.setStart(TimeUtils.getBeforeTheSpecifiedTimeStr(0,0,0,0,-1,0,TimeUtils.FORMAT_3));
+        List<EmailCodeInfo> infos = emailCodeService.findBy(emailCodeVo);
+        if(infos==null || infos.size()!=1){ // 根据 userid+邮箱+验证码+1分钟内 未找到相关记录
+            return R.fail("邮箱绑定失败!请重新绑定!");
+        }
+        baseMapper.bindEmail(userVo);
+        return R.success("已成功绑定邮箱!");
+    }
+
+    @Override
+    public void unbindEmail(Integer userId) {
+        baseMapper.unbindEmail(userId);
+    }
+
+    @Override
+    public void updatePassword(User user) {
+        baseMapper.updatePassword(user);
+    }
+
+    @Override
+    public Integer searchUserOfPage(UserVo userVo) {
+        return baseMapper.searchUserOfPage(userVo);
     }
 }

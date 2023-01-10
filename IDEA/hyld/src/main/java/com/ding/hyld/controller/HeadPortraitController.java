@@ -11,6 +11,7 @@ import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UpdateLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,7 @@ public class HeadPortraitController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",headPortraitService.searchHeadPortrait(page, headPortraitVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(headPortraitService.searchHeadPortrait(null,headPortraitVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(headPortraitService.searchHeadPortraitOfPage(headPortraitVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -39,7 +40,7 @@ public class HeadPortraitController extends BaseController {
     public R saveHeadPortrait(HeadPortraitVo headPortraitVo, MultipartFile headPortraitFile){
         if(headPortraitFile!=null){
             // 1.删除旧资源
-            if(!headPortraitVo.getImage().isEmpty()){
+            if(StringUtils.hasText(headPortraitVo.getImage())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+headPortraitVo.getImage());
                 oldFile.delete();
             }
@@ -66,7 +67,7 @@ public class HeadPortraitController extends BaseController {
     @PostMapping("/deleteHeadPortrait")
     public R deleteHeadPortrait(@RequestBody HeadPortraitVo headPortraitVo){
         // 1.删除旧资源
-        if(!headPortraitVo.getImage().isEmpty()){
+        if(StringUtils.hasText(headPortraitVo.getImage())){
             File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+headPortraitVo.getImage());
             oldFile.delete();
         }

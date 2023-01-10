@@ -22,4 +22,6 @@ public interface DictionaryMapper extends BaseMapper<Dictionary> {
     void updateDictionaryInfo(@Param("dictionaryInfo") DictionaryInfo dictionaryInfo);
 
     void deleteById(Integer dictionaryId);
+
+    Integer searchDictionaryOfPage(@Param("dictionaryInfo") DictionaryInfo dictionaryInfo);
 }

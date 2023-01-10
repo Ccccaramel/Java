@@ -17,4 +17,6 @@ public interface GearMapper extends BaseMapper<Gear> {
     void update(@Param("gearVo") GearVo gearVo);
 
     void add(@Param("gearVo") GearVo gearVo);
+
+    Integer searchGearOfPage(@Param("gearVo") GearVo gearVo);
 }

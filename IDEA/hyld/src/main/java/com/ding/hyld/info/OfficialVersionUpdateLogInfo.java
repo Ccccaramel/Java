@@ -81,4 +81,18 @@ public class OfficialVersionUpdateLogInfo{
     public void setDetails(String details) {
         this.details = details;
     }
+
+    @Override
+    public String toString() {
+        return "OfficialVersionUpdateLogInfo{" +
+                "id=" + id +
+                ", createTime='" + createTime + '\'' +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", name='" + name + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                ", updateTimeStr='" + updateTimeStr + '\'' +
+                ", details='" + details + '\'' +
+                '}';
+    }
 }

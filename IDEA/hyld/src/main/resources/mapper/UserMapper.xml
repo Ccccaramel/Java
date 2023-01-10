@@ -23,6 +23,7 @@
         <id column="qq" property="qq"/>
         <id column="note" property="note"/>
         <id column="ex" property="ex"/>
+        <id column="email" property="email"/>
 
         <association property="role" column="role" select="com.ding.hyld.mapper.RoleMapper.findById"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
@@ -52,6 +53,26 @@
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
         </if>
+    </select>
+    <select id="searchUserOfPage" resultType="java.lang.Integer">
+        select count(1) from user
+        <where>
+            <if test="userVo.name!=null and userVo.name.trim()!=''">
+                and name like concat('%',#{userVo.name},'%')
+            </if>
+            <if test="userVo.role!=null">
+                and role = #{userVo.role}
+            </if>
+            <if test="userVo.status!=null">
+                and status = #{userVo.status}
+            </if>
+            <if test="userVo.time!=null">
+                and createTime > #{userVo.time}
+            </if>
+            <if test="userVo.fingerprint!=null and userVo.fingerprint.trim()!=''">
+                and fingerprint = #{userVo.fingerprint}
+            </if>
+        </where>
     </select>
     <select id="findBy" resultMap="resultMap">
         select * from user
@@ -119,4 +140,23 @@
         select * from user
         where qqOpenId = #{qqOpenId}
     </select>
+    <select id="findByEmail" resultMap="resultMap">
+        select * from user
+        where email = #{email}
+    </select>
+    <update id="bindEmail">
+        update user
+        set email = #{userVo.email}
+        where id = #{userVo.id}
+    </update>
+    <update id="unbindEmail">
+        update user
+        set email = ''
+        where id = #{userVo.id}
+    </update>
+    <update id="updatePassword">
+        update user
+        set password = #{user.password}
+        where id=#{user.id}
+    </update>
 </mapper>

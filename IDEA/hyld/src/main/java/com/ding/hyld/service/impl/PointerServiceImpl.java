@@ -37,4 +37,9 @@ public class PointerServiceImpl extends ServiceImpl<PointerMapper, Pointer> impl
     public void updateStatus(PointerVo pointerVo) {
         baseMapper.updateStatus(pointerVo);
     }
+
+    @Override
+    public Integer searchPointerOfPage(PointerVo pointerVo) {
+        return baseMapper.searchPointerOfPage(pointerVo);
+    }
 }

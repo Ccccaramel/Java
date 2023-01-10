@@ -19,4 +19,6 @@ public interface OfficialVersionUpdateLogService extends IService<OfficialVersio
     void add(OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
 
     void delete(OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
+
+    Integer searchOfficialVersionUpdateLogOfPage(OfficialVersionUpdateLogVo officialVersionUpdateLogVo);
 }

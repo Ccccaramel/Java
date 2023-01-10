@@ -218,4 +218,32 @@ public class UserWithTeamInfo {
     public void setTeamMainPageUrl(String teamMainPageUrl) {
         this.teamMainPageUrl = teamMainPageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "UserWithTeamInfo{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", userId=" + userId +
+                ", teamId=" + teamId +
+                ", relationStatus=" + relationStatus +
+                ", playerPosition=" + playerPosition +
+                ", checkStatus=" + checkStatus +
+                ", parentId=" + parentId +
+                ", teamName='" + teamName + '\'' +
+                ", teamNote='" + teamNote + '\'' +
+                ", teamStatus=" + teamStatus +
+                ", relation=" + relation +
+                ", user=" + user +
+                ", team=" + team +
+                ", playerPositionType=" + playerPositionType +
+                ", controllerPreparePage='" + controllerPreparePage + '\'' +
+                ", controllerPreparePageUrl='" + controllerPreparePageUrl + '\'' +
+                ", teamMainPage='" + teamMainPage + '\'' +
+                ", teamMainPageUrl='" + teamMainPageUrl + '\'' +
+                ", creditScore=" + creditScore +
+                '}';
+    }
 }

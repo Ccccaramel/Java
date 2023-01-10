@@ -70,4 +70,9 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Player> impleme
     public PlayerInfo findBy(PlayerVo playerVo) {
         return baseMapper.findBy(playerVo);
     }
+
+    @Override
+    public Integer searchPlayerInfoOfPage(PlayerVo playerVo) {
+        return baseMapper.searchPlayerInfoOfPage(playerVo);
+    }
 }

@@ -18,4 +18,6 @@ public interface TeamService extends IService<Team> {
     void update(TeamVo teamVo);
 
     List<TeamInfo> searchTeamInfo(Page page, TeamVo teamVo);
+
+    Integer searchTeamInfoOfPage(TeamVo teamVo);
 }

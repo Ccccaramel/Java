@@ -14,6 +14,7 @@ import com.ding.hyld.vo.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +35,7 @@ public class GameRoleController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         result.put("data",gameRoleService.searchGameRole(page, gameRoleVo));
         if(!Objects.equals(page.getSize(),null)){
-            result.put("totalPage",Math.ceil(gameRoleService.searchGameRole(null,gameRoleVo).size()*1.0/page.getSize()));
+            result.put("totalPage",Math.ceil(gameRoleService.searchGameRoleOfPage(gameRoleVo)*1.0/page.getSize()));
         }
         return R.success(result);
     }
@@ -50,7 +51,7 @@ public class GameRoleController extends BaseController {
         ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
         if(headImg!=null){
             // 1.删除旧资源
-            if(!gameRoleVo.getHeadImg().isEmpty()){
+            if(StringUtils.hasText(gameRoleVo.getHeadImg())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gameRoleVo.getHeadImg());
                 oldFile.delete();
             }
@@ -60,7 +61,7 @@ public class GameRoleController extends BaseController {
         }
         if(portrait!=null){
             // 1.删除旧资源
-            if(!gameRoleVo.getPortrait().isEmpty()){
+            if(StringUtils.hasText(gameRoleVo.getPortrait())){
                 File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gameRoleVo.getPortrait());
                 oldFile.delete();
             }

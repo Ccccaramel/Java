@@ -107,4 +107,21 @@ public class PointerInfo {
     public void setReplyTimeStr(String replyTimeStr) {
         this.replyTimeStr = replyTimeStr;
     }
+
+    @Override
+    public String toString() {
+        return "PointerInfo{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", createTimeStr='" + createTimeStr + '\'' +
+                ", note='" + note + '\'' +
+                ", text='" + text + '\'' +
+                ", replyText='" + replyText + '\'' +
+                ", address='" + address + '\'' +
+                ", userInfo=" + userInfo +
+                ", status=" + status +
+                ", replyTime=" + replyTime +
+                ", replyTimeStr='" + replyTimeStr + '\'' +
+                '}';
+    }
 }

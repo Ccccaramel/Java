@@ -21,6 +21,26 @@ public class UserVo {
     private LocalDateTime time; // 今日起始时间
     private String qqOpenId;// qq openId
     private String qqUnionId;// qq unionId
+    private String email;
+    private String emailCode;
+
+    private String emailToken;
+
+    public String getEmailToken() {
+        return emailToken;
+    }
+
+    public void setEmailToken(String emailToken) {
+        this.emailToken = emailToken;
+    }
+
+    public String getEmailCode() {
+        return emailCode;
+    }
+
+    public void setEmailCode(String emailCode) {
+        this.emailCode = emailCode;
+    }
 
     public String getQqOpenId() {
         return qqOpenId;
@@ -134,6 +154,14 @@ public class UserVo {
         this.qqUnionId = qqUnionId;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "UserVo{" +
@@ -151,6 +179,7 @@ public class UserVo {
                 ", time=" + time +
                 ", qqOpenId='" + qqOpenId + '\'' +
                 ", qqUnionId='" + qqUnionId + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

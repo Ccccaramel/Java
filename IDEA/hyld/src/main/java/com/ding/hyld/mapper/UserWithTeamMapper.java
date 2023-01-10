@@ -54,5 +54,9 @@ public interface UserWithTeamMapper extends BaseMapper<UserWithTeam> {
     UserWithTeamInfo findById(Integer id);
 
     void updateTeamCreditScore(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    Integer searchTeamOfPage(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
+
+    Integer searchValidTeamInfoOfPage(@Param("userWithTeamVo") UserWithTeamVo userWithTeamVo);
 }
 

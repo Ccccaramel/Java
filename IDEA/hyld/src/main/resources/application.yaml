@@ -7,5 +7,28 @@ spring:
       max-request-size: 100MB
   main:
     allow-circular-references: true
-
+  # 发送邮件相关配置,需要邮箱开启 SMTP服务
+  mail:
+    host: smtp.163.com # 邮箱 > 设置 里可找到
+    username: by164office@163.com # 发送邮件的账号
+    password: AIVIIMGDESRDXBNG # 账号秘钥,注意不是密码！邮箱 > 设置 > POP3/SMTP/IMAP > 开启POP3/SMTP服务 > 获得秘钥
+    port: 465 # 必须指定端口,否则默认25端口,在本地没问题,但云服务器一般默认禁用25端口
+    protocol: smtp
+    default-encoding: utf-8
+    properties:
+      mail:
+        imap:
+          ssl:
+            socketFactory:
+              fallback: false
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            socketFactory:
+              class: com.fintech.modules.base.util.mail.MailSSLSocketFactory
+            starttls:
+              enable: true
+              required: true
+      test-connection: false
 # 切换开发环境记得 clean !

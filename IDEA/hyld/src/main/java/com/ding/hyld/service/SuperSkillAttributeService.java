@@ -19,4 +19,6 @@ public interface SuperSkillAttributeService extends IService<SuperSkillAttribute
     void add(SuperSkillAttributeVo superSkillAttributeVo);
 
     void delete(SuperSkillAttributeVo normalAttackAttributeVo);
+
+    Integer searchSuperSkillAttributeOfPage(SuperSkillAttributeVo superSkillAttributeVo);
 }

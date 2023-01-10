@@ -78,6 +78,34 @@
             limit #{start},#{page.size}
         </if>
     </select>
+    <select id="searchRelationOfPage" resultType="java.lang.Integer">
+        select count(1) from user_with_player uwp
+        join player p on p.id=uwp.playerId
+        join user u on u.id=uwp.userId
+        <where>
+            <if test="userWithPlayerVo.userId!=null">
+                and uwp.userId=#{userWithPlayerVo.userId}
+            </if>
+            <if test="userWithPlayerVo.userName!=null and userWithPlayerVo.userName.trim()!=''">
+                and u.name like concat('%',#{userWithPlayerVo.userName},'%')
+            </if>
+            <if test="userWithPlayerVo.playerScid!=null">
+                and p.scid like concat('%',#{userWithPlayerVo.playerScid},'%')
+            </if>
+            <if test="userWithPlayerVo.playerName!=null and userWithPlayerVo.playerName.trim()!=''">
+                and p.name like concat('%',#{userWithPlayerVo.playerName},'%')
+            </if>
+            <if test="userWithPlayerVo.playerType!=null">
+                and p.type = #{userWithPlayerVo.playerType}
+            </if>
+            <if test="userWithPlayerVo.relationStatus!=null">
+                and uwp.relationStatus = #{userWithPlayerVo.relationStatus}
+            </if>
+            <if test="userWithPlayerVo.checkStatus!=null">
+                and uwp.checkStatus = #{userWithPlayerVo.checkStatus}
+            </if>
+        </where>
+    </select>
     <update id="changeRelationStatus">
         update user_with_player set relationStatus=#{relationStatus}
         where userId = #{userId} and playerId = #{playerId}

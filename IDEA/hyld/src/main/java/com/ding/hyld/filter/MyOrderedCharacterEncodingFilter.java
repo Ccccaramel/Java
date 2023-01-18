@@ -3,6 +3,7 @@ package com.ding.hyld.filter;
 import com.alibaba.fastjson.JSON;
 import com.ding.hyld.aspect.WebLogAspect;
 import com.ding.hyld.service.VisitLogService;
+import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.utils.SpringUtils;
 import com.ding.hyld.vo.VisitLogVo;
@@ -33,6 +34,8 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        logger.info("IP(new)            : {}", IpUtils.getIpAddr(request));
+
         request.setCharacterEncoding("utf-8");
         String ip = request.getHeader("x-forwarded-for");
         String url = request.getRequestURL().toString();

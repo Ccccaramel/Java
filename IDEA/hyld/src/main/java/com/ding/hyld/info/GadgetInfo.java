@@ -2,6 +2,7 @@ package com.ding.hyld.info;
 
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +26,9 @@ public class GadgetInfo {
 
     public void setImage(String image) {
         this.image = image;
-        setImageUrl(ResourcesPathUtils.getPhotoPath() +image);
+        if(StringUtils.hasText(image)){
+            setImageUrl(ResourcesPathUtils.getPhotoPath() +image);
+        }
     }
 
     public String getImageUrl() {

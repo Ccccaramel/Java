@@ -64,7 +64,7 @@ public class EmailCodeController extends BaseController {
         emailCodeVo.setUserId(userId);
         emailCodeVo.setUserName(userName);
         emailCodeVo.setFormEmail(CommonCode.FORM_EMAIL);
-        emailCodeVo.setSubject("【164office】用户邮箱验证");
+        emailCodeVo.setSubject("【芽芽office】用户邮箱验证");
         emailCodeVo.setIp(visitLogVo.getIp());
         emailCodeVo.setAddress(visitLogVo.getTrueAddress());
         try {
@@ -80,14 +80,14 @@ public class EmailCodeController extends BaseController {
                 "\t\t<h2 style=\"color: #66ccff;\">&emsp;"+emailCodeVo.getCode()+"</h2>\n" +
                 "\t\t<hr/>\n" +
                 "\t\t<h3>尊敬的用户<span style=\"color: #FFB6C1;\">"+emailCodeVo.getUserName()+"</span>，您好：</h3>\n" +
-                "\t\t<h3>&emsp;我们（164office.cn-荒野社区平台）收到了来自您的"+emailCodeVo.getTitle()+"请求，请使用上面的验证码验证您的账号归属。</h3>\n" +
+                "\t\t<h3>&emsp;我们（芽芽office-荒野社区微平台）收到了来自您的"+emailCodeVo.getTitle()+"请求，请使用上面的验证码验证您的账号归属。</h3>\n" +
                 "\t\t<h3>&emsp;该验证码将在1分钟后过期，请及时输入。</h3>\n" +
                 "\t\t<br>\n" +
                 "\t\t<h3>&emsp;为保证账号安全，请勿泄漏此验证码。</h3>\n" +
-                "\t\t<h3>&emsp;祝在【164office】收获愉快！</h3>\n" +
+                "\t\t<h3>&emsp;祝在【芽芽office】收获愉快！</h3>\n" +
                 "\t\t<h3>&emsp;(〃￣︶￣)人(￣︶￣〃)</h3>\n" +
                 "\t\t<hr/>\t\n" +
-                "\t\t<h3>如果您有任何疑问请<a href='https://www.164office.cn'>访问平台</a>留言询问</h3>\n" +
+                "\t\t<h3>如果您有任何疑问请访问<a href='https://www.164office.cn'>芽芽office</a>留言询问</h3>\n" +
                 "\t</body>\n" +
                 "</html>";
         emailCodeVo.setText(text);

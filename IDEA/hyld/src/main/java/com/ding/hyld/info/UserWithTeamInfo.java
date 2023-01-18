@@ -4,6 +4,7 @@ import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.entity.Team;
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -175,7 +176,9 @@ public class UserWithTeamInfo {
 
     public void setControllerPreparePage(String controllerPreparePage) {
         this.controllerPreparePage =  controllerPreparePage;
-        setControllerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + controllerPreparePage);
+        if(StringUtils.hasText(controllerPreparePage)){
+            setControllerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + controllerPreparePage);
+        }
     }
 
     public String getTeamMainPage() {
@@ -184,7 +187,9 @@ public class UserWithTeamInfo {
 
     public void setTeamMainPage(String teamMainPage) {
         this.teamMainPage = teamMainPage;
-        setTeamMainPageUrl(ResourcesPathUtils.getPhotoPath() + teamMainPage);
+        if(StringUtils.hasText(teamMainPage)){
+            setTeamMainPageUrl(ResourcesPathUtils.getPhotoPath() + teamMainPage);
+        }
     }
 
     public String getCreateTimeStr() {

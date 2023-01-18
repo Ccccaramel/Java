@@ -195,12 +195,13 @@
         where id = #{userWithTeamVo.id}
     </update>
     <insert id="addViceCaptain">
-        insert into user_with_team(userId,teamId,relationStatus,checkStatus,playerPosition)
+        insert into user_with_team(userId,teamId,relationStatus,checkStatus,playerPosition,parentId)
         values(#{userWithTeamVo.userId},
                #{userWithTeamVo.teamId},
                #{userWithTeamVo.relationStatus},
                #{userWithTeamVo.checkStatus},
-               #{userWithTeamVo.playerPosition});
+               #{userWithTeamVo.playerPosition},
+               #{userWithTeamVo.parentId});
     </insert>
     <select id="searchValidTeamInfo" resultMap="resultInfoMap">
         select *

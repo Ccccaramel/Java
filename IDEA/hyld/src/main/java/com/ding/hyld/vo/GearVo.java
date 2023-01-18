@@ -1,6 +1,7 @@
 package com.ding.hyld.vo;
 
 import com.ding.hyld.utils.ResourcesPathUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * 强化装备
@@ -91,7 +92,9 @@ public class GearVo {
 
     public void setOneLevelImg(String oneLevelImg) {
         this.oneLevelImg = oneLevelImg;
-        setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath()+oneLevelImg);
+        if(StringUtils.hasText(oneLevelImg)){
+            setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath()+oneLevelImg);
+        }
     }
 
     public String getTwoLevelImg() {
@@ -100,7 +103,9 @@ public class GearVo {
 
     public void setTwoLevelImg(String twoLevelImg) {
         this.twoLevelImg = twoLevelImg;
-        setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath()+twoLevelImg);
+        if(StringUtils.hasText(twoLevelImg)){
+            setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath()+twoLevelImg);
+        }
     }
 
     public String getThreeLevelImg() {
@@ -109,7 +114,9 @@ public class GearVo {
 
     public void setThreeLevelImg(String threeLevelImg) {
         this.threeLevelImg = threeLevelImg;
-        setThreeLevelImgUrl(ResourcesPathUtils.getPhotoPath()+threeLevelImg);
+        if(StringUtils.hasText(threeLevelImg)){
+            setThreeLevelImgUrl(ResourcesPathUtils.getPhotoPath()+threeLevelImg);
+        }
     }
 
     public String getOneLevelImgUrl() {

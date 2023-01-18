@@ -3,6 +3,7 @@ package com.ding.hyld.info;
 import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +51,9 @@ public class GameRoleInfo {
 
     public void setHeadImg(String headImg) {
         this.headImg = headImg;
-        setHeadImgUrl(ResourcesPathUtils.getPhotoPath() + headImg);
+        if(StringUtils.hasText(headImg)){
+            setHeadImgUrl(ResourcesPathUtils.getPhotoPath() + headImg);
+        }
     }
 
     public String getPortrait() {
@@ -59,7 +62,9 @@ public class GameRoleInfo {
 
     public void setPortrait(String portrait) {
         this.portrait = portrait;
-        setPortraitUrl(ResourcesPathUtils.getPhotoPath() +portrait);
+        if(StringUtils.hasText(portrait)){
+            setPortraitUrl(ResourcesPathUtils.getPhotoPath() +portrait);
+        }
     }
 
     public Dictionary getRarity() {

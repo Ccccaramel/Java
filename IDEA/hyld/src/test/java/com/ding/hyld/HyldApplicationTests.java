@@ -82,6 +82,18 @@ class HyldApplicationTests {
 //        System.out.println("云 password 加密："+cloudPasswordEnc);
 //        String cloudPasswordDec = stringEncryptor.decrypt(cloudPasswordEnc);
 //        System.out.println("云 password 解密："+cloudPasswordDec);
+//
+//        // 163邮箱 > username
+//        String emailUserNameEnc = stringEncryptor.encrypt("by164office@163.com");
+//        System.out.println("163邮箱 username 加密："+emailUserNameEnc);
+//        String emailUserNameDec = stringEncryptor.decrypt(emailUserNameEnc);
+//        System.out.println("163邮箱 username 解密："+emailUserNameDec);
+//
+//        // 163邮箱 > password
+//        String emailPasswordEnc = stringEncryptor.encrypt("VAPAEBLKWLTSTCNT");
+//        System.out.println("163邮箱 password 加密："+emailPasswordEnc);
+//        String emailPasswordDec = stringEncryptor.decrypt(emailPasswordEnc);
+//        System.out.println("163邮箱 password 解密："+emailPasswordDec);
 //    }
 
 //    @Autowired(required = false)

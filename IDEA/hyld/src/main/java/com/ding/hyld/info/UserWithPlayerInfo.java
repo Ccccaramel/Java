@@ -7,6 +7,7 @@ import com.ding.hyld.entity.User;
 import com.ding.hyld.entity.base.BaseObject;
 import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -105,7 +106,9 @@ public class UserWithPlayerInfo{
 
     public void setPlayerMainPage(String playerMainPage) {
         this.playerMainPage = playerMainPage;
-        setPlayerMainPageUrl(ResourcesPathUtils.getPhotoPath() + playerMainPage);
+        if(StringUtils.hasText(playerMainPage)){
+            setPlayerMainPageUrl(ResourcesPathUtils.getPhotoPath() + playerMainPage);
+        }
     }
 
     public String getPlayerPreparePage() {
@@ -114,7 +117,9 @@ public class UserWithPlayerInfo{
 
     public void setPlayerPreparePage(String playerPreparePage) {
         this.playerPreparePage = playerPreparePage;
-        setPlayerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + playerPreparePage);
+        if(StringUtils.hasText(playerPreparePage)){
+            setPlayerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + playerPreparePage);
+        }
     }
 
     public LocalDateTime getCreateTime() {

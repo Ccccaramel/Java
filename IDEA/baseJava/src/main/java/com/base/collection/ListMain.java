@@ -7,6 +7,9 @@ import java.util.List;
 
 public class ListMain {
     public static void main(String[] args) {
+//        List<String> list1=new ArrayList<>();
+//        System.out.println(list1.get(0));
+
         // ArrayList
         List<String> arrayList= new ArrayList<>();
         arrayList.add("arrayList2");

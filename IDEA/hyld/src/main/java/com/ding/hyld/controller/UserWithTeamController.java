@@ -154,35 +154,39 @@ public class UserWithTeamController extends BaseController {
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
 
+        // 判断当前用户是否为队长
         UserWithTeamVo vo = new UserWithTeamVo();
         vo.setUserId(getUserId());
         vo.setTeamId(userWithTeamVo.getTeamId());
         vo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         vo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);
-        vo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
+//        vo.setPlayerPosition(DictionaryCode.PLAYER_POSITION_1);
         List<UserWithTeamInfo> list = userWithTeamService.findBy(vo);
+        UserWithTeamInfo userWithTeamInfo;
         if(list.size()!=1){
-            return R.fail("你不是该战队的队长/副队长,你无权解除其他用户关联!");
+            return R.fail("你与该战队绑定异常!禁止操作!");
         }
         else{
-            UserWithTeamInfo info = list.get(0);
-            if(Objects.equals(info.getPlayerPosition(), DictionaryCode.PLAYER_POSITION_2) && !Objects.equals(info.getId(), userWithTeamVo.getId())){
-                return R.fail("你是该战队的副队长,你无权解除其他用户关联!");
+            userWithTeamInfo = list.get(0);
+            if(!Objects.equals(userWithTeamInfo.getPlayerPositionType().getId(), DictionaryCode.PLAYER_POSITION_1) && !Objects.equals(userWithTeamInfo.getId(), userWithTeamVo.getId())){
+                return R.fail("你不是该战队的队长,你无权解除其他用户关联!");
             }
         }
 
-        List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
-        if(userWithTeamInfoList.size()!=1){
-            return R.fail("该用户未关联战队!无需解除关联!");
+//        List<UserWithTeamInfo> userWithTeamInfoList = userWithTeamService.findBy(userWithTeamVo);
+//        if(userWithTeamInfoList.size()!=1){ // 查询到该用户与某一战队存在多个绑定,禁止操作
+//            return R.fail("该用户未关联战队!无需解除关联!");
+//        }
+
+        // 如果队长解除与战队的关联,那么还需要解除他任命的副队长与战队的关联
+//        UserWithTeamInfo userWithTeamInfo = userWithTeamInfoList.get(0);
+        if(Objects.equals(userWithTeamInfo.getPlayerPositionType().getId(), DictionaryCode.PLAYER_POSITION_1) && Objects.equals(userWithTeamInfo.getId(), userWithTeamVo.getId())){
+            userWithTeamVo.setTeamId(userWithTeamInfo.getTeam().getId());
+            userWithTeamVo.setAllRelieve(true); // 队长在解除战队关联时，同时把战队其他副队长的关联也解除
+        }else{
+            userWithTeamVo.setAllRelieve(false);
         }
 
-        UserWithTeamInfo userWithTeamInfo = userWithTeamInfoList.get(0);
-        if(Objects.equals(userWithTeamInfo.getPlayerPositionType().getId(), DictionaryCode.PLAYER_POSITION_2)){
-            userWithTeamVo.setAllRelieve(false);
-        }else{ // 判断是否为队长
-            userWithTeamVo.setTeamId(userWithTeamInfo.getTeam().getId());
-            userWithTeamVo.setAllRelieve(true);
-        }
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_3);
         userWithTeamService.relieveTeam(userWithTeamVo);
         return R.success("已成功解除关联!");
@@ -299,6 +303,7 @@ public class UserWithTeamController extends BaseController {
         if(viceCaptainUserId.equals(getUserId())){
             return R.fail("不可以将自己添加为副队长!");
         }
+        userWithTeamVo.setParentId(userWithTeamVo.getId());
         userWithTeamVo.setUserId(getUserId());
         userWithTeamVo.setRelationStatus(DictionaryCode.RELATION_STATUS_2);
         userWithTeamVo.setCheckStatus(DictionaryCode.CHECK_STATUS_3);

@@ -41,12 +41,17 @@ public class HeadPortraitController extends BaseController {
         if(headPortraitFile!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(headPortraitVo.getImage())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+headPortraitVo.getImage());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+headPortraitVo.getImage());
                 oldFile.delete();
             }
 
             // 2.将解析整理资源并存储,并返回资源信息
-            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                    ResourcesPathUtils.HYLD,
+                    ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
             String headPortraitNewName = resourceUploadAndDownload.resourceUpload(headPortraitFile,getUserId()).get("newName");
 
             headPortraitVo.setImage(headPortraitNewName);
@@ -68,7 +73,7 @@ public class HeadPortraitController extends BaseController {
     public R deleteHeadPortrait(@RequestBody HeadPortraitVo headPortraitVo){
         // 1.删除旧资源
         if(StringUtils.hasText(headPortraitVo.getImage())){
-            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+headPortraitVo.getImage());
+            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+headPortraitVo.getImage());
             oldFile.delete();
         }
         headPortraitService.del(headPortraitVo);

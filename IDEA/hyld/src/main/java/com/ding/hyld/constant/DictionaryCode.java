@@ -146,4 +146,50 @@ public interface DictionaryCode {
      * 不喜欢
      */
     Integer POPULARITY_TYPE_2 = 1901;
+
+    // 博客状态
+    /**
+     * 未激活
+     */
+//    Integer BLOG_STATUS_1 = 2100;
+    /**
+     * 正常
+     */
+    Integer BLOG_STATUS_2 = 2101;
+    /**
+     * 删除
+     */
+    Integer BLOG_STATUS_3 = 2103;
+
+    // 博客访问权限
+    /**
+     * 公开
+     */
+    Integer BLOG_POWER_1 = 2300;
+    /**
+     * 仅作者可见
+     */
+    Integer BLOG_POWER_2 = 2301;
+
+    // 博客分类
+    /**
+     * 技术科学类,默认类型
+     */
+    Integer BLOG_TYPE_1 = 2200;
+
+    // 博客文件状态
+    /**
+     * 正常
+     */
+    Integer BLOG_FILE_STATUS_1 = 2400;
+
+    // 账单状态
+    /**
+     * 正常
+     */
+    Integer BILL_STATUS_1 =3000;
+    /**
+     * 冻结
+     */
+    Integer BILL_STATUS_2 =3001;
 }

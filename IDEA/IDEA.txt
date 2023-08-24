@@ -31,6 +31,7 @@ A:IDEA > File > Invalidate Caches...
 Q:application.properties 中文乱码问题解决
 A:File -> Settings -> Editor -> File Encodings
   将 Properties Files (*.properties) 下的 Default encoding for properties files设置为 UTF-8
+  将 项目编码 设置为 GBK 不是 系统默认-GBK
   将 Transparent native-to-ascii conversion 前的勾选上
   配置完成后,一定要重新重新重新新建一个 application.properties
 
@@ -53,3 +54,6 @@ A:File -> Settings -> Editor -> File Encodings
 
 替换
   Ctrl+r
+
+Q:Java HotSpot(TM) 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+A:IDEA > 运行 > 编辑配置 > 选择对应项目/模块点击 修改选项 > 勾选 禁用启动优化

@@ -23,7 +23,7 @@ mybatis:
 
 # 全局变量
 resourcespathutils:
-  url: http://127.0.0.1:8090
+  url: http://127.0.0.1:8090/resources
   realpath: D:/hyldResources
   photopathprefix: /photo
   videopathprefix: /video

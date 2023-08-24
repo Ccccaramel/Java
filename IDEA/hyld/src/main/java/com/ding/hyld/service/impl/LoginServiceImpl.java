@@ -142,8 +142,7 @@ public class LoginServiceImpl implements LoginService {
         String token = JWTUtils.createToken(Long.valueOf(currentUser.getUser().getId()));
 
         // 把完整用户信息存入 redis , userId 作为 key
-        redisTemplate.opsForValue().set("login_"+currentUser.getUser().getId(), JSON.toJSONString(currentUser)); // 1天后过期
-
+        redisTemplate.opsForValue().set("login_"+currentUser.getUser().getId(), JSON.toJSONString(currentUser),1,TimeUnit.DAYS); // 1天后过期
         Map<String,Object> res = new HashMap<>();
         res.put("token",token);
         try {
@@ -252,7 +251,7 @@ public class LoginServiceImpl implements LoginService {
         CurrentUser currentUser = new CurrentUser(user,menuService.getCurrentUserPower(user.getRole()));
 
         // 把完整用户信息存入 redis , userId 作为 key
-        redisTemplate.opsForValue().set("login_"+user.getId(), JSON.toJSONString(currentUser)); // 1天后过期
+        redisTemplate.opsForValue().set("login_"+user.getId(), JSON.toJSONString(currentUser),1, TimeUnit.DAYS); // 1天后过期
 
         Map<String,Object> res = new HashMap<>();
         res.put("token",token);

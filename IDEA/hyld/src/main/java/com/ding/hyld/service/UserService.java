@@ -30,7 +30,7 @@ public interface UserService extends IService<User> {
 
     void saveHeadPortrait(UserVo userVo);
 
-    void addEx(Integer userId, int i);
+    void addEx(Integer userId, int ex);
 
     User findByQqOpenId(String qqOpenId);
 

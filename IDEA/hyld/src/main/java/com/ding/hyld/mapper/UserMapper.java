@@ -32,6 +32,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     UserInfo findByTopicId(Integer topicId);
 
+    UserInfo findByBlogRemarkId(Integer blogRemarkId);
+
     UserInfo findByGameRoleCommentId(Integer gameRoleCommentId);
 
     void addEx(Integer userId, Integer i);

@@ -1,6 +1,11 @@
 package com.ding.hyld;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.ding.hyld.info.QQMapIPInfo;
+import com.ding.hyld.info.UpdateLogInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +15,8 @@ import org.springframework.mail.MailMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -66,13 +73,13 @@ class HyldApplicationTests {
 //    @Test
 //    public void encryptConfig(){
 //        // mysql > username
-//        String userNameEnc = stringEncryptor.encrypt("root");
+//        String userNameEnc = stringEncryptor.encrypt("***");
 //        System.out.println("username 加密："+userNameEnc);
 //        String userNameDec = stringEncryptor.decrypt(userNameEnc);
 //        System.out.println("username 解密："+userNameDec);
 //
 //        // mysql > password
-//        String passwordEnc = stringEncryptor.encrypt("root");
+//        String passwordEnc = stringEncryptor.encrypt("***");
 //        System.out.println("password 加密："+passwordEnc);
 //        String passwordDec = stringEncryptor.decrypt(passwordEnc);
 //        System.out.println("password 解密："+passwordDec);
@@ -84,13 +91,13 @@ class HyldApplicationTests {
 //        System.out.println("云 password 解密："+cloudPasswordDec);
 //
 //        // 163邮箱 > username
-//        String emailUserNameEnc = stringEncryptor.encrypt("by164office@163.com");
+//        String emailUserNameEnc = stringEncryptor.encrypt("***");
 //        System.out.println("163邮箱 username 加密："+emailUserNameEnc);
 //        String emailUserNameDec = stringEncryptor.decrypt(emailUserNameEnc);
 //        System.out.println("163邮箱 username 解密："+emailUserNameDec);
 //
 //        // 163邮箱 > password
-//        String emailPasswordEnc = stringEncryptor.encrypt("VAPAEBLKWLTSTCNT");
+//        String emailPasswordEnc = stringEncryptor.encrypt("***");
 //        System.out.println("163邮箱 password 加密："+emailPasswordEnc);
 //        String emailPasswordDec = stringEncryptor.decrypt(emailPasswordEnc);
 //        System.out.println("163邮箱 password 解密："+emailPasswordDec);
@@ -100,12 +107,11 @@ class HyldApplicationTests {
 //    private JavaMailSender javaMailSender; // 引入Spring Mail依赖后，会自动装配到IOC容器。用来发送邮件
 //    @Autowired(required = false)
 //    private MailProperties mailProperties;
-//
 //    @Test
-//    public void test1() {
+//    public void testEmail() {
 //        String code = "6760"; // 验证码
 //
-//        String from = "by164office@163.com";
+//        String from = "**164office@163.com";
 //        String to = "444543565@qq.com";
 //        String title = "【164office】用户邮箱验证";
 //        String userName = "麦克";
@@ -144,4 +150,15 @@ class HyldApplicationTests {
 //        }
 //    }
 
+//    @Test
+//    public void testIP(){
+//        try {
+//            RestTemplate restTemplate = new RestTemplate();
+//            String url ="https://apis.map.qq.com/ws/location/v1/ip?key=VQPBZ-GZIKU-QNPV7-B7MD5-PPA2F-TMBES&ip=183.250.252.12";
+//            QQMapIPInfo qqMapIPInfo = restTemplate.getForObject(url,QQMapIPInfo.class);
+//            System.out.println(qqMapIPInfo.toString());
+//        }catch (HttpClientErrorException e){
+//            System.out.println("http客户端请求出错了！");
+//        }
+//    }
 }

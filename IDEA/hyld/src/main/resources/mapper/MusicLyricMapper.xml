@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.MusicLyricMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.MusicLyric">
+        <id column="id" property="id"/>
+
+        <id column="point" property="point"/>
+        <id column="text" property="text"/>
+        <id column="color" property="color"/>
+        <id column="status" property="status"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.MusicLyricInfo">
+        <id column="id" property="id"/>
+
+        <id column="point" property="point"/>
+        <id column="text" property="text"/>
+        <id column="color" property="color"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association column="status" property="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <insert id="add">
+        insert into
+            music_lyric(point,text,color,note)
+        values(#{musicLyricVo.point},
+               #{musicLyricVo.text},
+               #{musicLyricVo.color},
+               #{musicLyricVo.note},)
+    </insert>
+    <select id="searchMusicLyric" resultMap="resultInfoMap">
+        select * from music_lyric
+        <where>
+            <if test="musicLyricVo.id != null">
+                and id = #{musicLyricVo.id}
+            </if>
+        </where>
+    </select>
+    <update id="delete">
+        update music_lyric
+        set status = #{musicLyricVo.status}
+        where id = #{musicLyricVo.id}
+    </update>
+</mapper>

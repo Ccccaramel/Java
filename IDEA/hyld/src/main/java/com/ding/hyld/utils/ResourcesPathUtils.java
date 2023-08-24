@@ -6,7 +6,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -22,7 +21,10 @@ public class ResourcesPathUtils {
     private static String filePathPrefix; // 文件资源目录
     private static String audioPathPrefix; // 音源资源目录
     private static Environment environment;
-    private static String HYLD="hyld";
+
+    public static String BLOG="blog";
+    public static String HYLD="hyld";
+
     public static String getUrl() {
         return url;
     }
@@ -105,41 +107,41 @@ public class ResourcesPathUtils {
      * 访问资源的地址
      * @return
      */
-    public static String getPhotoPath(){
-        return getUrl() + File.separator+HYLD + getPhotoPathPrefix() + File.separator;
+    public static String getPhotoPath(String type){
+        return getUrl() + File.separator+ type + getPhotoPathPrefix() + File.separator;
     }
-    public static String getVideoPath(){
-        return getUrl()+ getVideoPathPrefix() + File.separator;
+    public static String getVideoPath(String type){
+        return getUrl() + File.separator+ type + getVideoPathPrefix() + File.separator;
     }
-    public static String getAudioPath(){
-        return getUrl()+ getAudioPathPrefix() + File.separator;
+    public static String getAudioPath(String type){
+        return getUrl() + File.separator+ type + getAudioPathPrefix() + File.separator;
     }
-    public static String getFilePath(){
-        return getUrl()+ getFilePathPrefix() + File.separator;
+    public static String getFilePath(String type){
+        return getUrl() + File.separator+ type + getFilePathPrefix() + File.separator;
     }
 
 
     /**
      * 真实资源存放路径(资源删除操作)
       */
-    public static String getRealPhotoPath(){
-        return getRealPath() + getPhotoPathPrefix() + File.separator;
+    public static String getRealPhotoPath(String module){
+        return getRealPath() + File.separator + module + getPhotoPathPrefix() + File.separator;
     }
-    public static String getRealVideoPath(){
-        return getRealPath() + getVideoPathPrefix() + File.separator;
+    public static String getRealVideoPath(String module){
+        return getRealPath() + File.separator + module + getVideoPathPrefix() + File.separator;
     }
-    public static String getRealAudioPath(){
-        return getRealPath() + getAudioPathPrefix() + File.separator;
+    public static String getRealAudioPath(String module){
+        return getRealPath() + File.separator + module + getAudioPathPrefix() + File.separator;
     }
-    public static String getRealFilePath(){
-        return getRealPath() + getFilePathPrefix() + File.separator;
+    public static String getRealFilePath(String module){
+        return getRealPath() + File.separator + module + getFilePathPrefix() + File.separator;
     }
 
     /**
      * 资源上传的地址
      **/
-    public static File getPhotoDirFile() {
-        String fileDirPath = getRealPhotoPath();
+    public static File getPhotoDirFile(String module) {
+        String fileDirPath = getRealPhotoPath(module);
         System.out.println("fileDirPath:"+fileDirPath);
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
@@ -147,24 +149,24 @@ public class ResourcesPathUtils {
         }
         return fileDir;
     }
-    public static File getVideoDirFile(){
-        String fileDirPath = getRealVideoPath();
+    public static File getVideoDirFile(String type){
+        String fileDirPath = getRealVideoPath(type);
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
             fileDir.mkdirs();
         }
         return fileDir;
     }
-    public static File getAudioDirFile(){
-        String fileDirPath = getRealAudioPath();
+    public static File getAudioDirFile(String type){
+        String fileDirPath = getRealAudioPath(type);
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
             fileDir.mkdirs();
         }
         return fileDir;
     }
-    public static File getFileDirFile(){
-        String fileDirPath = getRealFilePath();
+    public static File getFileDirFile(String type){
+        String fileDirPath = getRealFilePath(type);
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
             fileDir.mkdirs();

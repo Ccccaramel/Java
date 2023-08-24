@@ -1,10 +1,6 @@
 package com.ding.hyld.utils;
 
-import com.ding.hyld.info.TopicInfo;
-
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Tree implements Comparable<Tree>{
     private Integer id;

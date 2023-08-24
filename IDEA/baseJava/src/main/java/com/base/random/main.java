@@ -1,5 +1,8 @@
 package com.base.random;
 
+/**
+ * 模拟生成4位数字验证码
+ */
 public class main {
     public static void main(String[] args) {
         int m=0,n=10,i=4;

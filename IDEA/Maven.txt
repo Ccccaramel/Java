@@ -3,10 +3,36 @@
   https://maven.apache.org/download.cgi
   点击下载并解压
   Binary zip archive > apache-maven-x.x.x-bin.zip
-  新建一个系统变量
+
+配置本地仓库
+  建议修改,方便以后查看
+  打开 conf/settings.xml 并找到 <localRepository> (被注释的状态,移出即可)
+  标签内的值即为本地仓库的位置,改为新位置即可
+
+系统变量
   MAVEN_HOME   [ maven 的 bin 所在目录位置]
   再在系统变量中的 path 变量中添加 %MAVEN_HOME%\bin
   cmd > mvn -version 显示版本即成功
+
+配置私服
+  默认中央仓库,部署在国外,下载依赖时网速可能受影响,一般改为私服
+  打开 conf/settings.xml 中的 <mirrors> 标签并添加如下标签
+    <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+IDEA 配置
+  如果你的开发工具是 IDEA
+  那么既可以使用 IDEA 自带的 maven
+  也可以更换成你自己本地的 maven
+    打开 IDEA > 设置 > 搜索 maven 
+    将 Maven主路经(H) 项改为自己本地的 maven
+    并将 用户设置文件 修改为本地 maven 下的 conf/settings.xml
+    如果是手动选择,注意是选择 bin 的父目录
+  最后点击 应用
 
 Maven
   Maven 是一个项目管理工具,可以对 Java 项目进行构建和依赖管理
@@ -117,3 +143,47 @@ IDEA 配置 maven
 
 Q:在哪里配置 Maven ?
 A:IDEA > File > Settings... > Build,Execution,Deployment > Build Tools > Maven
+
+依赖传递
+  <dependency>
+    <groupId>[xxx]</groupId>
+    <artifactId>[项目名称]</artifactId>
+    <version>[版本]</version>
+  </dependency>
+
+排除依赖
+  <exclusions>
+    <exclusion>
+      <groupId>[xxx]</groupId>
+      <artifactId>[项目名称]</artifactId>
+    </exclusion>
+  </exclusions>
+
+依赖范围
+  默认情况下在任何地方都生效
+  可通过在 <dependency> 标签下添加 <scope>[值]</scope> 标签设置作用范围
+    scope 值      主程序      测试程序      打包(运行)
+    compile         Y            Y            Y
+    test                         Y
+    provided        Y            Y
+    runtime                      Y            Y
+v
+生命周期
+  对 maven 项目构建过程进行抽象和统一
+  以下是主要的3套生命周期以及各自包含的主要阶段
+    clean       文件清理
+                  clean       清理上次项目构建产生的文件
+    default     编译,测试,打包,安装,部署等
+                  compile     编译项目源代码
+                  test        使用合适的单元测试框架运行测试
+                  package     将编译后的文件打包
+                  install     安装项目到本地仓库
+    site        生成报告,发布站点等
+                  site
+  注意:当执行某一阶段,那么其生命周期内,其之前的所有阶段也会按序提前默认执行
+  跳过阶段
+    IDEA 右侧选中想要跳过的阶段,点击(激活) 切换"跳过测试"模式(蓝色闪电图标) 即可
+  运行:
+    方式一:双击即可
+    方式二:在项目根目录下通过命令执行
+            mvn [阶段名称]

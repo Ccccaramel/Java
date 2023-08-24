@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ResourceUploadAndDownloadUtils {
+    private String module;
     private File photoDirFile;
     private File videoDirFile;
     private File fileDirFile;
@@ -23,8 +24,9 @@ public class ResourceUploadAndDownloadUtils {
         // TODO Auto-generated constructor stub
     }
 
-    public ResourceUploadAndDownloadUtils(File photoDirFile, File videoDirFile,File audioDirFile,File fileDirFile) {
+    public ResourceUploadAndDownloadUtils(String module,File photoDirFile, File videoDirFile,File audioDirFile,File fileDirFile) {
         super();
+        this.module = module;
         this.photoDirFile= photoDirFile;
         this.videoDirFile= videoDirFile;
         this.audioDirFile= audioDirFile;
@@ -66,7 +68,9 @@ public class ResourceUploadAndDownloadUtils {
         result.put("fileName",fileName);
         result.put("newName",newName);
         Integer type= (Integer) data.get("type");//-1:未知类型 0:图片 1:视频 2:压缩包 3:文档/表格 4:音源
-        String finalPath = getUpPath(type,newName);
+        String finalPath = getUpPath(type,newName); // 上传至服务器的位置
+        String accessPath = getAccessPath(type,newName); // 公网访问路径
+        result.put("accessPath",accessPath);
         try {
             multipartFile.transferTo(new File(finalPath)); // 流输出,将文件资源上传至指定位置
         } catch (IOException e) {
@@ -94,6 +98,27 @@ public class ResourceUploadAndDownloadUtils {
         }
         return finalPath;
     }
+
+    private String getAccessPath(Integer type,String newName){ //-1:未知类型 0:图片 1:视频 2:压缩包 3:文档/表格 4:音源
+        String accessPath = null;
+        if(type==-1){
+            accessPath=ResourcesPathUtils.getFilePath(module) + newName;
+        }
+        else if(type==0){
+            accessPath=ResourcesPathUtils.getPhotoPath(module)+newName;
+        }
+        else if(type==1){
+            accessPath=ResourcesPathUtils.getVideoPath(module)+newName;
+        }
+        else if(type==2 || type==3){ // 有时间将其分开,【3】可以在线查看
+            accessPath=ResourcesPathUtils.getFilePath(module)+newName;
+        }
+        else if(type==4){
+            accessPath=ResourcesPathUtils.getAudioPath(module)+newName;
+        }
+        return accessPath;
+    }
+
 
     private Map<String,Object> newNameUtils(String fileName, int userId) {
         Map<String,Object> data=new HashMap<>();

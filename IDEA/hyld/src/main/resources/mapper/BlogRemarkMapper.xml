@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.BlogRemarkMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.BlogRemark">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="user" property="user"/>
+        <id column="remark" property="remark"/>
+        <id column="parentId" property="parentId"/>
+        <id column="status" property="status"/>
+        <id column="rootId" property="rootId"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.hyld.info.BlogRemarkInfo">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="remark" property="remark"/>
+        <id column="parentId" property="parentId"/>
+        <id column="rootId" property="rootId"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association column="user" property="user" select="com.ding.hyld.mapper.UserMapper.findById"/>
+        <association column="parentId" property="replyOfUser" select="com.ding.hyld.mapper.UserMapper.findByBlogRemarkId"/>
+        <association column="status" property="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <insert id="save">
+        insert into blog_remark(blog,remark,parentId,user,status,rootId,ip,address)
+        values(#{blogRemarkVo.blog},
+               #{blogRemarkVo.remark},
+               #{blogRemarkVo.parentId},
+               #{blogRemarkVo.user},
+               #{blogRemarkVo.status},
+               #{blogRemarkVo.rootId},
+               #{blogRemarkVo.ip},
+               #{blogRemarkVo.address})
+    </insert>
+    <select id="searchBlogRemark" resultMap="resultInfoMap">
+        select * from blog_remark
+        <where>
+            <if test="blogRemarkVo.id != null">
+                and id = #{blogRemarkVo.id}
+            </if>
+            <if test="blogRemarkVo.blog != null">
+                and blog = #{blogRemarkVo.blog}
+            </if>
+            <if test="blogRemarkVo.remark != null and blogRemarkVo.remark.trim() != ''">
+                and remark like concat('%',#{blogRemarkVo.remark},'%')
+            </if>
+            <if test="blogRemarkVo.user != null">
+                and user = #{blogRemarkVo.user}
+            </if>
+            <if test="blogRemarkVo.parentId != null">
+                and parentId = #{blogRemarkVo.parentId}
+            </if>
+            <if test="blogRemarkVo.rootId != null">
+                and rootId = #{blogRemarkVo.rootId}
+            </if>
+            <if test="blogRemarkVo.status != null and blogRemarkVo.status != 0">
+                and status = #{blogRemarkVo.status}
+            </if>
+        </where>
+        ORDER BY createTime
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchBlogRemarkOfPage" resultType="java.lang.Integer">
+        select count(1) from blog_remark
+        <where>
+            <if test="blogRemarkVo.id != null">
+                and id = #{blogRemarkVo.id}
+            </if>
+            <if test="blogRemarkVo.blog != null">
+                and blog = #{blogRemarkVo.blog}
+            </if>
+            <if test="blogRemarkVo.remark != null and blogRemarkVo.remark.trim() != ''">
+                and remark like concat('%',#{blogRemarkVo.remark},'%')
+            </if>
+            <if test="blogRemarkVo.user != null">
+                and user = #{blogRemarkVo.user}
+            </if>
+            <if test="blogRemarkVo.status != null">
+                and status = #{blogRemarkVo.status}
+            </if>
+            <if test="blogRemarkVo.rootId != null">
+                and rootId = #{blogRemarkVo.rootId}
+            </if>
+            <if test="blogRemarkVo.parentId != null">
+                and parentId = #{blogRemarkVo.parentId}
+            </if>
+        </where>
+    </select>
+    <update id="delete">
+        update blog_remark
+        set status = #{blogRemarkVo.status}
+        where id = #{blogRemarkVo.id}
+    </update>
+</mapper>

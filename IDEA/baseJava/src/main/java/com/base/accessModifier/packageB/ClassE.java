@@ -26,7 +26,7 @@ public class ClassE {
     }
 
     public void show(){
-        System.out.println("***show(E)***"+b.pubA);
-        System.out.println("***show(E)***"+b.pubB);
+        System.out.println("show(E):"+b.pubA);
+        System.out.println("show(E):"+b.pubB);
     }
 }

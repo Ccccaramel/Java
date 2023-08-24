@@ -36,7 +36,7 @@ public class TopicInfo extends Tree {
         if(StringUtils.hasText(images)){
             for(String image:images.split(";")){
                 if(StringUtils.hasText(image)){
-                    this.images.add(ResourcesPathUtils.getPhotoPath() + image);
+                    this.images.add(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + image);
                 }
             }
         }

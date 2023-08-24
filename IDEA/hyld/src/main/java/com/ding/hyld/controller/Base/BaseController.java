@@ -1,5 +1,6 @@
 package com.ding.hyld.controller.Base;
 
+import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.security.CurrentUser;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,5 +27,9 @@ public class BaseController {
 
     protected String getUserName(){
         return getCurrentUser().getUser().getName();
+    }
+
+    protected boolean isRoot(){
+        return getCurrentUser().getUser().getRole().equals(DictionaryCode.USER_ROLE_1);
     }
 }

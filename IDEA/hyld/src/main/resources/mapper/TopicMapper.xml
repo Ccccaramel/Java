@@ -59,7 +59,7 @@
             <if test="topicVo.userId != null">
                 and t.userId = #{topicVo.userId}
             </if>
-            <if test="topicVo.status != null">
+            <if test="topicVo.status != null and topicVo.status != 0">
                 and t.status = #{topicVo.status}
             </if>
             <if test="topicVo.rubric != null">

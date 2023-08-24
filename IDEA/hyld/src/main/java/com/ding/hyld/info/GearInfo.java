@@ -85,7 +85,7 @@ public class GearInfo {
     public void setOneLevelImg(String oneLevelImg) {
         this.oneLevelImg = oneLevelImg;
         if(StringUtils.hasText(oneLevelImg)){
-            setOneLevelImgUrl(ResourcesPathUtils.getPhotoPath()+oneLevelImg);
+            setOneLevelImgUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD)+oneLevelImg);
         }
     }
 
@@ -96,7 +96,7 @@ public class GearInfo {
     public void setTwoLevelImg(String twoLevelImg) {
         this.twoLevelImg = twoLevelImg;
         if(StringUtils.hasText(twoLevelImg)){
-            setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath()+twoLevelImg);
+            setTwoLevelImgUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD)+twoLevelImg);
         }
     }
 
@@ -107,7 +107,7 @@ public class GearInfo {
     public void setThreeLevelImg(String threeLevelImg) {
         this.threeLevelImg = threeLevelImg;
         if(StringUtils.hasText(threeLevelImg)){
-            setThreeLevelImgUrl(ResourcesPathUtils.getPhotoPath()+threeLevelImg);
+            setThreeLevelImgUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD)+threeLevelImg);
         }
     }
 

@@ -1,8 +1,13 @@
+Q:JDK 下载
+A:以最新 openJDK20 为例
+    https://www.oracle.com/java/technologies/downloads/#jdk20-windows
+  下载 zip
+
 Q: JDK 配置
 A:打开 控制面板 > 系统安全 > 系统 > 高级系统设置 > 环境变量 > 系统变量
-  点击 新建(W)... 
+  点击 新建(W)...
     变量名(N): JAVA_HOME
-    变量值(V): [ JDK 的 bin 目录所在的绝对路径]
+    变量值(V): [ JDK 的 bin 文件夹所在的绝对路径]
   双击 Path 变量进行编辑,点击 新建(N) 添加如下信息
   %JAVA_HOME%\bin
   %JAVA_HOME%\jre\bin
@@ -296,3 +301,10 @@ Q:AtomicInteger
 A:使用场景
     1.作为多个线程同时使用的原子计数器
     2.在比较和交换操作中实现非阻塞算法
+
+Reflection - 反射
+  是 java 程序开发语言的特征之一,它允许运行中的 java 程序对自身进行检查
+  通常被 private 封装的资源(成员,方法等等)只能通过类内部访问,但反射能直接操作类的私有属性
+  反射可以在运行时获取一个类的所有信息,包括成员变量,成员方法,构造器等等,并操作
+  解剖一个类,通过 Class 类中的方法获取类的字节码文件对象
+  反射即将 java 类中的成员映射成一个个 java 对象

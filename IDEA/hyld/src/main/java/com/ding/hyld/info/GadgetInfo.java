@@ -27,7 +27,7 @@ public class GadgetInfo {
     public void setImage(String image) {
         this.image = image;
         if(StringUtils.hasText(image)){
-            setImageUrl(ResourcesPathUtils.getPhotoPath() +image);
+            setImageUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) +image);
         }
     }
 

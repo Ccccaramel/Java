@@ -17,6 +17,7 @@ public class UserWithTeamVo {
     private String teamNote;
     private String userNote;
     private Integer teamType;
+    private Integer eliminationLine; // 淘汰线
     private Integer userId;
     private String userName;
     private Integer relationStatus;
@@ -231,5 +232,13 @@ public class UserWithTeamVo {
 
     public void setNewUserId(Integer newUserId) {
         this.newUserId = newUserId;
+    }
+
+    public Integer getEliminationLine() {
+        return eliminationLine;
+    }
+
+    public void setEliminationLine(Integer eliminationLine) {
+        this.eliminationLine = eliminationLine;
     }
 }

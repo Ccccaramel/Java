@@ -60,7 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public void register(UserVo userVo) {
         try {
-            userVo.setPassword(new BCryptPasswordEncoder().encode(JSON.parseObject(RsaUtils.decryptByPrivateKey(userVo.getPassword()),String.class)+ CommonCode.SLAT));
+            userVo.setPassword(new BCryptPasswordEncoder().encode(RsaUtils.decryptByPrivateKey(userVo.getPassword())+ CommonCode.SLAT));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,9 +108,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         baseMapper.saveHeadPortrait(userVo);
     }
 
+    /**
+     * 增加经验
+     * @param userId 用户
+     * @param ex 经验值
+     */
     @Override
-    public void addEx(Integer userId, int i) {
-        baseMapper.addEx(userId,i);
+    public void addEx(Integer userId, int ex) {
+        baseMapper.addEx(userId, ex);
     }
 
     @Override

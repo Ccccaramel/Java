@@ -21,7 +21,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 resourcespathutils:
-  url: /api
+  url: /api/resources # 需要加上 api ,本地开发测试没有 nginx , nginx 会识别 api 并剔除掉
   realpath: /usr/local/hyld/hyldData/upload
   photopathprefix: /photo
   videopathprefix: /video

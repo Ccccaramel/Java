@@ -13,16 +13,19 @@ public interface CommonCode {
 
     String SLAT = "ding";
 
+    String IBS_KEY = "VQPBZ-GZIKU-QNPV7-B7MD5-PPA2F-TMBES";
+
     /**
      * 放行的 URL
      */
     String[] OPEN_URL = {
             "/static/**", // 放行静态资源
 //            "/photo/**", // 放行静态资源
-            "/hyld/**", // 放行静态资源
+            "/resources/**", // 放行静态资源
 //            "/static/ppp.jpg",
-            "/upload/**", // 放行静态资源
+//            "/upload/**", // 放行静态资源
             "/api/**", // 放行静态资源
+//            "/hyld/**", // 放行静态资源
 
             "/dictionary/getTeamCompetitionType",
             "/dictionary/getTeamType",
@@ -33,6 +36,7 @@ public interface CommonCode {
             "/dictionary/findJoinWayType",
             "/dictionary/findLeaveType",
             "/dictionary/getTeamStatusType",
+            "/dictionary/getBlogType",
 
             "/team/searchTeamInfo",
             "/userWithTeam/searchValidTeamInfo",
@@ -78,7 +82,15 @@ public interface CommonCode {
             "/user/login",
             "/user/qqLogin",
             "/user/updatePassword",
+
+            "/blog/searchBlog",
+            "/blog/findBlogById",
+            "/blog/viewBlog",
+            "/blogRemark/searchBlogRemark",
     };
 
     String FORM_EMAIL = "by164office@163.com"; // 平台发送验证码专用邮箱
+
+    String STRING_1 = "急冻树，急冻树，好吃的~急冻树~";
+    String STRING_2 = "急冻树!";
 }

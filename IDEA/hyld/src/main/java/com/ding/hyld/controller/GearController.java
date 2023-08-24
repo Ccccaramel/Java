@@ -46,11 +46,16 @@ public class GearController extends BaseController {
         GearVo gearVo =objectMapper.convertValue(JSONObject.parse(gearVoStr), GearVo.class);
 
         // 1.将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                ResourcesPathUtils.HYLD,
+                ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
         if(oneLevelImg!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(gearVo.getOneLevelImg())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getOneLevelImg());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+gearVo.getOneLevelImg());
                 oldFile.delete();
             }
 
@@ -60,7 +65,7 @@ public class GearController extends BaseController {
         if(twoLevelImg!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(gearVo.getTwoLevelImg())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getTwoLevelImg());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+gearVo.getTwoLevelImg());
                 oldFile.delete();
             }
 
@@ -70,7 +75,7 @@ public class GearController extends BaseController {
         if(threeLevelImg!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(gearVo.getThreeLevelImg())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gearVo.getThreeLevelImg());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+gearVo.getThreeLevelImg());
                 oldFile.delete();
             }
 

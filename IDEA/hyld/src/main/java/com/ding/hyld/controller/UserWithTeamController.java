@@ -236,16 +236,21 @@ public class UserWithTeamController extends BaseController {
         UserWithTeamInfo userWithTeamInfo = userWithTeamService.findById(relationId);
         // 1.删除旧资源
         if(StringUtils.hasText(userWithTeamInfo.getControllerPreparePage())){
-            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getControllerPreparePage());
+            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+userWithTeamInfo.getControllerPreparePage());
             oldFile.delete();
         }
         if(StringUtils.hasText(userWithTeamInfo.getTeamMainPage())){
-            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+userWithTeamInfo.getTeamMainPage());
+            File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+userWithTeamInfo.getTeamMainPage());
             oldFile.delete();
         }
 
         // 1.将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                ResourcesPathUtils.HYLD,
+                ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
         String controllerPreparePageNewName = resourceUploadAndDownload.resourceUpload(controllerPreparePageFile,getUserId()).get("newName");
         String teamMainPageNewName = resourceUploadAndDownload.resourceUpload(teamMainPageFile,getUserId()).get("newName");
 

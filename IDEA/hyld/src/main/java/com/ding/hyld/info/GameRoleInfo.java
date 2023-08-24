@@ -52,7 +52,7 @@ public class GameRoleInfo {
     public void setHeadImg(String headImg) {
         this.headImg = headImg;
         if(StringUtils.hasText(headImg)){
-            setHeadImgUrl(ResourcesPathUtils.getPhotoPath() + headImg);
+            setHeadImgUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + headImg);
         }
     }
 
@@ -63,7 +63,7 @@ public class GameRoleInfo {
     public void setPortrait(String portrait) {
         this.portrait = portrait;
         if(StringUtils.hasText(portrait)){
-            setPortraitUrl(ResourcesPathUtils.getPhotoPath() +portrait);
+            setPortraitUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) +portrait);
         }
     }
 

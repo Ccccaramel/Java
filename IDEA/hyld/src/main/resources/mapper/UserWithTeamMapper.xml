@@ -204,19 +204,28 @@
                #{userWithTeamVo.parentId});
     </insert>
     <select id="searchValidTeamInfo" resultMap="resultInfoMap">
-        select *
-        from user_with_team
-        where relationStatus = #{userWithTeamVo.relationStatus}
-        and checkStatus = #{userWithTeamVo.checkStatus}
-        and playerPosition = #{userWithTeamVo.playerPosition}
-        and creditScore = #{userWithTeamVo.creditScore}
+        select uwt.*,MAX(vl.createTime) as lastTime
+        from user_with_team uwt
+        join visit_log vl on uwt.userId=vl.userId
+        where uwt.relationStatus = #{userWithTeamVo.relationStatus}
+        and uwt.checkStatus = #{userWithTeamVo.checkStatus}
+        and uwt.playerPosition = #{userWithTeamVo.playerPosition}
+        and uwt.creditScore = #{userWithTeamVo.creditScore}
+        and vl.note like '%登录'
         <if test="userWithTeamVo.teamName!=null and userWithTeamVo.teamName.trim()!=''">
-            and exists (select 1 from team t where t.name like concat('%', #{userWithTeamVo.teamName},'%') and t.id = teamId)
+            and exists (select 1 from team t where t.name like concat('%', #{userWithTeamVo.teamName},'%') and t.id = uwt.teamId)
         </if>
         <if test="userWithTeamVo.teamScid!=null and userWithTeamVo.teamScid.trim()!=''">
-            and exists (select 1 from team t where t.scid like concat('%', #{userWithTeamVo.teamScid},'%') and t.id = teamId)
+            and exists (select 1 from team t where t.scid like concat('%', #{userWithTeamVo.teamScid},'%') and t.id = uwt.teamId)
         </if>
-        order by createTime desc
+        <if test="userWithTeamVo.teamType!=null">
+            and exists (select 1 from team t where t.type = #{userWithTeamVo.teamType} and t.id = uwt.teamId)
+        </if>
+        <if test="userWithTeamVo.eliminationLine!=null">
+            and exists (select 1 from team t where t.eliminationLine >= #{userWithTeamVo.eliminationLine} and t.id = uwt.teamId)
+        </if>
+        group by uwt.id
+        order by lastTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
             <bind name="start" value="(page.currentPage-1)*page.size"/>
             limit #{start},#{page.size}
@@ -234,6 +243,12 @@
         </if>
         <if test="userWithTeamVo.teamScid!=null and userWithTeamVo.teamScid.trim()!=''">
             and exists (select 1 from team t where t.scid like concat('%', #{userWithTeamVo.teamScid},'%') and t.id = teamId)
+        </if>
+        <if test="userWithTeamVo.teamType!=null">
+            and exists (select 1 from team t where t.type = #{userWithTeamVo.teamType} and t.id = teamId)
+        </if>
+        <if test="userWithTeamVo.eliminationLine!=null">
+            and exists (select 1 from team t where t.eliminationLine >= #{userWithTeamVo.eliminationLine} and t.id = teamId)
         </if>
     </select>
     <select id="playerFindTeamBy" resultMap="resultInfoMap">

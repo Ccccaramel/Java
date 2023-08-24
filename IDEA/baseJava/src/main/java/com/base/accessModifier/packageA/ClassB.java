@@ -49,6 +49,6 @@ public class ClassB extends ClassA{
     }
 
     public void show(){
-        System.out.println("***show(C)***"+super.pubA+super.defA+super.proA);
+        System.out.println("show(B):"+super.pubA+","+super.defA+","+super.proA);
     }
 }

@@ -12,6 +12,7 @@ public class Student{
     private static void goHome() {
         System.out.println("我先回家");
     }
+
     public static void main(String[] args) throws InterruptedException {
         Student student = new Student();
         String aHomeWork = "1+1=?";

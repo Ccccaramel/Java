@@ -46,6 +46,6 @@ public class ClassA {
     }
 
     public void show(){
-        System.out.println("***show(A)***"+this.priA+this.defA+this.proA+this.pubA);
+        System.out.println("show(A):"+this.priA+","+this.defA+","+this.proA+","+this.pubA);
     }
 }

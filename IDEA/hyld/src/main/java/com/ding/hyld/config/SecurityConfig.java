@@ -74,7 +74,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${spring.web.resources.static-locations}")
     private String[] staticLocations;
 
-    // 添加资源处理器路径 即每次访问静态资源都得添加"/hyld/",例如localhost:8080/hyld/j1.jpg
+    // 添加资源处理器路径 即每次访问静态资源都得添加"/hyld/",例如localhost:8080/hyld/j1.jpg(本地开发测试)
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/hyld/**") // url 格式,(在 CommonCode.OPEN_URL 放行该请求路径)

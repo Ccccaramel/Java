@@ -118,6 +118,35 @@ public class DictionaryController {
         return R.success(dictionaryService.findByType("gearRarity", null));
     }
 
+    @GetMapping("/getBlogPower")
+    public R getBlogPower(){
+        return R.success(dictionaryService.findByType("blogPower", null));
+    }
+
+    @GetMapping("/getBlogType")
+    public R getBlogType(){
+        return R.success(dictionaryService.findByType("blogType", null));
+    }
+
+    @GetMapping("/getBillType")
+    public R getBillType(){
+        return R.success(dictionaryService.findByType("billType", null));
+    }
+
+    @GetMapping("/getBillWeight")
+    public R getBillWeight(){
+        return R.success(dictionaryService.findByType("billWeight", null));
+    }
+
+    @GetMapping("/getCurrencyType")
+    public R getCurrencyType(){
+        return R.success(dictionaryService.findByType("currencyType", null));
+    }
+
+    @GetMapping("/getBillStatus")
+    public R getBillStatus(){
+        return R.success(dictionaryService.findByType("billStatus", null));
+    }
 
 
     @GetMapping("searchDictionary")

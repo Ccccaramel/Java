@@ -23,7 +23,7 @@ public class ClassC{
     }
 
     public void show(){
-        System.out.println("***show(C)***"+b.defA+b.proA+b.pubA);
-        System.out.println("***show(C)***"+b.pubB+b.proB+b.defB);
+        System.out.println("show(C):"+b.defA+","+b.proA+","+b.pubA);
+        System.out.println("show(C):"+b.pubB+","+b.proB+","+b.defB);
     }
 }

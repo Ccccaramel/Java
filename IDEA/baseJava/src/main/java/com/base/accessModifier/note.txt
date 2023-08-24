@@ -1,6 +1,6 @@
 访问修饰符相关
-             同类        同包(成员/子类) 不同包子类     不同包非子类(成员)
-  private    yes
-  default    yes        yes
-  protected  yes        yes           yes
-  public     yes        yes           yes          yes
+                                        同类   同包成员/子类   异包子类   异包成员
+  private                               yes
+  default/默认(package-private/包私有)    yes   yes
+  protected                             yes   yes           yes
+  public                                yes   yes           yes      yes

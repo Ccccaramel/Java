@@ -57,7 +57,7 @@ public class VisitLogController extends BaseController {
         result.put("numberOfRegistrantsInThisMonth",userService.searchUserOfPage( userVo));
         VisitLogVo visitLogVo = new VisitLogVo();
         visitLogVo.setNote("访问首页");
-        result.put("totalVisits",visitLogService.searchVisitLogOfPage( new VisitLogVo()));
+        result.put("totalVisits",visitLogService.searchVisitLogOfPage(visitLogVo));
         visitLogVo.setStartDate(TimeUtils.getFirstDayOfTheMonthStr());
         result.put("numberOfVisitInThisMonth",visitLogService.searchVisitLogOfPage( visitLogVo));
         visitLogVo.setNote("登录");

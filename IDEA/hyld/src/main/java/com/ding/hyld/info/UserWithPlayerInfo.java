@@ -107,7 +107,7 @@ public class UserWithPlayerInfo{
     public void setPlayerMainPage(String playerMainPage) {
         this.playerMainPage = playerMainPage;
         if(StringUtils.hasText(playerMainPage)){
-            setPlayerMainPageUrl(ResourcesPathUtils.getPhotoPath() + playerMainPage);
+            setPlayerMainPageUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + playerMainPage);
         }
     }
 
@@ -118,7 +118,7 @@ public class UserWithPlayerInfo{
     public void setPlayerPreparePage(String playerPreparePage) {
         this.playerPreparePage = playerPreparePage;
         if(StringUtils.hasText(playerPreparePage)){
-            setPlayerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + playerPreparePage);
+            setPlayerPreparePageUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + playerPreparePage);
         }
     }
 

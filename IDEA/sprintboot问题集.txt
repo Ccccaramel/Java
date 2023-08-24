@@ -1,0 +1,10 @@
+Q:sout 打印输出乱码
+A:IDEA > 文件 > 设置(T...) > 编译器 > 文件编码
+    全局编码 > UTF-8
+    项目编码 > GBK
+    列表下全部为 UTF-8
+    属性文件的默认编码 > UTF-8
+    勾选 自动转换成 Ascii 但显示原生的内容
+
+Q:Caused by: java.nio.charset.MalformedInputException: Input length = 2
+A:尝试把 yaml 文件内容去掉中文复制重新粘贴

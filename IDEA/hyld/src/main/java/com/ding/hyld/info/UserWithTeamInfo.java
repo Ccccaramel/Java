@@ -177,7 +177,7 @@ public class UserWithTeamInfo {
     public void setControllerPreparePage(String controllerPreparePage) {
         this.controllerPreparePage =  controllerPreparePage;
         if(StringUtils.hasText(controllerPreparePage)){
-            setControllerPreparePageUrl(ResourcesPathUtils.getPhotoPath() + controllerPreparePage);
+            setControllerPreparePageUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + controllerPreparePage);
         }
     }
 
@@ -188,7 +188,7 @@ public class UserWithTeamInfo {
     public void setTeamMainPage(String teamMainPage) {
         this.teamMainPage = teamMainPage;
         if(StringUtils.hasText(teamMainPage)){
-            setTeamMainPageUrl(ResourcesPathUtils.getPhotoPath() + teamMainPage);
+            setTeamMainPageUrl(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + teamMainPage);
         }
     }
 

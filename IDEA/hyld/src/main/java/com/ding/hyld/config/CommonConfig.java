@@ -67,10 +67,10 @@ public class CommonConfig extends WebMvcConfigurationSupport {
     @Value("${spring.web.resources.static-locations}")
     private String[] staticLocations;
 
-    // 添加资源处理器路径 即每次访问静态资源都得添加"/hyld/",例如localhost:8080/hyld/j1.jpg
+    // 添加资源处理器路径 即每次访问静态资源都得添加"/resources/",例如 http://127.0.0.1:8090/resources/ppp.jpg
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/hyld/**").addResourceLocations(staticLocations);
+        registry.addResourceHandler("/resources/**").addResourceLocations(staticLocations);
     }
 
     @Bean

@@ -127,6 +127,10 @@
         select u.* from user u
         where exists (select 1 from topic t where t.id = #{topicId} and t.userId=u.id);
     </select>
+    <select id="findByBlogRemarkId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from blog_remark br where br.id = #{blogRemarkId} and br.user=u.id);
+    </select>
     <select id="findByGameRoleCommentId" resultMap="resultInfoMap">
         select u.* from user u
         where exists (select 1 from game_role_comment grc where grc.id = #{gameRoleCommentId} and grc.user=u.id);

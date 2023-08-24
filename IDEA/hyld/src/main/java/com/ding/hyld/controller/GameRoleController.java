@@ -48,11 +48,16 @@ public class GameRoleController extends BaseController {
         GameRoleVo gameRoleVo =objectMapper.convertValue(JSONObject.parse(gameRoleVoStr),GameRoleVo.class);
 
         // 1.将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                ResourcesPathUtils.HYLD,
+                ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
         if(headImg!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(gameRoleVo.getHeadImg())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gameRoleVo.getHeadImg());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+gameRoleVo.getHeadImg());
                 oldFile.delete();
             }
 
@@ -62,7 +67,7 @@ public class GameRoleController extends BaseController {
         if(portrait!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(gameRoleVo.getPortrait())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+gameRoleVo.getPortrait());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+gameRoleVo.getPortrait());
                 oldFile.delete();
             }
 

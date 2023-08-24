@@ -47,11 +47,16 @@ public class StarPowerController extends BaseController {
         StarPowerVo starPowerVo =objectMapper.convertValue(JSONObject.parse(starPowerVoStr),StarPowerVo.class);
 
         // 1.将解析整理资源并存储,并返回资源信息
-        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+        ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                ResourcesPathUtils.HYLD,
+                ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
         if(image!=null){
             // 1.删除旧资源
             if(StringUtils.hasText(starPowerVo.getImage())){
-                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath()+starPowerVo.getImage());
+                File oldFile = new File(ResourcesPathUtils.getRealPhotoPath(ResourcesPathUtils.HYLD)+starPowerVo.getImage());
                 oldFile.delete();
             }
 

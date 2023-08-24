@@ -19,7 +19,7 @@ public class ClassD extends ClassB{
     }
 
     public void show(){
-        System.out.println("***show(D)***"+super.proA+super.pubA);
-        System.out.println("***show(D)***"+super.proB+super.pubB);
+        System.out.println("show(D):"+super.proA+","+super.pubA);
+        System.out.println("show(D):"+super.proB+","+super.pubB);
     }
 }

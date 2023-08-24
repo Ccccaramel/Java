@@ -126,7 +126,12 @@ public class TopicController extends BaseController {
         if(imageFiles!=null){
             StringBuffer images = new StringBuffer();
             // 将解析整理资源并存储,并返回资源信息
-            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                    ResourcesPathUtils.HYLD,
+                    ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
             for(int i=0;i<imageFiles.length;i++){
                 String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
                 images.append(imageNewName+";");
@@ -159,7 +164,12 @@ public class TopicController extends BaseController {
         if(imageFiles!=null){
             StringBuffer images = new StringBuffer();
             // 将解析整理资源并存储,并返回资源信息
-            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(ResourcesPathUtils.getPhotoDirFile(), ResourcesPathUtils.getVideoDirFile(), ResourcesPathUtils.getAudioDirFile(), ResourcesPathUtils.getFileDirFile());
+            ResourceUploadAndDownloadUtils resourceUploadAndDownload=new ResourceUploadAndDownloadUtils(
+                    ResourcesPathUtils.HYLD,
+                    ResourcesPathUtils.getPhotoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getVideoDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getAudioDirFile(ResourcesPathUtils.HYLD),
+                    ResourcesPathUtils.getFileDirFile(ResourcesPathUtils.HYLD));
             for(int i=0;i<imageFiles.length;i++){
                 String imageNewName = resourceUploadAndDownload.resourceUpload(imageFiles[i],getUserId()).get("newName");
                 images.append(imageNewName+";");

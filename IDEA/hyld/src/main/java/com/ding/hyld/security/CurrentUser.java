@@ -2,6 +2,7 @@ package com.ding.hyld.security;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.ding.hyld.entity.User;
+import com.ding.hyld.info.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,5 +90,9 @@ public class CurrentUser implements UserDetails {
 
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
+    }
+
+    public UserInfo getUserInfo(){
+        return new UserInfo();
     }
 }

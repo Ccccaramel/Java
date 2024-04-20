@@ -16,7 +16,7 @@ public class User extends BaseObject {
     private String qqOpenId;
     private String qqUnionId;
     private String email;
-
+    private int coin;
 
     public String getFingerprint() {
         return fingerprint;
@@ -104,5 +104,13 @@ public class User extends BaseObject {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
     }
 }

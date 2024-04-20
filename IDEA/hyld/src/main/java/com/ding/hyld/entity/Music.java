@@ -7,26 +7,26 @@ import java.time.LocalDateTime;
 
 @TableName("music")
 public class Music extends BaseObject {
-    private String cover;
+    private String coverRef;
     private String name;
-    private String info;
-    private String lyrics;
     private String composing;
-    private String sing;
+    private String lyrics;
+    private String arranger;
+    private String singer;
+    private String info;
     private String album;
     private LocalDateTime releaseTime;
-    private String audio;
-    private String audioLink;
-    private String mv;
+    private String audioName;
+    private String audioRef;
     private String mvLink;
     private Integer status;
 
-    public String getCover() {
-        return cover;
+    public String getCoverRef() {
+        return coverRef;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setCoverRef(String coverRef) {
+        this.coverRef = coverRef;
     }
 
     public String getName() {
@@ -37,12 +37,12 @@ public class Music extends BaseObject {
         this.name = name;
     }
 
-    public String getInfo() {
-        return info;
+    public String getComposing() {
+        return composing;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setComposing(String composing) {
+        this.composing = composing;
     }
 
     public String getLyrics() {
@@ -53,44 +53,28 @@ public class Music extends BaseObject {
         this.lyrics = lyrics;
     }
 
-    public String getComposing() {
-        return composing;
+    public String getArranger() {
+        return arranger;
     }
 
-    public void setComposing(String composing) {
-        this.composing = composing;
+    public void setArranger(String arranger) {
+        this.arranger = arranger;
     }
 
-    public String getSing() {
-        return sing;
+    public String getSinger() {
+        return singer;
     }
 
-    public String getAudio() {
-        return audio;
+    public void setSinger(String singer) {
+        this.singer = singer;
     }
 
-    public void setAudio(String audio) {
-        this.audio = audio;
+    public String getInfo() {
+        return info;
     }
 
-    public String getAudioLink() {
-        return audioLink;
-    }
-
-    public void setAudioLink(String audioLink) {
-        this.audioLink = audioLink;
-    }
-
-    public String getMvLink() {
-        return mvLink;
-    }
-
-    public void setMvLink(String mvLink) {
-        this.mvLink = mvLink;
-    }
-
-    public void setSing(String sing) {
-        this.sing = sing;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public String getAlbum() {
@@ -109,12 +93,28 @@ public class Music extends BaseObject {
         this.releaseTime = releaseTime;
     }
 
-    public String getMv() {
-        return mv;
+    public String getAudioName() {
+        return audioName;
     }
 
-    public void setMv(String mv) {
-        this.mv = mv;
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
+    }
+
+    public String getAudioRef() {
+        return audioRef;
+    }
+
+    public void setAudioRef(String audioRef) {
+        this.audioRef = audioRef;
+    }
+
+    public String getMvLink() {
+        return mvLink;
+    }
+
+    public void setMvLink(String mvLink) {
+        this.mvLink = mvLink;
     }
 
     public Integer getStatus() {

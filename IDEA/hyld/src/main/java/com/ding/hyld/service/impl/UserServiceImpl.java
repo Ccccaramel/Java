@@ -8,6 +8,7 @@ import com.ding.hyld.info.EmailCodeInfo;
 import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.mapper.UserMapper;
 import com.ding.hyld.security.CurrentUser;
+import com.ding.hyld.service.BaseService;
 import com.ding.hyld.service.EmailCodeService;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.service.UserService;
@@ -19,18 +20,25 @@ import com.ding.hyld.vo.LoginUserVo;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService, BaseService {
     @Autowired
     LoginService loginService;
     @Autowired
     EmailCodeService emailCodeService;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
 
     @Override
     public User login(String account, String password) {
@@ -64,6 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         } catch (Exception e) {
             e.printStackTrace();
         }
+        userVo.setCoin(3200);
         baseMapper.register(userVo);
     }
 
@@ -74,6 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
     @Override
     public UserInfo findById(Integer id) {
+        delay(id);  // 查看个人信息重置token生命周期为1天
         return baseMapper.findById(id);
     }
 
@@ -95,7 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     public void saveUserPassword(UserVo userVo) {
         try {
-            String s = JSON.parseObject(RsaUtils.decryptByPrivateKey(userVo.getPassword()),String.class)+ CommonCode.SLAT;
+            String s = RsaUtils.decryptByPrivateKey(userVo.getPassword())+ CommonCode.SLAT;
             userVo.setPassword(new BCryptPasswordEncoder().encode(s));
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,4 +167,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public Integer searchUserOfPage(UserVo userVo) {
         return baseMapper.searchUserOfPage(userVo);
     }
+
+    @Override
+    public void updateCoin(UserVo userVo) {
+        baseMapper.updateCoin(userVo);
+    }
+
+    @Override
+    public UserInfo findBriefInfoById(Integer id) {
+        return baseMapper.findBriefInfoById(id);
+    }
+
+    /**
+     * 项目启动时立即执行一次
+     * @Scheduled(fixedRate = 30*60*1000)  // 30分钟执行一次,单位为毫秒
+     *
+     * cron
+     * @Scheduled(cron = "0 0/30 9-22 * * ?")  // 每天在9点至22点之间,0分和30分执行一次
+     */
+
+    /**
+     * 重置用户的token生命周期
+     * @param userId
+     */
+    @Override
+    public void delay(Integer userId) {
+        redisTemplate.expire("login_"+userId,1, TimeUnit.DAYS);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void giftCoin(){  // 每天0点为每位用户赠送60代币,当用户拥有的代币大于8000则不赠送
+        baseMapper.giftCoin();
+    }
+
+
 }

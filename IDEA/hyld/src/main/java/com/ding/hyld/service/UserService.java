@@ -43,4 +43,8 @@ public interface UserService extends IService<User> {
     void updatePassword(User user);
 
     Integer searchUserOfPage(UserVo userVo);
+
+    void updateCoin(UserVo userVo);
+
+    UserInfo findBriefInfoById(Integer id);
 }

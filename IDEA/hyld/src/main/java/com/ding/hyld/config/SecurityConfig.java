@@ -3,6 +3,7 @@ package com.ding.hyld.config;
 import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.filter.JWTAuthenticationTokenFilter;
 import com.ding.hyld.interceptor.ResourceInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 请求认证过滤器
  *   EnableGlobalMethodSecurity 权限
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 开启注解配置权限
@@ -63,14 +65,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .build();
     }
 
-//    private static final String[] CLASSPATH_RESOURCE_LOCATINOS={
-//            "file:D:/hyldResources/", "classpath:/static/"
-//    };
-//
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATINOS);
-//    }
     @Value("${spring.web.resources.static-locations}")
     private String[] staticLocations;
 
@@ -83,7 +77,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("SecurityConfig >>> addInterceptors");
+        log.info("SecurityConfig >>> addInterceptors");
         registry.addInterceptor(new ResourceInterceptor()) // 添加拦截器
                 .addPathPatterns("/**") // 拦截路径,包括静态资源
                 .excludePathPatterns(CommonCode.OPEN_URL); // 放行请求

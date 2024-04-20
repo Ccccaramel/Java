@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,16 +42,16 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info("IP(IpUtils)        : {}", IpUtils.getIpAddress(request));
+        String ips = IpUtils.getIpAddress(request);// 正常情况下 ip 与 ips 的值是一样的,若不同则全部视为非法访问
+        logger.info("IP(IpUtils)        : {}", ips);
 
         request.setCharacterEncoding("utf-8");
-        String ip = request.getHeader("x-forwarded-for");
         String url = request.getRequestURL().toString();
         String method = request.getMethod();
         // 打印请求相关参数
         logger.info("Host               : {}",request.getHeader("host"));
         logger.info("X-Real-IP          : {}",request.getHeader("x-real-ip"));
-        logger.info("IP                 : {}",ip);
+        logger.info("IP                 : {}",request.getHeader("x-forwarded-for"));
         logger.info("X-Forwarded-Proto  : {}",request.getHeader("x-forwarded-proto"));
         logger.info("URL                : {}",url);
         logger.info("HTTP Method        : {}",request.getMethod());
@@ -58,9 +59,9 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
         boolean check = checkUrl(url);
         logger.info("url检查结果         : {}",check);
         logger.info("运行环境            : {}",SpringUtils.getActiveProfile());
-        if((ip==null || !check)&&SpringUtils.getActiveProfile().equals("prod")){
+        if((ips==null || !check)&&SpringUtils.getActiveProfile().equals("prod")){
+//        if(ips==null || !check){
             logger.info("ip 为空或 url 包含非法字符!");
-            String ips = IpUtils.getIpAddress(request); // 正常情况下 ip 与 ips 的值是一样的,若不同则全部视为非法访问
             if(checkIP(ips)){ // 在未记录到 redis 中
                 logger.info("此 {} 不在黑名单中或非 ipv4 ...",ips);
                 RestTemplate restTemplate = new RestTemplate();
@@ -102,7 +103,7 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
     }
 
     private boolean checkUrl(String url) {
-        for (String s:Arrays.asList("%3B","%25","forName","Response","121.36.141.65")) {
+        for (String s:Arrays.asList("%3B","%25","forName","Response")) {
             if(url.contains(s)){
                 logger.info("检测到非法字符       : {}", s);
                 return false;

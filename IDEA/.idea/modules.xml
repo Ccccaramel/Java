@@ -3,13 +3,20 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/IDEA.iml" filepath="$PROJECT_DIR$/.idea/IDEA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/SpringCloud.iml" filepath="$PROJECT_DIR$/SpringCloud/SpringCloud.iml" />
       <module fileurl="file://$PROJECT_DIR$/baseJava/baseJava.iml" filepath="$PROJECT_DIR$/baseJava/baseJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/common/common.iml" filepath="$PROJECT_DIR$/SpringCloud/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/common/common-util/common-util.iml" filepath="$PROJECT_DIR$/SpringCloud/common/common-util/common-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/hyld/hyld.iml" filepath="$PROJECT_DIR$/hyld/hyld.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/model/model.iml" filepath="$PROJECT_DIR$/SpringCloud/model/model.iml" />
       <module fileurl="file://$PROJECT_DIR$/onlineEdu/onlineEdu.iml" filepath="$PROJECT_DIR$/onlineEdu/onlineEdu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/service/service.iml" filepath="$PROJECT_DIR$/SpringCloud/service/service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/common/service-util/service-util.iml" filepath="$PROJECT_DIR$/SpringCloud/common/service-util/service-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/springBoot/springBoot.iml" filepath="$PROJECT_DIR$/springBoot/springBoot.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC/springMVC.iml" filepath="$PROJECT_DIR$/springMVC/springMVC.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC-annotation/springMVC-annotation.iml" filepath="$PROJECT_DIR$/springMVC-annotation/springMVC-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringCloud/test.iml" filepath="$PROJECT_DIR$/SpringCloud/test.iml" />
     </modules>
   </component>
 </project>

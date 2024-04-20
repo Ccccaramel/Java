@@ -192,4 +192,82 @@ public interface DictionaryCode {
      * 冻结
      */
     Integer BILL_STATUS_2 =3001;
+
+    // music状态
+    /**
+     * 正常
+     */
+    Integer MUSIC_STATUS_1 =3100;
+    /**
+     * 删除
+     */
+    Integer MUSIC_STATUS_2 =3101;
+
+    // musicLyric状态
+    /**
+     * 正常
+     */
+    Integer MUSIC_LYRIC_STATUS_1 =3200;
+    /**
+     * 删除
+     */
+    Integer MUSIC_LYRIC_STATUS_2 =3201;
+
+    // 关系状态
+    /**
+     * 正常
+     */
+    Integer RELATIONSHIP_STATUS_1 =3300;
+
+    /**
+     * 待回应
+     */
+    Integer RELATIONSHIP_STATUS_2 =3301;
+
+    /**
+     * 解除
+     */
+    Integer RELATIONSHIP_STATUS_3 =3302;
+
+    /**
+     * 已撤销
+     */
+    Integer RELATIONSHIP_STATUS_4 =3303;
+
+    /**
+     * 已拒绝
+     */
+    Integer RELATIONSHIP_STATUS_5 =3304;
+
+    // 关系类型
+    /**
+     * 好友
+     */
+    Integer RELATIONSHIP_TYPE_1 =3400;
+
+    /**
+     * 黑名单
+     */
+    Integer RELATIONSHIP_TYPE_2 =3401;
+
+    // 聊天信息状态
+    /**
+     * 已读
+     */
+    Integer CHAT_STATUS_1 =3500;
+    /**
+     * 未读
+     */
+    Integer CHAT_STATUS_2 =3501;
+
+    // 聊天信息类型
+    /**
+     * 私密
+     */
+    Integer CHAT_TYPE_1 =3600;
+    /**
+     * 公开
+     */
+    Integer CHAT_TYPE_2 =3601;
+
 }

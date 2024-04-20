@@ -1,6 +1,7 @@
 package com.ding.hyld.info;
 
 import com.ding.hyld.entity.Dictionary;
+import com.ding.hyld.entity.User;
 import com.ding.hyld.utils.CommonUtils;
 import com.ding.hyld.utils.TimeUtils;
 
@@ -30,6 +31,7 @@ public class UserInfo {
     private Integer proportion;
     private String no; // 指纹
     private String email;
+    private int coin;
 
     public Integer getProportion() {
         return proportion;
@@ -175,6 +177,14 @@ public class UserInfo {
         this.email = email;
     }
 
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -195,6 +205,7 @@ public class UserInfo {
                 ", proportion=" + proportion +
                 ", no='" + no + '\'' +
                 ", email='" + email + '\'' +
+                ", coin='" + coin + '\'' +
                 '}';
     }
 }

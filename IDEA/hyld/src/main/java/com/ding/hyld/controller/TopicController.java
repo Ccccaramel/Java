@@ -6,6 +6,8 @@ import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.info.TopicInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.TopicService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
+import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.utils.ResourceUploadAndDownloadUtils;
 import com.ding.hyld.utils.ResourcesPathUtils;
@@ -17,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +29,8 @@ import java.util.Objects;
 public class TopicController extends BaseController {
     @Autowired
     private TopicService topicService;
-
+    @Autowired
+    private QQIPServiceImpl ibsService;
     /**
      * 用于搜索话题
      * @param page
@@ -118,10 +122,14 @@ public class TopicController extends BaseController {
      * @return
      */
     @PostMapping("/saveTopic")
-    public R saveTopic(@RequestParam("topicVoStr")  String topicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles){
+    public R saveTopic(@RequestParam("topicVoStr")  String topicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles, HttpServletRequest request){
         // 解析
         ObjectMapper objectMapper = new ObjectMapper();
         TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(topicVoStr),TopicVo.class);
+
+        String ip = IpUtils.getIpAddress(request);
+        topicVo.setIp(ip);
+        topicVo.setAddress(ibsService.getAddress(ip).get("address"));
 
         if(imageFiles!=null){
             StringBuffer images = new StringBuffer();
@@ -155,11 +163,13 @@ public class TopicController extends BaseController {
      */
     @PreAuthorize("hasAuthority('replyMe_reply')")
     @PostMapping("/saveReplyTopicInfo")
-    public R saveReplyTopicInfo(@RequestParam("replyTopicVoStr") String replyTopicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles){
+    public R saveReplyTopicInfo(@RequestParam("replyTopicVoStr") String replyTopicVoStr,@RequestParam(value = "imageFiles",required = false) MultipartFile[] imageFiles, HttpServletRequest request){
         // 解析
         ObjectMapper objectMapper = new ObjectMapper();
         TopicVo topicVo =objectMapper.convertValue(JSONObject.parse(replyTopicVoStr),TopicVo.class);
-
+        String ip = IpUtils.getIpAddress(request);
+        topicVo.setIp(ip);
+        topicVo.setAddress(ibsService.getAddress(ip).get("address"));
 
         if(imageFiles!=null){
             StringBuffer images = new StringBuffer();

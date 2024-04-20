@@ -56,7 +56,7 @@ IOC 的技术实现
   点击 Finish 完成项目创建并自动打开了 pom.xml
   在左侧 Project 目录窗口中展开你的项目
     src
-      |- main
+      |- annotationDemo
       |   |- java
       |   |- resources
       |- test
@@ -81,7 +81,7 @@ IOC 的技术实现
         <version>4.13</version>
         <scope>test</scope>
       </dependency>
-    目的是代替通过 main() 方法测试代码
+    目的是代替通过 annotationDemo() 方法测试代码
     使测试部分功能时更方便
     在 test/java 目录下测试
   创建 Spring 配置文件

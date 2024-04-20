@@ -2,6 +2,7 @@ package com.ding.hyld.utils;
 
 import com.ding.hyld.constant.CommonCode;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,6 +11,7 @@ import java.util.*;
 
 import static java.time.LocalTime.now;
 
+@Slf4j
 public class JWTUtils {
     public static String getUUID(){
         String token = UUID.randomUUID().toString().replace("-","");
@@ -63,9 +65,9 @@ public class JWTUtils {
     }
     private static void fun(Long value){
         String token = JWTUtils.createToken(value);
-        System.out.println(token);
+        log.info("token:{}",token);
         Map<String,Object> objectMap=JWTUtils.checkToken(token);
-        System.out.println(objectMap.get("userId"));
+        log.info("userId:{}",objectMap.get("userId"));
     }
 
 }

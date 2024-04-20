@@ -2,7 +2,7 @@
 1.创建一个 Maven 工程,在项目的 java 新建一个 java 类
     @SpringBootApplication
     public class start {
-        public static void main(String[] args){
+        public static void annotationDemo(String[] args){
             SpringApplication.run(start.class,args);
         }
     }
@@ -18,7 +18,7 @@
 2.修改 Maven 配置
   IDEA > File > Settings > Build,Execution,Deployment > Maven
   将 Maven home path , User settings file , Local repository 三项更改为本地 maven
-3.运行,点击 main 方法 左侧的"run"按钮启动服务
+3.运行,点击 annotationDemo 方法 左侧的"run"按钮启动服务
 4.在浏览器输入 localhost:8080/hi 即可访问页面
 
 快速创建 springboot 项目
@@ -196,9 +196,9 @@
   </dependency>
 
 Q:启动报错
-    Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+    Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.annotationDemo.allow-circular-references to true.
 A:相互/循环-引用/依赖,在 配置(yaml)中加入如下配置
-    spring.main.allow-circular-references=true
+    spring.annotationDemo.allow-circular-references=true
 添加 refresh_token
   <额外模块,优化相关,非必要>
 

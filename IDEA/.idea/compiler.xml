@@ -19,21 +19,29 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="15">
       <module name="baseJava" target="15" />
-      <module name="demo" target="11" />
+      <module name="common" target="15" />
+      <module name="common-util" target="17" />
+      <module name="demo" target="20" />
       <module name="hyld" target="11" />
-      <module name="metaverse" target="20" />
+      <module name="model" target="17" />
       <module name="onlineEdu" target="11" />
+      <module name="service" target="17" />
+      <module name="service-util" target="17" />
       <module name="springBoot" target="1.8" />
+      <module name="SpringCloud" target="15" />
       <module name="springMVC" target="15" />
       <module name="springMVC-annotation" target="15" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common-util" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="hyld" options="-parameters" />
-      <module name="metaverse" options="-parameters" />
+      <module name="model" options="-parameters" />
       <module name="onlineEdu" options="-parameters" />
+      <module name="service" options="-parameters" />
+      <module name="service-util" options="-parameters" />
       <module name="springBoot" options="-parameters" />
     </option>
   </component>

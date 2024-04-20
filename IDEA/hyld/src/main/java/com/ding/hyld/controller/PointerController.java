@@ -3,6 +3,8 @@ package com.ding.hyld.controller;
 import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.service.PointerService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
+import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.Page;
 import com.ding.hyld.vo.PointerVo;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Objects;
@@ -19,7 +22,8 @@ import java.util.Objects;
 public class PointerController extends BaseController {
     @Autowired
     private PointerService pointerService;
-
+    @Autowired
+    private QQIPServiceImpl ibsService;
     /**
      * @param page
      * @param pointerVo
@@ -39,7 +43,12 @@ public class PointerController extends BaseController {
     }
 
     @PostMapping("/savePointer")
-    public R savePointer(@RequestBody PointerVo pointerVo){
+    public R savePointer(@RequestBody PointerVo pointerVo, HttpServletRequest request){
+
+        String ip = IpUtils.getIpAddress(request);
+        pointerVo.setIp(ip);
+        pointerVo.setAddress(ibsService.getAddress(ip).get("address"));
+
         pointerVo.setUserId(getUserId());
         pointerVo.setStatus(DictionaryCode.POINTER_STATUS_1);
         pointerService.add(pointerVo);

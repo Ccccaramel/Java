@@ -1,5 +1,6 @@
 package com.ding.hyld.info;
 
+import com.ding.hyld.entity.Dictionary;
 import com.ding.hyld.utils.TimeUtils;
 
 import java.time.LocalDateTime;
@@ -7,14 +8,41 @@ import java.time.LocalDateTime;
 public class MusicLyricInfo {
     private Integer id;
 
-    private Integer point;
+    private Integer music;
+    private Integer number;
+    private Integer minutes;
+    private Integer second;
     private String text;
     private String color;
-    private DictionaryInfo status;
+    private Dictionary status;
 
     private LocalDateTime createTime;
     private String createTimeStr;
     private String note;
+
+    public Integer getMusic() {
+        return music;
+    }
+
+    public void setMusic(Integer music) {
+        this.music = music;
+    }
+
+    public Integer getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(Integer minutes) {
+        this.minutes = minutes;
+    }
+
+    public Integer getSecond() {
+        return second;
+    }
+
+    public void setSecond(Integer second) {
+        this.second = second;
+    }
 
     public Integer getId() {
         return id;
@@ -24,12 +52,12 @@ public class MusicLyricInfo {
         this.id = id;
     }
 
-    public Integer getPoint() {
-        return point;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setPoint(Integer point) {
-        this.point = point;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getText() {
@@ -74,11 +102,11 @@ public class MusicLyricInfo {
     }
 
 
-    public DictionaryInfo getStatus() {
+    public Dictionary getStatus() {
         return status;
     }
 
-    public void setStatus(DictionaryInfo status) {
+    public void setStatus(Dictionary status) {
         this.status = status;
     }
 }

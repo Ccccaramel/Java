@@ -18,22 +18,12 @@ public class EmailCodeVo {
 
     private String start; // 起始时间
 
-    private String Data;
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getData() {
-        return Data;
-    }
-
-    public void setData(String data) {
-        Data = data;
     }
 
     public String getStart() {

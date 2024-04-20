@@ -1,5 +1,6 @@
 package com.ding.hyld.service;
 
+import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.QQUserVo;
@@ -12,6 +13,8 @@ public interface LoginService {
     R login(UserVo userVo, long timeout, TimeUnit days, VisitLogVo visitLogVo);
 
     CurrentUser checkToken(String token);
+
+    UserInfo getUserInfoByToken(String token);
 
     void logout();
 

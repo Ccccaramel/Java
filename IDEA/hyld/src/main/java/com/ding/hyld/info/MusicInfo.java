@@ -1,53 +1,44 @@
 package com.ding.hyld.info;
 
+import com.ding.hyld.entity.Dictionary;
+import com.ding.hyld.utils.ResourcesPathUtils;
 import com.ding.hyld.utils.TimeUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MusicInfo {
     private Integer id;
-
-    private String cover;
+    private String coverRef;
+    private String coverLink;
     private String name;
-    private String info;
-    private String lyrics;
     private String composing;
-    private String sing;
+    private String lyrics;
+    private String arranger;
+    private String singer;
+    private String info;
     private String album;
-    private LocalDateTime releaseTime;
+    private String releaseTime;
     private String releaseTimeStr;
-    private String audio;
+    private String audioName;
+    private String audioRef;
     private String audioLink;
-    private String mv;
     private String mvLink;
-    private DictionaryInfo status;
+    private String note;
+    private Dictionary status;
 
     private LocalDateTime createTime;
     private String createTimeStr;
-    private String note;
 
-    public String getAudio() {
-        return audio;
+    private List<MusicLyricInfo> musicLyricInfoList;
+
+    public List<MusicLyricInfo> getMusicLyricInfoList() {
+        return musicLyricInfoList;
     }
 
-    public void setAudio(String audio) {
-        this.audio = audio;
-    }
-
-    public String getAudioLink() {
-        return audioLink;
-    }
-
-    public void setAudioLink(String audioLink) {
-        this.audioLink = audioLink;
-    }
-
-    public String getMvLink() {
-        return mvLink;
-    }
-
-    public void setMvLink(String mvLink) {
-        this.mvLink = mvLink;
+    public void setMusicLyricInfoList(List<MusicLyricInfo> musicLyricInfoList) {
+        this.musicLyricInfoList = musicLyricInfoList;
     }
 
     public Integer getId() {
@@ -58,12 +49,31 @@ public class MusicInfo {
         this.id = id;
     }
 
-    public String getCover() {
-        return cover;
+    public String getCoverRef() {
+        return coverRef;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setCoverRef(String coverRef) {
+        this.coverRef = coverRef;
+        if(StringUtils.hasText(coverRef)){
+            setCoverLink(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.MUSIC) + coverRef);
+        }
+    }
+
+    public String getAudioLink() {
+        return audioLink;
+    }
+
+    public void setAudioLink(String audioLink) {
+        this.audioLink = audioLink;
+    }
+
+    public String getCoverLink() {
+        return coverLink;
+    }
+
+    public void setCoverLink(String coverLink) {
+        this.coverLink = coverLink;
     }
 
     public String getName() {
@@ -74,12 +84,12 @@ public class MusicInfo {
         this.name = name;
     }
 
-    public String getInfo() {
-        return info;
+    public String getComposing() {
+        return composing;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setComposing(String composing) {
+        this.composing = composing;
     }
 
     public String getLyrics() {
@@ -90,20 +100,28 @@ public class MusicInfo {
         this.lyrics = lyrics;
     }
 
-    public String getComposing() {
-        return composing;
+    public String getArranger() {
+        return arranger;
     }
 
-    public void setComposing(String composing) {
-        this.composing = composing;
+    public void setArranger(String arranger) {
+        this.arranger = arranger;
     }
 
-    public String getSing() {
-        return sing;
+    public String getSinger() {
+        return singer;
     }
 
-    public void setSing(String sing) {
-        this.sing = sing;
+    public void setSinger(String singer) {
+        this.singer = singer;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public String getAlbum() {
@@ -114,13 +132,13 @@ public class MusicInfo {
         this.album = album;
     }
 
-    public LocalDateTime getReleaseTime() {
+    public String getReleaseTime() {
         return releaseTime;
     }
 
     public void setReleaseTime(LocalDateTime releaseTime) {
-        this.releaseTime = releaseTime;
-        setReleaseTimeStr(TimeUtils.toString(releaseTime,TimeUtils.FORMAT_1));
+        this.releaseTime =releaseTime.toString();
+        setReleaseTimeStr(TimeUtils.toString(releaseTime,TimeUtils.FORMAT_4));
     }
 
     public String getReleaseTimeStr() {
@@ -131,12 +149,47 @@ public class MusicInfo {
         this.releaseTimeStr = releaseTimeStr;
     }
 
-    public String getMv() {
-        return mv;
+    public String getAudioName() {
+        return audioName;
     }
 
-    public void setMv(String mv) {
-        this.mv = mv;
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
+    }
+
+    public String getAudioRef() {
+        return audioRef;
+    }
+
+    public void setAudioRef(String audioRef) {
+        this.audioRef = audioRef;
+        if(StringUtils.hasText(audioRef)){
+            setAudioLink(ResourcesPathUtils.getAudioPath(ResourcesPathUtils.MUSIC) + audioRef);
+        }
+    }
+
+    public String getMvLink() {
+        return mvLink;
+    }
+
+    public void setMvLink(String mvLink) {
+        this.mvLink = mvLink;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Dictionary getStatus() {
+        return status;
+    }
+
+    public void setStatus(Dictionary status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreateTime() {
@@ -148,28 +201,11 @@ public class MusicInfo {
         setCreateTimeStr(TimeUtils.toString(createTime,TimeUtils.FORMAT_1));
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public String getCreateTimeStr() {
         return createTimeStr;
     }
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
-    }
-
-
-    public DictionaryInfo getStatus() {
-        return status;
-    }
-
-    public void setStatus(DictionaryInfo status) {
-        this.status = status;
     }
 }

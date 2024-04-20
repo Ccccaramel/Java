@@ -1,32 +1,35 @@
 package com.ding.hyld.vo;
 
-import java.time.LocalDateTime;
-
 public class MusicVo {
     private Integer id;
-
     private String cover;
+    private String coverRef;
+    private String coverLink;
     private String name;
-    private String info;
-    private String lyrics;
     private String composing;
-    private String sing;
+    private String lyrics;
+    private String arranger;
+    private String singer;
+    private String info;
     private String album;
-    private LocalDateTime releaseTime;
-    private String audio;
+    private String releaseTime;
+    private String audioName;
+    private String audioRef;
     private String audioLink;
-    private String mv;
     private String mvLink;
     private Integer status;
-
     private String note;
 
-    public String getAudio() {
-        return audio;
+    private boolean add;
+    private String title;
+    private String keywords;
+
+    public String getCoverLink() {
+        return coverLink;
     }
 
-    public void setAudio(String audio) {
-        this.audio = audio;
+    public void setCoverLink(String coverLink) {
+        this.coverLink = coverLink;
     }
 
     public String getAudioLink() {
@@ -35,14 +38,6 @@ public class MusicVo {
 
     public void setAudioLink(String audioLink) {
         this.audioLink = audioLink;
-    }
-
-    public String getMvLink() {
-        return mvLink;
-    }
-
-    public void setMvLink(String mvLink) {
-        this.mvLink = mvLink;
     }
 
     public Integer getId() {
@@ -61,28 +56,20 @@ public class MusicVo {
         this.cover = cover;
     }
 
+    public String getCoverRef() {
+        return coverRef;
+    }
+
+    public void setCoverRef(String coverRef) {
+        this.coverRef = coverRef;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public String getLyrics() {
-        return lyrics;
-    }
-
-    public void setLyrics(String lyrics) {
-        this.lyrics = lyrics;
     }
 
     public String getComposing() {
@@ -93,12 +80,36 @@ public class MusicVo {
         this.composing = composing;
     }
 
-    public String getSing() {
-        return sing;
+    public String getLyrics() {
+        return lyrics;
     }
 
-    public void setSing(String sing) {
-        this.sing = sing;
+    public void setLyrics(String lyrics) {
+        this.lyrics = lyrics;
+    }
+
+    public String getArranger() {
+        return arranger;
+    }
+
+    public void setArranger(String arranger) {
+        this.arranger = arranger;
+    }
+
+    public String getSinger() {
+        return singer;
+    }
+
+    public void setSinger(String singer) {
+        this.singer = singer;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public String getAlbum() {
@@ -109,20 +120,36 @@ public class MusicVo {
         this.album = album;
     }
 
-    public LocalDateTime getReleaseTime() {
+    public String getReleaseTime() {
         return releaseTime;
     }
 
-    public void setReleaseTime(LocalDateTime releaseTime) {
+    public void setReleaseTime(String releaseTime) {
         this.releaseTime = releaseTime;
     }
 
-    public String getMv() {
-        return mv;
+    public String getAudioName() {
+        return audioName;
     }
 
-    public void setMv(String mv) {
-        this.mv = mv;
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
+    }
+
+    public String getAudioRef() {
+        return audioRef;
+    }
+
+    public void setAudioRef(String audioRef) {
+        this.audioRef = audioRef;
+    }
+
+    public String getMvLink() {
+        return mvLink;
+    }
+
+    public void setMvLink(String mvLink) {
+        this.mvLink = mvLink;
     }
 
     public Integer getStatus() {
@@ -139,5 +166,29 @@ public class MusicVo {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 }

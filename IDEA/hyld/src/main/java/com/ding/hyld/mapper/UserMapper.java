@@ -49,4 +49,10 @@ public interface UserMapper extends BaseMapper<User> {
     void updatePassword(@Param("user") User user);
 
     Integer searchUserOfPage(@Param("userVo") UserVo userVo);
+
+    void updateCoin(@Param("userVo") UserVo userVo);
+
+    void giftCoin();
+
+    UserInfo findBriefInfoById(Integer id);
 }

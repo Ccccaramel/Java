@@ -1,29 +1,18 @@
 package com.ding.hyld.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
-import com.ding.hyld.info.BlogRemarkInfo;
-import com.ding.hyld.info.ibs.AddressInfo;
-import com.ding.hyld.info.ibs.IpInfo;
-import com.ding.hyld.service.BlogFileService;
 import com.ding.hyld.service.BlogRemarkService;
-import com.ding.hyld.service.IBSService;
 import com.ding.hyld.service.UserService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
 import com.ding.hyld.utils.*;
-import com.ding.hyld.vo.BlogFileVo;
 import com.ding.hyld.vo.BlogRemarkVo;
-import com.ding.hyld.vo.BlogVo;
 import com.ding.hyld.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -33,7 +22,7 @@ public class BlogRemarkController extends BaseController {
     private BlogRemarkService blogRemarkService;
 
     @Autowired
-    private IBSService ibsService;
+    private QQIPServiceImpl ibsService;
 
     @Autowired
     private UserService userService;
@@ -51,17 +40,8 @@ public class BlogRemarkController extends BaseController {
             blogRemarkVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
             blogRemarkVo.setUser(getUserId());
             blogRemarkVo.setIp(ips);
-            try{
-                IpInfo ipInfo = JSONObject.toJavaObject(ibsService.ip(CommonCode.IBS_KEY,ips), IpInfo.class);
-                AddressInfo addressInfo = ipInfo.getResult().getAd_info();
-                blogRemarkVo.setIp(ips);
-                blogRemarkVo.setAddress(addressInfo.getNation()+addressInfo.getProvince());
 
-            }catch (Exception e){
-//                throw new Exception("IBS请求异常");
-                blogRemarkVo.setAddress("M78星云");
-                System.out.println("IBS请求异常");
-            }
+            blogRemarkVo.setAddress(ibsService.getAddress(ips).get("address"));
 
             blogRemarkService.save(blogRemarkVo);
             userService.addEx(getUserId(),1);

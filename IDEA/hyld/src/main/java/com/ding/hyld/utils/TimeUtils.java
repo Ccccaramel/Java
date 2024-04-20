@@ -13,6 +13,7 @@ public class TimeUtils {
     public static final String FORMAT_1="yyyy年MM月dd日 HH:mm:ss";
     public static final String FORMAT_2="yyyy/MM/dd";
     public static final String FORMAT_3="yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_4="yyyy年MM月dd日";
 
     public static Map<String,LocalDateTime> toString(List<LocalDateTime> localDateTimeList){
         HashMap<String,LocalDateTime> result = new HashMap<>();
@@ -29,6 +30,10 @@ public class TimeUtils {
 
     public static LocalDateTime toLocalDateTime(String settlementTime) {
         return LocalDateTime.parse(settlementTime);
+    }
+
+    public static String getNow(){
+        return toString(LocalDateTime.now(),TimeUtils.FORMAT_1);
     }
 
     public static LocalDateTime getToday() {

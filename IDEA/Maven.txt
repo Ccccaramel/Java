@@ -41,11 +41,11 @@ Maven
     Maven 使用约定由于配置的原则
     --目录---------------------------------目的--
       ${basedir}                           存放 pom.xml 和所有的子目录
-      ${basedir}/src/main/java             项目的 java 源代码
-      ${basedir}/src/main/resources        项目的资源,比如 property 文件, springmvc.xml
+      ${basedir}/src/annotationDemo/java             项目的 java 源代码
+      ${basedir}/src/annotationDemo/resources        项目的资源,比如 property 文件, springmvc.xml
       ${basedir}/src/test/java             项目的测试类,比如 Junit 代码
       ${basedir}/src/test/resources        测试用的资源
-      ${basedir}/src/main/webapp/WEB-INF   web 应用文件目录, web 项目的信息,比如存放 web.xml,本地图片, jsp 视图页面 
+      ${basedir}/src/annotationDemo/webapp/WEB-INF   web 应用文件目录, web 项目的信息,比如存放 web.xml,本地图片, jsp 视图页面
       ${basedir}/src/target                打包输出目录
       ${basedir}/src/target/classes        编译输出目录
       ${basedir}/src/target/test-classes   测试编译使出目录

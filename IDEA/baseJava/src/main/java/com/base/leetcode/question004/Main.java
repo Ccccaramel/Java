@@ -19,6 +19,6 @@ public class Main {
 
     private static void running(){
         Solution solution = new Solution();
-        System.out.println("res:"+solution.findMedianSortedArrays(new int[]{1,3}, new int[]{2}));
+        System.out.println("res:"+solution.findMedianSortedArrays(new int[]{1,2}, new int[]{}));
     }
 }

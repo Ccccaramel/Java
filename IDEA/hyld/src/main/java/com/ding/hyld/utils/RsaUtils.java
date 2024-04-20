@@ -1,5 +1,6 @@
 package com.ding.hyld.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.util.Arrays;
  * Cipher 提供加解密 API
  * 其中 RSA 非对称加密解密内容长度是有限制的
  */
+@Slf4j
 @Component
 public class RsaUtils {
     public static String PUBLIC_KEY = "";
@@ -73,7 +75,6 @@ public class RsaUtils {
         return new String(Base64.encodeBase64(encryptedData));
     }
 
-
     /**
      * 私钥解密
      * @param data 待解密的文本
@@ -97,7 +98,7 @@ public class RsaUtils {
 //        Provider provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        System.out.println("加密(转义前):"+data);
+        log.info("加密(转义前):{}",data);
         return new String(getMaxResultDecrypt(escape(data), cipher), StandardCharsets.UTF_8);
     }
 
@@ -110,8 +111,8 @@ public class RsaUtils {
      * @throws BadPaddingException
      */
     private static byte[] getMaxResultDecrypt(String str, Cipher cipher) throws IllegalBlockSizeException, BadPaddingException {
-        System.out.println("加密(转义后):"+str);
-        System.out.println("provider:" + cipher.getProvider().getClass().getName());
+        log.info("加密(转义后):{}",str);
+        log.info("provider:{}" , cipher.getProvider().getClass().getName());
         byte[] inputArray = Base64.decodeBase64(str.getBytes(StandardCharsets.UTF_8));
         int inputLength = inputArray.length;
         // 最大解密字节数，超出最大字节数需要分组加密
@@ -122,11 +123,11 @@ public class RsaUtils {
         byte[] cache = {};
         while (inputLength - offSet > 0) {
             if (inputLength - offSet > MAX_ENCRYPT_BLOCK) {
-                System.out.println("分段");
+                log.info("分段");
                 cache = cipher.doFinal(inputArray, offSet, MAX_ENCRYPT_BLOCK);
                 offSet += MAX_ENCRYPT_BLOCK;
             } else {
-                System.out.println("未分段");
+                log.info("未分段");
                 cache = cipher.doFinal(inputArray, offSet, inputLength - offSet);
                 offSet = inputLength;
             }

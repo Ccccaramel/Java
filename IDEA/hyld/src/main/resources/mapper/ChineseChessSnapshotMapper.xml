@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.ChineseChessSnapshotMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.ChineseChessSnapshot">
+    </resultMap>
+    <resultMap id="resultMapInfo" type="com.ding.hyld.info.ChineseChessInfo">
+        <association property="chineseChess" column="chineseChess" select="com.ding.hyld.mapper.ChineseChessMapper.findById"/>
+    </resultMap>
+    <select id="searchChineseChessSnapshot" resultMap="resultMapInfo">
+        select * from chinese_chess_snapshot
+        <where>
+            <if test="chineseChessSnapshotVo.chineseChess != null">
+                and chineseChess = #{chineseChessSnapshotVo.chineseChess}
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchChineseChessSnapshotOfPage" resultType="java.lang.Integer">
+        select count(1) from chinese_chess_snapshot
+        <where>
+            <if test="chineseChessSnapshotVo.chineseChess != null">
+                and chineseChess = #{chineseChessSnapshotVo.chineseChess}
+            </if>
+        </where>
+        ORDER BY createTime desc
+    </select>
+    <insert id="add" parameterType="com.ding.hyld.vo.ChineseChessVo">
+        insert into chinese_chess_snapshot(chineseChess,round,actor,chess,oldLocationX,oldLocationY,newLocationX,newLocationY,note)
+        values(#{chineseChessSnapshotVo.chineseChess},
+               #{chineseChessSnapshotVo.round},
+               #{chineseChessSnapshotVo.actor},
+               #{chineseChessSnapshotVo.chess},
+               #{chineseChessSnapshotVo.oldLocationX},
+               #{chineseChessSnapshotVo.oldLocationY},
+               #{chineseChessSnapshotVo.newLocationX},
+               #{chineseChessSnapshotVo.newLocationY},
+               #{chineseChessSnapshotVo.note})
+    </insert>
+</mapper>

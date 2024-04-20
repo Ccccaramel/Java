@@ -8,6 +8,7 @@ import com.ding.hyld.info.EmailCodeInfo;
 import com.ding.hyld.service.EmailCodeService;
 import com.ding.hyld.service.UserService;
 import com.ding.hyld.service.VisitLogService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
 import com.ding.hyld.utils.*;
 import com.ding.hyld.vo.EmailCodeVo;
 import com.ding.hyld.vo.VisitLogVo;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -27,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 public class EmailCodeController extends BaseController {
     @Autowired
     private UserService userService;
-
     @Autowired
     private EmailCodeService emailCodeService;
-
+    @Autowired
+    private QQIPServiceImpl ibsService;
     @Autowired
     private VisitLogService visitLogService;
 
@@ -38,7 +41,7 @@ public class EmailCodeController extends BaseController {
     private RedisTemplate<String,String> redisTemplate;
 
     @PostMapping("/sendEmailCode")
-    public R sendEmailCode(@RequestBody EmailCodeVo emailCodeVo) {
+    public R sendEmailCode(@RequestBody EmailCodeVo emailCodeVo, HttpServletRequest request) {
         String userName = "";
         Integer userId = 0;
         if(isLogin()){
@@ -53,20 +56,16 @@ public class EmailCodeController extends BaseController {
             userId = user.getId();
         }
 
-        VisitLogVo visitLogVo = new VisitLogVo();
-        try {
-            visitLogVo = JSON.parseObject(RsaUtils.decryptByPrivateKey(emailCodeVo.getData()), VisitLogVo.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String ip = IpUtils.getIpAddress(request);
+        Map<String, String> addressInfo = ibsService.getAddress(ip);
 
         emailCodeVo.setCode(EmailUtils.getEmailCode()); // 验证码
         emailCodeVo.setUserId(userId);
         emailCodeVo.setUserName(userName);
         emailCodeVo.setFormEmail(CommonCode.FORM_EMAIL);
         emailCodeVo.setSubject("【芽芽office】用户邮箱验证");
-        emailCodeVo.setIp(visitLogVo.getIp());
-        emailCodeVo.setAddress(visitLogVo.getTrueAddress());
+        emailCodeVo.setIp(ip);
+        emailCodeVo.setAddress(addressInfo.get("trueAddress"));
         try {
             emailCodeVo.setFingerprint(RsaUtils.decryptByPrivateKey(emailCodeVo.getFingerprint()));
         } catch (Exception e) {
@@ -95,15 +94,15 @@ public class EmailCodeController extends BaseController {
     }
 
     @PostMapping("/emailVerify")
-    public R emailVerify(@RequestBody EmailCodeVo emailCodeVo) {
+    public R emailVerify(@RequestBody EmailCodeVo emailCodeVo, HttpServletRequest request) {
 
         // 日志
         VisitLogVo visitLogVo = new VisitLogVo();
-        try {
-            visitLogVo = JSON.parseObject(RsaUtils.decryptByPrivateKey(emailCodeVo.getData()), VisitLogVo.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String ip = IpUtils.getIpAddress(request);
+        visitLogVo.setIp(ip);
+        Map<String, String> addressInfo = ibsService.getAddress(ip);
+        visitLogVo.setTrueAddress(addressInfo.get("trueAddress"));
+        visitLogVo.setAddress(addressInfo.get("address"));
 
         emailCodeVo.setStart(TimeUtils.getBeforeTheSpecifiedTimeStr(0,0,0,0,-1,0,TimeUtils.FORMAT_3)); // 1分钟内
         List<EmailCodeInfo> infos = emailCodeService.findBy(emailCodeVo);

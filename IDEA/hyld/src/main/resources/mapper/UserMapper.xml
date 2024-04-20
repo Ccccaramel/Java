@@ -13,6 +13,7 @@
         <id column="ex" property="ex"/>
         <id column="fingerprint" property="fingerprint"/>
         <id column="qqOpenId" property="qqOpenId"/>
+        <id column="coin" property="coin"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
@@ -24,9 +25,13 @@
         <id column="note" property="note"/>
         <id column="ex" property="ex"/>
         <id column="email" property="email"/>
+        <id column="coin" property="coin"/>
 
         <association property="role" column="role" select="com.ding.hyld.mapper.RoleMapper.findById"/>
         <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="headPortrait" column="headPortrait" select="com.ding.hyld.mapper.HeadPortraitMapper.findById"/>
+    </resultMap>
+    <resultMap id="resultBriefInfoMap" type="com.ding.hyld.info.UserInfo">
         <association property="headPortrait" column="headPortrait" select="com.ding.hyld.mapper.HeadPortraitMapper.findById"/>
     </resultMap>
     <select id="searchUser" resultMap="resultInfoMap">
@@ -86,6 +91,14 @@
         select * from user
         where id=#{id};
     </select>
+    <!--  获取用户部分信息  -->
+    <sql id="briefInfo">id,name,headPortrait,ex,note</sql>
+    <select id="findBriefInfoById" resultMap="resultBriefInfoMap">
+        select
+            <include refid="briefInfo"/>
+        from user
+        where id=#{id};
+    </select>
     <select id="login" resultMap="resultMap">
         select * from user
             where name=#{account}
@@ -100,13 +113,24 @@
     </select>
     <!-- 1:管理员 2:普通用户   -->
     <insert id="register">
-        insert into user(name,status,role,password,fingerprint,qqOpenId,qqUnionId)
-        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint},#{userVo.qqOpenId},#{userVo.qqUnionId});
+        insert into user(name,status,role,password,fingerprint,qqOpenId,qqUnionId,coin)
+        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint},#{userVo.qqOpenId},#{userVo.qqUnionId},#{userVo.coin});
     </insert>
     <update id="updateUserInfo">
         update user
         set qq = #{userVo.qq},note = #{userVo.note}
         where id=#{userVo.id}
+    </update>
+    <update id="updateCoin">
+        update user
+        set coin = #{userVo.coin}
+        where id=#{userVo.id}
+    </update>
+    <update id="giftCoin">
+        update user
+        set coin = coin+60
+        where coin &lt; 8000
+            and status=400
     </update>
     <update id="saveUser">
         update user

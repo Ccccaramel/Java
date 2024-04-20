@@ -76,12 +76,12 @@
             <version>1.1.7</version>
         </dependency>
     </dependencies>
-7.添加 web 模块,在 src/main 下新建 webapp 文件夹
+7.添加 web 模块,在 src/annotationDemo 下新建 webapp 文件夹
   打开 File > Project Structure... > 右侧选择 Modules
   展开当前项目其目录下有一个 web 项,选中它,可看到 Web Resource Directories 下有一个上述的 webapp 模块的路径
   Deployment Descriptors 用来配置项目描述符,即 web.xml ,点击“+”号创建
   默认设置的路径格式为 [项目绝对路径]\WEB-INF\web.xml
-                 改成 [项目绝对路径]\src\main\webapp\WEB-INF\web.xml
+                 改成 [项目绝对路径]\src\annotationDemo\webapp\WEB-INF\web.xml
   系统会自动生成 WEB-INF 文件夹和 web.xml 配置文件
 9.配置 web.xml
   作用:注册 servlet ,监听器等等
@@ -124,7 +124,7 @@
         </servlet-mapping>
     右键右侧项目目录中的 resources 文件夹 > New > XML Configuration File > Spring Config > 填入 springMVC.xml (文件名称自定义,不固定)
 10.创建控制器
-  右键 src\main\java > New > Java Class > [自定义命名, xxx.controller.xxxController ]
+  右键 src\annotationDemo\java > New > Java Class > [自定义命名, xxx.controller.xxxController ]
   a.注解+扫描配置控制器
     在 xxx.java 添加如下两行代码
         import org.springframework.stereotype.Controller;
@@ -441,7 +441,7 @@ A: IDEA > File > Project Structure... > Project
       }
 1.注解配置 springMVC
   创建一个 Maven 项目, pom.xml 同上
-  在 src\main 下新建 webapp\WEB-INF 两个文件夹即可
+  在 src\annotationDemo 下新建 webapp\WEB-INF 两个文件夹即可
   <略,见 github >
 2.springMVC 常用组件
   1.DispatcherServlet:前端控制器,不需要工程师开发,由框架提供

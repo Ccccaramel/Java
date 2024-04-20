@@ -1,5 +1,7 @@
 package com.ding.hyld.utils;
 
+import com.ding.hyld.config.ServerConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -10,6 +12,7 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+@Slf4j
 @Component
 @ConfigurationProperties(prefix = "resourcespathutils")
 public class ResourcesPathUtils {
@@ -23,7 +26,9 @@ public class ResourcesPathUtils {
     private static Environment environment;
 
     public static String BLOG="blog";
+    public static String MUSIC="music";
     public static String HYLD="hyld";
+    public static String CHAT="chat";
 
     public static String getUrl() {
         return url;
@@ -142,7 +147,7 @@ public class ResourcesPathUtils {
      **/
     public static File getPhotoDirFile(String module) {
         String fileDirPath = getRealPhotoPath(module);
-        System.out.println("fileDirPath:"+fileDirPath);
+        log.info("fileDirPath:{}",fileDirPath);
         File fileDir = new File(fileDirPath);
         if(!fileDir.exists()){
             fileDir.mkdirs();

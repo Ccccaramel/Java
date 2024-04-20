@@ -6,6 +6,7 @@ import com.ding.hyld.entity.User;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.LoginService;
 import com.ding.hyld.utils.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import java.util.Objects;
 /**
  * OncePerRequestFilter:每次请求时只执行一次过滤
  */
+@Slf4j
 @Component
 public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -44,7 +46,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("JWTAuthenticationTokenFilter >>> start,method:"+request.getMethod());
+        log.info("JWTAuthenticationTokenFilter >>> start,method:{}",request.getMethod());
 
         //放行options请求, 因为浏览器的跨域验证，通过options请求发送
         if(request.getMethod().equals("OPTIONS")){
@@ -56,6 +58,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
         String token=request.getHeader("Authorization");
         if(!StringUtils.hasText(token)) { // 没有 token ,放行
             filterChain.doFilter(request,response);
+
             return;
         }
 
@@ -73,7 +76,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 放行
         filterChain.doFilter(request,response);
-        System.out.println("JWTAuthenticationTokenFilter >>> end");
+        log.info("JWTAuthenticationTokenFilter >>> end");
     }
 
 }

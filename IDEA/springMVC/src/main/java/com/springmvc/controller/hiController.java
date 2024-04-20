@@ -35,7 +35,7 @@ public class hiController { // 类名前新增了一个图标,表示该类交给
     @RequestMapping(value = {"/target1", "/target2"})
     public String toTarget() {
         return "target";
-    }
+    }  // 返回视图或页面
 
     @RequestMapping(value = "/test", method = {RequestMethod.GET})
     public String test() {
@@ -277,5 +277,10 @@ public class hiController { // 类名前新增了一个图标,表示该类交给
     public String testExceptionHandler(){
         System.out.println(1/0);
         return "test";
+    }
+
+    @RequestMapping("/hi")
+    public String hi(){
+        return "hi";
     }
 }

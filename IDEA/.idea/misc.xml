@@ -11,10 +11,20 @@
         <option value="$PROJECT_DIR$/springMVC/pom.xml" />
         <option value="$PROJECT_DIR$/springMVC-annotation/pom.xml" />
         <option value="$PROJECT_DIR$/onlineEdu/pom.xml" />
-        <option value="$PROJECT_DIR$/demo/pom.xml" />
         <option value="$PROJECT_DIR$/baseJava/pom.xml" />
         <option value="$PROJECT_DIR$/hyld/pom.xml" />
+        <option value="$PROJECT_DIR$/MQDemo/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringCould/pom.xml" />
+        <option value="$PROJECT_DIR$/demo/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/SpringCloud/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringCould/common-util/pom.xml" />
+        <option value="$PROJECT_DIR$/rabbitMQDemo/consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/rabbitMQDemo/publisher/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" project-jdk-name="15" project-jdk-type="JavaSDK" />

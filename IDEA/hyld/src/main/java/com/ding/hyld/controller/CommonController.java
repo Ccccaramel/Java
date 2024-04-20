@@ -1,18 +1,24 @@
 package com.ding.hyld.controller;
 
+import com.ding.hyld.service.impl.BaiduWeatherServiceImpl;
+import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.utils.RsaUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.NoSuchAlgorithmException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/common")
 public class CommonController {
+
+    @Autowired
+    private BaiduWeatherServiceImpl baiduWeatherService;
 
     @GetMapping("/getPublicKey")
     public R getPublicKey(){
@@ -42,5 +48,10 @@ public class CommonController {
 //        System.out.println("publicKey:"+RsaUtils.getRsaKeyPair().getPublicKey());
 //        System.out.println("privateKey:"+RsaUtils.getRsaKeyPair().getPrivateKey());
         return R.success(result);
+    }
+
+    @GetMapping("/getWeather")
+    public R getWeather(HttpServletRequest request){
+        return baiduWeatherService.getWeather(IpUtils.getIpAddress(request));
     }
 }

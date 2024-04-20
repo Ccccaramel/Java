@@ -6,6 +6,7 @@ import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.constant.SystemConfigKey;
 import com.ding.hyld.entity.User;
 import com.ding.hyld.info.SystemConfigInfo;
+import com.ding.hyld.info.UserInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.*;
 import com.ding.hyld.utils.JWTUtils;
@@ -282,6 +283,23 @@ public class LoginServiceImpl implements LoginService {
         }
         CurrentUser currentUser=JSON.parseObject(userJson,CurrentUser.class); // 将字符串转换为对象
         return currentUser;
+    }
+
+    @Override
+    public UserInfo getUserInfoByToken(String token) {
+        if(token==null){
+            return null;
+        }
+        Map<String,Object> objectMap = JWTUtils.checkToken(token);
+        if(objectMap==null){
+            return null;
+        }
+        String userJson = redisTemplate.opsForValue().get("login_" + objectMap.get("userId"));
+        if(userJson==null){
+            return null;
+        }
+        CurrentUser currentUser=JSON.parseObject(userJson,CurrentUser.class); // 将字符串转换为对象
+        return userService.findById(currentUser.getUser().getId());
     }
 
     @Override

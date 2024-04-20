@@ -5,6 +5,8 @@ import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.info.GameRoleCommentInfo;
 import com.ding.hyld.security.CurrentUser;
 import com.ding.hyld.service.GameRoleCommentService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
+import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.GameRoleCommentVo;
 import com.ding.hyld.vo.Page;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +24,8 @@ import java.util.Objects;
 public class GameRoleCommentController extends BaseController {
     @Autowired
     private GameRoleCommentService gameRoleCommentService;
-
+    @Autowired
+    private QQIPServiceImpl ibsService;
     /**
      * 获取指定话题的全部内容
      * @param page
@@ -63,11 +67,16 @@ public class GameRoleCommentController extends BaseController {
      * @return
      */
     @PostMapping("/saveReplyGameRoleCommentInfo")
-    public R saveReplyGameRoleCommentInfo(@RequestBody GameRoleCommentVo gameRoleCommentVo){
+    public R saveReplyGameRoleCommentInfo(@RequestBody GameRoleCommentVo gameRoleCommentVo, HttpServletRequest request){
         if(gameRoleCommentVo.isReply()){
             gameRoleCommentVo.setFloor(gameRoleCommentService.getGameRoleCommentData(null,gameRoleCommentVo,true).size()+1); // 放在开头,所有状态的回复都统计
             gameRoleCommentVo.setBelongToFloor(gameRoleCommentVo.getFloor());
         }
+
+        String ip = IpUtils.getIpAddress(request);
+        gameRoleCommentVo.setIp(ip);
+        gameRoleCommentVo.setAddress(ibsService.getAddress(ip).get("address"));
+
         gameRoleCommentVo.setUserId(getUserId());
         gameRoleCommentVo.setStatus(DictionaryCode.SPEECH_STATUS_1);
         gameRoleCommentService.saveReplyGameRoleCommentInfo(gameRoleCommentVo);

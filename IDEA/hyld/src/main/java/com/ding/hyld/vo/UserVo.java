@@ -23,6 +23,7 @@ public class UserVo {
     private String qqUnionId;// qq unionId
     private String email;
     private String emailCode;
+    private int coin;
 
     private String emailToken;
 
@@ -162,6 +163,14 @@ public class UserVo {
         this.email = email;
     }
 
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
+    }
+
     @Override
     public String toString() {
         return "UserVo{" +
@@ -180,6 +189,7 @@ public class UserVo {
                 ", qqOpenId='" + qqOpenId + '\'' +
                 ", qqUnionId='" + qqUnionId + '\'' +
                 ", email='" + email + '\'' +
+                ", coin='" + coin + '\'' +
                 '}';
     }
 }

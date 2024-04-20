@@ -23,6 +23,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
 
     @Override
     public void init(BlogVo blogVo) {
+        delay(blogVo.getUser());
         baseMapper.init(blogVo);
     }
 
@@ -48,6 +49,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
 
     @Override
     public void modify(BlogVo blogVo) {
+        delay(blogVo.getUser());
         baseMapper.modify(blogVo);
     }
 

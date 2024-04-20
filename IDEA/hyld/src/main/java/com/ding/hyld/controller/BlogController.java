@@ -1,15 +1,12 @@
 package com.ding.hyld.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ding.hyld.constant.CommonCode;
 import com.ding.hyld.constant.DictionaryCode;
 import com.ding.hyld.controller.Base.BaseController;
 import com.ding.hyld.info.BlogInfo;
-import com.ding.hyld.info.ibs.AddressInfo;
-import com.ding.hyld.info.ibs.IpInfo;
 import com.ding.hyld.service.BlogService;
-import com.ding.hyld.service.IBSService;
 import com.ding.hyld.service.UserService;
+import com.ding.hyld.service.impl.QQIPServiceImpl;
 import com.ding.hyld.utils.IpUtils;
 import com.ding.hyld.utils.R;
 import com.ding.hyld.vo.BlogVo;
@@ -21,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/blog")
@@ -29,9 +25,9 @@ public class BlogController extends BaseController {
     @Autowired
     private BlogService blogService;
     @Autowired
-    private IBSService ibsService;
-    @Autowired
     private UserService userService;
+    @Autowired
+    private QQIPServiceImpl ibsService;
 
     @PostMapping("/initBlog")
     public R initBlog(BlogVo blogVo, HttpServletRequest request){
@@ -46,14 +42,8 @@ public class BlogController extends BaseController {
 
         String ips = IpUtils.getIpAddress(request);
         blogVo.setIp(ips);
-        try{
-            IpInfo ipInfo = JSONObject.toJavaObject(ibsService.ip(CommonCode.IBS_KEY,ips), IpInfo.class);
-            AddressInfo addressInfo = ipInfo.getResult().getAd_info();
-            blogVo.setAddress(addressInfo.getNation()+addressInfo.getProvince());
-        }catch (Exception e){
-            blogVo.setAddress("M78星云");
-            System.out.println("IBS请求异常");
-        }
+
+        blogVo.setAddress(ibsService.getAddress(ips).get("address"));
 
         blogService.init(blogVo);
         result.put("blogId",blogVo.getId());
@@ -85,7 +75,7 @@ public class BlogController extends BaseController {
                     blogVo.setUser(getUserId());
                     blogVo.setStatus(DictionaryCode.BLOG_STATUS_2);
                     blogService.delay(getUserId());
-                }else{ // 未登录的游客是不允许编辑的
+                }else{  // 未登录的游客是不允许编辑的
                     return R.fail("非法访问!");
                 }
             }else{ // 浏览查看

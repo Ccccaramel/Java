@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.hyld.mapper.RelationshipMapper">
+    <resultMap id="resultMap" type="com.ding.hyld.entity.Relationship">
+        <id column="id" property="id"/>
+
+        <id column="user" property="user"/>
+        <id column="another" property="another"/>
+        <id column="type" property="type"/>
+        <id column="status" property="status"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultMapInfo" type="com.ding.hyld.info.RelationshipInfo">
+        <id column="id" property="id"/>
+
+        <id column="isSelf" property="isSelf"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association property="user" column="user" select="com.ding.hyld.mapper.UserMapper.findBriefInfoById"/>
+        <association property="another" column="another" select="com.ding.hyld.mapper.UserMapper.findBriefInfoById"/>
+        <association property="type" column="type" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+        <association property="status" column="status" select="com.ding.hyld.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="searchRelationship" resultMap="resultMapInfo">
+        select *,
+               case
+                    when user = #{relationshipVo.user} then true
+                    when user != #{relationshipVo.user} then false
+                end as isSelf
+        from relationship
+        <where>
+            <if test="relationshipVo.user != null and relationshipVo.another != null">
+                and ((user = #{relationshipVo.user} and another = #{relationshipVo.another})
+                or (user = #{relationshipVo.another} and another = #{relationshipVo.user}))
+            </if>
+            <if test="relationshipVo.user != null">
+                and (user = #{relationshipVo.user}
+                or another = #{relationshipVo.user})
+            </if>
+            <if test="relationshipVo.status != null">
+                and status = #{relationshipVo.status}
+            </if>
+            <if test="relationshipVo.exceptType != null">
+                and type != #{relationshipVo.exceptType}
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into relationship(user,another,status,type,note)
+        values(#{relationshipVo.user},#{relationshipVo.another},#{relationshipVo.status},#{relationshipVo.type},#{relationshipVo.note})
+    </insert>
+    <delete id="update">
+        update relationship
+        set status = #{relationshipVo.status}
+        where id = #{relationshipVo.id}
+        <if test="#{relationshipVo.oldStatus}!=null">
+            and status=#{relationshipVo.oldStatus}
+        </if>
+        <if test="#{relationshipVo.type}!=null">
+            and type=#{relationshipVo.type}
+        </if>
+    </delete>
+</mapper>

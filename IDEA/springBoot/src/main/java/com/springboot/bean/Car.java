@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  *   !:有构造函数就报错
  */
 //@Component
-@ConfigurationProperties(prefix = "car1")
+@ConfigurationProperties(prefix = "car")
 public class Car {
     private String brand;
     private Integer price;

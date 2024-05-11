@@ -18,7 +18,10 @@ import java.io.IOException;
  * 通过测试,暂时统一使用第二种方式
   */
 // 请求映射,或在 web.xml 里配置映射关系, /* 表示对所有请求进行过滤操作,而 / 至拦截静态资源请求,不会拦截动态(jsp)页面的请求,设置 dispatcherTypes 值将只处理识别指定类型的请求,默认 DispatcherType.REQUEST
-@WebFilter(filterName = "CommonFilter",urlPatterns = {"/car","/hi"},initParams = {@WebInitParam(name = "order",value = "1")})
+/**
+ * urlPatterns 过滤指定 url
+ */
+@WebFilter(filterName = "CommonFilter",urlPatterns = {"/car"},initParams = {@WebInitParam(name = "order",value = "1")})
 public class CommonFilter implements Filter {
 
     @Override

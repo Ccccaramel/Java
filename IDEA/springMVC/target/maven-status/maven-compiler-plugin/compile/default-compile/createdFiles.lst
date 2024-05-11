@@ -1,6 +1,0 @@
-com\springmvc\controller\RequestMappingController.class
-com\springmvc\controller\hiController.class
-com\springmvc\bean\User.class
-com\springmvc\controller\UserController.class
-com\springmvc\controller\FileUpAndDownController.class
-com\springmvc\dao\UserDao.class

@@ -1,5 +1,7 @@
 package com.base.random;
 
+import org.junit.jupiter.api.Test;
+
 /**
  * 模拟生成4位数字验证码
  */
@@ -14,5 +16,14 @@ public class main {
             i--;
         }
         System.out.println("code:"+code);
+    }
+
+    @Test
+    public void fun(){
+        System.out.println((int)(Math.random() * Math.pow(10, 14)));
+        System.out.println((int)(Math.random() * Math.pow(10, 14)));
+
+        System.out.println((int)Math.random() * Math.pow(10, 14));
+        System.out.println((int)Math.random() * Math.pow(10, 14));
     }
 }

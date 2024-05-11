@@ -104,7 +104,7 @@ public class ChineseChessEndpoint {
      */
     @OnMessage
     public void onMessage(String message){
-        log.info("onMessage");
+        log.info("onMessage - 收到信息: {}",message);
         // 将信息保存至数据库
         ChineseChessRoomVo chineseChessRoomVo = JSON.parseObject(message, ChineseChessRoomVo.class);
 
@@ -510,11 +510,14 @@ public class ChineseChessEndpoint {
         else if(chineseChessRoomVo.getInstruct()==15) {
             for (ChineseChessRoomVo vo : onlineRoomList) {
                 if (vo.getId().equals(chineseChessRoomVo.getId())) {  // 找到对应房间
+                    log.info("房间ID: "+vo.getId());
                     // Step1
                     Integer chessPlayer = vo.isActorIsRoomOwner()?1:2;  // 当前用户标识 1:红方(房主) 2:黑方(挑战者)
                     boolean isRoomOwner=vo.getRoomOwner().equals(user.getId());
+                    log.info("行动方是否为房主: "+isRoomOwner);
                     Integer skill=isRoomOwner?vo.getRoomOwnerSkill():vo.getRivalSkill();  // 获取当前用户的技能标识
-
+                    log.info("行动方技能: "+skill);
+                    log.info("行动方点击位置: "+vo.getSelectedChessX()+","+vo.getSelectedChessY());
                     // 将上次选中的位置信息赋值给"上一次"
                     vo.setPreviousChessOwner(vo.getSelectedChessOwner());
                     vo.setPreviousChess(vo.getSelectedChess());
@@ -1302,7 +1305,7 @@ public class ChineseChessEndpoint {
             // 绝杀判断
             boolean flag=true;
             if("1".equals(res.get("type"))){
-                for (HashMap<String, Integer> hashMap : map) {
+                for (HashMap<String, Integer> hashMap : map) {  // 遍历 帅/将 的所有下一步可行的位置
                     ArrayList<ChineseChessBaseVo> temp = new ArrayList<>(vo.getWhole());
                     for (ChineseChessBaseVo baseVo : temp) {  // 变更 帅/将 位置
                         if(7==baseVo.getPiece()){

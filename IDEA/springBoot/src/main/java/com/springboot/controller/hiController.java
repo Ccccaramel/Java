@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 
 @Controller
-//@ResponseBody
+@ResponseBody
 // 与下等价
 //@RestController
 public class hiController {
@@ -32,7 +32,7 @@ public class hiController {
 
     @RequestMapping("/car")
     public Car car(){
-        log.info("car");
+        log.info("car!");
         return car;
     }
 

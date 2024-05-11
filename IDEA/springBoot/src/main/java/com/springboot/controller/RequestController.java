@@ -12,6 +12,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/ding")
 public class RequestController {
+
+    @GetMapping("/info")
+    public String info(){
+        return "info";
+    }
+
     /**
      * 请求样例
      *   1.http://127.0.0.1:8081/ding/user/id/1/name/tom?age=10&hobby=ball&hobby=game

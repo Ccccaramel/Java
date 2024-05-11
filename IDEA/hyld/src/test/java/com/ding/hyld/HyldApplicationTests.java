@@ -22,7 +22,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 
-@SpringBootTest
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HyldApplicationTests {
 
     /**
@@ -70,8 +71,8 @@ class HyldApplicationTests {
      * 测试加密时记得解开配置文件 jasypt.encryptor.password 注解
      * 为配置文件中的 mysql 配置信息加密
      */
-//    @Test
-//    public void encryptConfig(){
+    @Test
+    public void encryptConfig(){
 //        // mysql > username
 //        String userNameEnc = stringEncryptor.encrypt("***");
 //        System.out.println("username 加密："+userNameEnc);
@@ -86,9 +87,10 @@ class HyldApplicationTests {
 //
 //        // 云 mysql > password
 //        String cloudPasswordEnc = stringEncryptor.encrypt("***");
+        String cloudPasswordEnc = "txVHlG5vtWXu0AaPRbx30Z8Vp2CPhWmXwes+Zp0rXzFPBAlghzGffg6t29jxJqae";
 //        System.out.println("云 password 加密："+cloudPasswordEnc);
-//        String cloudPasswordDec = stringEncryptor.decrypt(cloudPasswordEnc);
-//        System.out.println("云 password 解密："+cloudPasswordDec);
+        String cloudPasswordDec = stringEncryptor.decrypt(cloudPasswordEnc);
+        System.out.println("云 password 解密："+cloudPasswordDec);
 //
 //        // 163邮箱 > username
 //        String emailUserNameEnc = stringEncryptor.encrypt("***");
@@ -101,7 +103,7 @@ class HyldApplicationTests {
 //        System.out.println("163邮箱 password 加密："+emailPasswordEnc);
 //        String emailPasswordDec = stringEncryptor.decrypt(emailPasswordEnc);
 //        System.out.println("163邮箱 password 解密："+emailPasswordDec);
-//    }
+    }
 
 //    @Autowired(required = false)
 //    private JavaMailSender javaMailSender; // 引入Spring Mail依赖后，会自动装配到IOC容器。用来发送邮件

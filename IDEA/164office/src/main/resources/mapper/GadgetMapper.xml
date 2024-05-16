@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.GadgetMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Gadget">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="gameRole" property="gameRole"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.GadgetInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="gameRole" column="gameRole" select="com.ding.office.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <resultMap id="pithyResultInfoMap" type="com.ding.office.info.GadgetInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+        <id column="details" property="details"/>
+        <id column="launchTime" property="launchTime"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchGadget" resultMap="resultInfoMap">
+        select * from gadget
+        <where>
+            <if test="gadgetVo.gameRoleName != null and gadgetVo.gameRoleName.trim() != ''">
+                and exists (select 1 from game_role g where g.name like concat('%',#{gadgetVo.gameRoleName},'%') and gameRole = g.id )
+            </if>
+            <if test="gadgetVo.name != null and gadgetVo.name.trim() != ''">
+                and name like concat('%',#{gadgetVo.name},'%')
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchGadgetOfPage" resultType="java.lang.Integer">
+        select count(1) from gadget
+        <where>
+            <if test="gadgetVo.gameRoleName != null and gadgetVo.gameRoleName.trim() != ''">
+                and exists (select 1 from game_role g where g.name like concat('%',#{gadgetVo.gameRoleName},'%') and gameRole = g.id )
+            </if>
+            <if test="gadgetVo.name != null and gadgetVo.name.trim() != ''">
+                and name like concat('%',#{gadgetVo.name},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into gadget(gameRole,name,details,launchTime,note,image,duraMax)
+        values(#{gadgetVo.gameRole},#{gadgetVo.name},#{gadgetVo.details},#{gadgetVo.launchTime},#{gadgetVo.note},#{gadgetVo.image},#{gadgetVo.duraMax})
+    </insert>
+    <update id="update">
+        update gadget
+        set gameRole = #{gadgetVo.gameRole},
+            name = #{gadgetVo.name},
+            image = #{gadgetVo.image},
+            details = #{gadgetVo.details},
+            launchTime = #{gadgetVo.launchTime},
+            note = #{gadgetVo.note},
+            duraMax = #{gadgetVo.duraMax}
+        where id = #{gadgetVo.id}
+    </update>
+    <select id="findPithyInfoByGameRoleId" resultMap="pithyResultInfoMap">
+        select * from gadget
+        where gameRole = #{id}
+    </select>
+</mapper>

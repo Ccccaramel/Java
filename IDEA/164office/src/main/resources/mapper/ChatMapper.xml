@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.ChatMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Chat">
+    </resultMap>
+    <resultMap id="resultMapInfo" type="com.ding.office.info.ChatInfo">
+        <association property="sender" column="sender" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="recipient" column="recipient" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="type" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association property="status" column="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="searchChat" resultMap="resultMapInfo">
+        select *,
+            case
+            when sender = #{chatVo.user} then true
+            when sender != #{chatVo.user} then false
+            end as isSelf
+        from chat
+        <where>
+            <if test="chatVo.user != null and chatVo.recipient != null and !chatVo.isHall">
+                and ((sender = #{chatVo.user} and recipient = #{chatVo.recipient})
+                or (sender = #{chatVo.recipient} and recipient = #{chatVo.user}))
+            </if>
+            <if test="chatVo.type != null">
+                and type = #{chatVo.type}
+            </if>
+            <if test="chatVo.status != null">
+                and status = #{chatVo.status}
+            </if>
+            <if test="chatVo.isHall">
+                and sender = recipient
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchChatOfPage" resultType="java.lang.Integer">
+        select count(1) from chat
+        <where>
+            <if test="chatVo.user != null and chatVo.recipient != null">
+                and ((sender = #{chatVo.user} and recipient = #{chatVo.recipient})
+                or (sender = #{chatVo.recipient} and recipient = #{chatVo.user}))
+            </if>
+            <if test="relationshipVo.type != null">
+                and type = #{chatVo.type}
+            </if>
+            <if test="relationshipVo.status != null">
+                and status = #{chatVo.status}
+            </if>
+        </where>
+        ORDER BY createTime desc
+    </select>
+    <insert id="add" parameterType="com.ding.office.vo.ChatVo" useGeneratedKeys="true" keyProperty="id">
+        insert into chat(sender,recipient,content,status,type,note)
+        values(#{chatVo.sender},#{chatVo.recipient},#{chatVo.content},#{chatVo.status},#{chatVo.type},#{chatVo.note})
+    </insert>
+</mapper>

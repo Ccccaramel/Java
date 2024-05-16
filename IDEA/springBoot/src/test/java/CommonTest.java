@@ -1,16 +1,23 @@
-import com.fasterxml.jackson.core.format.DataFormatDetector;
 import com.springboot.enums.Color;
 import com.springboot.exception.CommonException;
+import com.springboot.start;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.junit.jupiter.api.Test;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+@SpringBootTest(classes = start.class)
 public class CommonTest {
+    @Autowired
+    private StringEncryptor stringEncryptor;
 
     @Test
     public void testCommonException(){
@@ -112,5 +119,21 @@ public class CommonTest {
         String dateTime = "2023年01月02日(123)12:21:11";
         DateTimeFormatter dateTimeFormatter3 = DateTimeFormatter.ofPattern("yyyy年MM月dd日(123)HH:mm:ss");
         System.out.println("字符串转时间: "+LocalDateTime.parse(dateTime, dateTimeFormatter3));
+    }
+
+    @Test
+    public void testJasypt(){
+        /**
+         * 也可不通过配置注入
+         */
+//        BasicTextEncryptor stringEncryptor = new BasicTextEncryptor();
+//        stringEncryptor.setPassword("123456");
+
+        String userName = stringEncryptor.encrypt("123");
+        System.out.println("加密："+userName);
+
+        // 解密 -基础类型
+        String decUserName = stringEncryptor.decrypt(userName);
+        System.out.println("解密："+decUserName);
     }
 }

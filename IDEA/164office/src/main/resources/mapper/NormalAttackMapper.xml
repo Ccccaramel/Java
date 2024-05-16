@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.NormalAttackMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.NormalAttack">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="gameRole" property="gameRole"/>
+        <id column="details" property="details"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.NormalAttackInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="gameRole" column="gameRole" select="com.ding.office.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <resultMap id="pithyResultInfoMap" type="com.ding.office.info.NormalAttackInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="normalAttackAttributeInfoList" column="id" select="com.ding.office.mapper.NormalAttackAttributeMapper.findPithyInfoByNormalAttackId"/>
+    </resultMap>
+    <select id="searchNormalAttack" resultMap="resultInfoMap">
+        select * from normal_attack
+        <where>
+            <if test="normalAttackVo.gameRoleId != null">
+                and gameRole = #{normalAttackVo.gameRoleId}
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchNormalAttackOfPage" resultType="java.lang.Integer">
+        select count(1) from normal_attack
+        <where>
+            <if test="normalAttackVo.gameRoleId != null">
+                and gameRole = #{normalAttackVo.gameRoleId}
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into normal_attack(gameRole,name,details,note)
+        values(#{normalAttackVo.gameRoleId},#{normalAttackVo.name},#{normalAttackVo.details},#{normalAttackVo.note})
+    </insert>
+    <update id="update">
+        update normal_attack
+        set gameRole = #{normalAttackVo.gameRoleId},
+            name = #{normalAttackVo.name},
+            details = #{normalAttackVo.details},
+            note = #{normalAttackVo.note}
+        where id = #{normalAttackVo.id}
+    </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from normal_attack
+        where id = #{id}
+    </select>
+    <delete id="delete">
+        delete from normal_attack where id = #{normalAttackVo.id}
+    </delete>
+    <select id="findPithyInfoByGameRoleId" resultMap="pithyResultInfoMap">
+        select * from normal_attack
+        where gameRole = #{id}
+    </select>
+</mapper>

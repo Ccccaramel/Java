@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.HeadPortraitMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.HeadPortrait">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.HeadPortraitInfo">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="image" property="image"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchHeadPortrait" resultMap="resultInfoMap">
+        select * from head_portrait
+        <where>
+            <if test="headPortraitVo.name != null and headPortraitVo.name.trim() != ''">
+                and name like concat('%',#{headPortraitVo.name},'%')
+            </if>
+        </where>
+        <if test="page!=null and page.asc != null and page.asc == true">
+            ORDER BY id asc
+        </if>
+        <if test="page!=null and (page.asc == null || page.asc == false)">
+            ORDER BY id desc
+        </if>
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchHeadPortraitOfPage" resultType="java.lang.Integer">
+        select count(1) from head_portrait
+        <where>
+            <if test="headPortraitVo.name != null and headPortraitVo.name.trim() != ''">
+                and name like concat('%',#{headPortraitVo.name},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into head_portrait(name,image,note)
+        values(#{headPortraitVo.name},#{headPortraitVo.image},#{headPortraitVo.note})
+    </insert>
+    <update id="update">
+        update head_portrait
+        set name = #{headPortraitVo.name},image = #{headPortraitVo.image},note = #{headPortraitVo.note}
+        where id = #{headPortraitVo.id}
+    </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from head_portrait
+        where id = #{id}
+    </select>
+    <delete id="del">
+        delete from head_portrait where id = #{headPortraitVo.id}
+    </delete>
+</mapper>

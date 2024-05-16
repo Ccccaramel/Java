@@ -2,6 +2,8 @@ package com.springboot.controller;
 
 import com.springboot.bean.Car;
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ public class hiController {
 
     @Autowired
     Car car;
+
+    @Autowired
+    private StringEncryptor stringEncryptor;
 
     @RequestMapping("/")
     public String index(){
@@ -90,5 +95,15 @@ public class hiController {
         } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @GetMapping("/testJasypt")
+    public void testJasypt(){
+        String userName = stringEncryptor.encrypt("123");
+        System.out.println("加密："+userName);
+
+        // 解密 -基础类型
+        String decUserName = stringEncryptor.decrypt(userName);
+        System.out.println("解密："+decUserName);
     }
 }

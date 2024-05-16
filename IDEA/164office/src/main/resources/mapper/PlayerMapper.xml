@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.PlayerMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Player">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.PlayerInfo">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <id column="type" property="type"/>
+
+        <association property="playerType" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="findBy" resultMap="resultInfoMap">
+        select * from player
+        <where>
+            <if test="playerVo.id != null">
+                and id=#{playerVo.id}
+            </if>
+            <if test="playerVo.scid != null and playerVo.scid.trim() != ''">
+                and scid=#{playerVo.scid}
+            </if>
+        </where>
+    </select>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from player
+        where id=#{id}
+    </select>
+    <insert id="addPlayer" parameterType="com.ding.office.vo.PlayerVo" useGeneratedKeys="true" keyProperty="id">
+        insert into player(scid,name,type)
+        values(#{playerVo.scid},#{playerVo.name},#{playerVo.type});
+    </insert>
+
+    <select id="searchPlayerInfo" resultMap="resultInfoMap">
+        select * from player
+        <where>
+            <if test="playerVo.name!=null and playerVo.name.trim() != ''">
+                and name like concat('%',#{playerVo.name},'%')
+            </if>
+            <if test="playerVo.scid!=null and playerVo.scid.trim() != ''">
+                and scid like concat('%',#{playerVo.scid},'%')
+            </if>
+            <if test="playerVo.type!=null">
+                and type = #{playerVo.type}
+            </if>
+        </where>
+        ORDER BY id
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchPlayerInfoOfPage" resultType="java.lang.Integer">
+        select count(1) from player
+        <where>
+            <if test="playerVo.name!=null and playerVo.name.trim() != ''">
+                and name like concat('%',#{playerVo.name},'%')
+            </if>
+            <if test="playerVo.scid!=null and playerVo.scid.trim() != ''">
+                and scid like concat('%',#{playerVo.scid},'%')
+            </if>
+            <if test="playerVo.type!=null">
+                and type = #{playerVo.type}
+            </if>
+        </where>
+    </select>
+    <update id="update">
+        update player set name=#{playerVo.name},type=#{playerVo.type}
+        where id = #{playerVo.id}
+    </update>
+    <update id="updatePlayer">
+        update player set scid=#{playerVo.scid},name=#{playerVo.name},type=#{playerVo.type},note=#{playerVo.note}
+        where id = #{playerVo.id}
+    </update>
+</mapper>

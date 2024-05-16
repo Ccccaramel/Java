@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.NormalAttackAttributeMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.NormalAttackAttribute">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="gameRole" property="gameRole"/>
+        <id column="details" property="details"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.NormalAttackAttributeInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="normalAttack" column="normalAttack" select="com.ding.office.mapper.NormalAttackMapper.findById"/>
+    </resultMap>
+    <resultMap id="pithyResultInfoMap" type="com.ding.office.info.NormalAttackAttributeInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="details" property="details"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchNormalAttackAttribute" resultMap="resultInfoMap">
+        select * from normal_attack_attribute
+        <where>
+            <if test="normalAttackAttributeVo.normalAttackId != null">
+                and normalAttack = #{normalAttackAttributeVo.normalAttackId}
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchNormalAttackAttributeOfPage" resultType="java.lang.Integer">
+        select count(1) from normal_attack_attribute
+        <where>
+            <if test="normalAttackAttributeVo.normalAttackId != null">
+                and normalAttack = #{normalAttackAttributeVo.normalAttackId}
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into normal_attack_attribute(normalAttack,name,details,note)
+        values(#{normalAttackAttributeVo.normalAttackId},#{normalAttackAttributeVo.name},#{normalAttackAttributeVo.details},#{normalAttackAttributeVo.note})
+    </insert>
+    <update id="update">
+        update normal_attack_attribute
+        set normalAttack = #{normalAttackAttributeVo.normalAttackId},
+            name = #{normalAttackAttributeVo.name},
+            details = #{normalAttackAttributeVo.details},
+            note = #{normalAttackAttributeVo.note}
+        where id = #{normalAttackAttributeVo.id}
+    </update>
+    <delete id="delete">
+        delete from normal_attack_attribute
+        where id = #{normalAttackAttributeVo.id}
+    </delete>
+    <select id="findPithyInfoByNormalAttackId" resultMap="pithyResultInfoMap">
+        select * from normal_attack_attribute
+        where normalAttack = #{normalAttackId}
+    </select>
+</mapper>

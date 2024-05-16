@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/demo1" />
     <file type="web" url="file://$PROJECT_DIR$/springMVC" />
     <file type="web" url="file://$PROJECT_DIR$/springMVC-annotation" />
   </component>
@@ -16,18 +18,16 @@
         <option value="$PROJECT_DIR$/MQDemo/pom.xml" />
         <option value="$PROJECT_DIR$/SpringCould/pom.xml" />
         <option value="$PROJECT_DIR$/demo/pom.xml" />
+        <option value="$PROJECT_DIR$/164office/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/SpringCloud/pom.xml" />
-        <option value="$PROJECT_DIR$/SpringCould/common-util/pom.xml" />
-        <option value="$PROJECT_DIR$/rabbitMQDemo/consumer/pom.xml" />
-        <option value="$PROJECT_DIR$/rabbitMQDemo/publisher/pom.xml" />
+        <option value="$PROJECT_DIR$/demo/pom.xml" />
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" project-jdk-name="15" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" project-jdk-name="17" project-jdk-type="JavaSDK" />
   <component name="ProjectType">
     <option name="id" value="jpab" />
   </component>

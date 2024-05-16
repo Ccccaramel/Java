@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.BlogFileMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.BlogFile">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="user" property="user"/>
+        <id column="originalName" property="originalName"/>
+        <id column="linkName" property="linkName"/>
+        <id column="status" property="status"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.BlogFileInfo">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="originalName" property="originalName"/>
+        <id column="linkName" property="linkName"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association column="user" property="userInfo" select="com.ding.office.mapper.UserMapper.findById"/>
+        <association column="status" property="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <insert id="add" parameterType="com.ding.office.vo.BlogFileVo" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_file(user,status,blog,originalName,linkName,note)
+        values(#{blogFileVo.user},#{blogFileVo.status},#{blogFileVo.blog},#{blogFileVo.originalName},#{blogFileVo.linkName},#{blogFileVo.note})
+    </insert>
+    <select id="searchBlogFile" resultMap="resultInfoMap">
+        select * from blog_file
+        <where>
+            <if test="blogFileVo.id != null">
+                and id = #{blogFileVo.id}
+            </if>
+        </where>
+    </select>
+    <update id="delete">
+        update blog_file
+        set status = #{blogFileVo.status}
+        where id = #{blogFileVo.id}
+    </update>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.BlogMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Blog">
+        <id column="id" property="id"/>
+
+        <id column="title" property="title"/>
+        <id column="content" property="content"/>
+        <id column="user" property="user"/>
+        <id column="status" property="status"/>
+        <id column="power" property="power"/>
+        <id column="type" property="type"/>
+        <id column="label" property="label"/>
+        <id column="views" property="views"/>
+        <id column="updateTime" property="updateTime"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.BlogInfo">
+        <id column="id" property="id"/>
+
+        <id column="title" property="title"/>
+        <id column="content" property="content"/>
+        <id column="status" property="status"/>
+        <id column="label" property="label"/>
+        <id column="views" property="views"/>
+        <id column="updateTime" property="updateTime"/>
+        <id column="address" property="address"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association column="user" property="userInfo" select="com.ding.office.mapper.UserMapper.findById"/>
+        <association column="type" property="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association column="power" property="power" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="searchBlog" resultMap="resultInfoMap">
+        select * from blog
+        <where>
+            <if test="blogVo.id != null">
+                and id = #{blogVo.id}
+            </if>
+            <if test="blogVo.title != null and blogVo.title.trim() != ''">
+                and title like concat('%',#{blogVo.title},'%')
+            </if>
+            <if test="blogVo.user != null">
+                and user = #{blogVo.user}
+            </if>
+            <if test="blogVo.content != null and blogVo.content.trim() != ''">
+                and content like concat('%',#{blogVo.content},'%')
+            </if>
+            <if test="blogVo.status != null">
+                and status = #{blogVo.status}
+            </if>
+            <if test="blogVo.power != null">
+                and power = #{blogVo.power}
+            </if>
+            <if test="blogVo.type != null and blogVo.type != 0">
+                and type = #{blogVo.type}
+            </if>
+            <if test="blogVo.label != null and blogVo.label.trim() != ''">
+                and label like concat('%',#{blogVo.label},'%')
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchBlogOfPage" resultType="java.lang.Integer">
+        select count(1) from blog
+        <where>
+            <if test="blogVo.id != null and blogVo.id.trim() != ''">
+                and id = #{blogVo.id}
+            </if>
+            <if test="blogVo.title != null and blogVo.title.trim() != ''">
+                and title like concat('%',#{blogVo.title},'%')
+            </if>
+            <if test="blogVo.user != null">
+                and user = #{blogVo.user}
+            </if>
+            <if test="blogVo.content != null and blogVo.content.trim() != ''">
+                and content like concat('%',#{blogVo.content},'%')
+            </if>
+            <if test="blogVo.status != null">
+                and status = #{blogVo.status}
+            </if>
+            <if test="blogVo.power != null">
+                and power = #{blogVo.power}
+            </if>
+            <if test="blogVo.type != null">
+                and type = #{blogVo.type}
+            </if>
+            <if test="blogVo.label != null and blogVo.label.trim() != ''">
+                and label like concat('%',#{blogVo.label},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="init" parameterType="com.ding.office.vo.BlogVo" useGeneratedKeys="true" keyProperty="id">
+        insert into blog(user,status,ip,address,power,type,title,content)
+        values(#{blogVo.user},#{blogVo.status},#{blogVo.ip},#{blogVo.address},#{blogVo.power},#{blogVo.type},#{blogVo.title},#{blogVo.content})
+    </insert>
+    <update id="update">
+        update blog
+        set title = #{blogVo.title},
+            content = #{blogVo.content},
+            status = #{blogVo.status},
+            power = #{blogVo.power},
+            type = #{blogVo.type},
+            label = #{blogVo.label},
+            ip = #{blogVo.ip},
+            address = #{blogVo.address}
+        where id = #{blogVo.id}
+    </update>
+    <update id="modify">
+        update blog
+        set title = #{blogVo.title},
+            content = #{blogVo.content},
+            status = #{blogVo.status},
+            power = #{blogVo.power},
+            type = #{blogVo.type},
+            label = #{blogVo.label}
+        where id = #{blogVo.id}
+    </update>
+    <update id="delete">
+        update blog
+        set status = #{blogVo.status}
+        where id = #{blogVo.id}
+    </update>
+    <update id="viewBlog">
+        update blog
+        set views = views+1
+        where id = #{blogVo.id}
+    </update>
+</mapper>

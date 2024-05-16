@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.GameRoleCommentMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.GameRoleComment">
+        <id column="id" property="id"/>
+
+        <id column="gameRole" property="gameRole"/>
+        <id column="user" property="userId"/>
+        <id column="text" property="text"/>
+        <id column="parentId" property="parentId"/>
+        <id column="floor" property="floor"/>
+        <id column="status" property="status"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+        <id column="belongToFloor" property="belongToFloor"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.GameRoleCommentInfo">
+        <id column="id" property="id"/>
+        <id column="text" property="text"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <id column="parentId" property="parentId"/>
+        <id column="address" property="address"/>
+        <id column="floor" property="floor"/>
+        <id column="belongToFloor" property="belongToFloor"/>
+        <id column="head" property="head"/>
+        <association property="status" column="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association property="userInfo" column="user" select="com.ding.office.mapper.UserMapper.findById"/>
+        <association property="replyUser" column="parentId" select="com.ding.office.mapper.UserMapper.findByGameRoleCommentId"/>
+        <association property="gameRoleInfo" column="gameRole" select="com.ding.office.mapper.GameRoleMapper.findById"/>
+    </resultMap>
+    <!-- 仅搜话题第一楼 -->
+    <select id="getGameRoleCommentData" resultMap="resultInfoMap">
+        select * from game_role_comment
+        <where>
+            <if test="gameRoleCommentVo.gameRoleId!=null">
+                and gameRole = #{gameRoleCommentVo.gameRoleId}
+            </if>
+            <if test="!onlyFloor">
+                and parentId is not null
+            </if>
+            <if test="onlyFloor">
+                and parentId = -1
+            </if>
+            <if test="gameRoleCommentVo.status != null">
+                and status = #{gameRoleCommentVo.status}
+            </if>
+        </where>
+        ORDER BY floor
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="getGameRoleCommentDataOfPage" resultType="java.lang.Integer">
+        select count(1) from game_role_comment
+        <where>
+            <if test="gameRoleCommentVo.gameRoleId!=null">
+                and gameRole = #{gameRoleCommentVo.gameRoleId}
+            </if>
+            <if test="!onlyFloor">
+                and parentId is not null
+            </if>
+            <if test="onlyFloor">
+                and parentId = -1
+            </if>
+            <if test="gameRoleCommentVo.status != null">
+                and status = #{gameRoleCommentVo.status}
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into game_role_comment(gameRole,user,text,floor,status,ip,address,belongToFloor)
+        values(#{gameRoleCommentVo.gameRoleId},
+               #{gameRoleCommentVo.userId},
+               #{gameRoleCommentVo.text},
+               #{gameRoleCommentVo.floor},
+               #{gameRoleCommentVo.status},
+               #{gameRoleCommentVo.ip},
+               #{gameRoleCommentVo.address},
+               #{gameRoleCommentVo.belongToFloor})
+    </insert>
+    <insert id="saveReplyGameRoleCommentInfo">
+        insert into game_role_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user,gameRole,text,status,parentId,ip,address,belongToFloor
+            <if test="gameRoleCommentVo.floor!=null">
+                ,floor
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{gameRoleCommentVo.userId},#{gameRoleCommentVo.gameRoleId},#{gameRoleCommentVo.text},#{gameRoleCommentVo.status},#{gameRoleCommentVo.parentId},#{gameRoleCommentVo.ip},#{gameRoleCommentVo.address},#{gameRoleCommentVo.belongToFloor}
+            <if test="gameRoleCommentVo.floor!=null">
+                ,#{gameRoleCommentVo.floor}
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update game_role_comment
+        set status = #{gameRoleCommentVo.status}
+        where id = #{gameRoleCommentVo.id}
+    </update>
+    <select id="findByParentId" resultMap="resultInfoMap">
+        select * from game_role_comment
+        where parent = #{id}
+    </select>
+    <select id="findChildren" resultMap="resultInfoMap">
+        select * from game_role_comment
+        <where>
+            <if test="floor!=null">
+                and belongToFloor = #{floor}
+                and parentId != -1
+                and gameRole = #{gameRoleId}
+            </if>
+            <if test="status!=null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+    <update id="updateStatus">
+        update game_role_comment
+        set status = #{gameRoleCommentVo.status}
+        where id = #{gameRoleCommentVo.id}
+    </update>
+    <select id="getAllGameRoleComment" resultMap="resultInfoMap">
+        select grc.* from game_role_comment grc
+        <where>
+            and grc.gameRole = #{gameRoleCommentVo.gameRoleId}
+            <if test="gameRoleCommentVo.status!=null">
+                and grc.status = #{gameRoleCommentVo.status}
+            </if>
+            <if test="gameRoleCommentVo.text!=null and gameRoleCommentVo.text.trim()!=''">
+                and grc.text like concat('%',#{gameRoleCommentVo.text},'%')
+            </if>
+            <if test="gameRoleCommentVo.userName!=null">
+                and exists (select 1 from user as u where u.name like concat('%',#{gameRoleCommentVo.userName},'%') and grc.user=u.id)
+            </if>
+        </where>
+        ORDER BY grc.floor ASC
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="getAllGameRoleCommentOfPage" resultType="java.lang.Integer">
+        select count(1) from game_role_comment grc
+        <where>
+            and grc.gameRole = #{gameRoleCommentVo.gameRoleId}
+            <if test="gameRoleCommentVo.status!=null">
+                and grc.status = #{gameRoleCommentVo.status}
+            </if>
+            <if test="gameRoleCommentVo.text!=null and gameRoleCommentVo.text.trim()!=''">
+                and grc.text like concat('%',#{gameRoleCommentVo.text},'%')
+            </if>
+            <if test="gameRoleCommentVo.userName!=null">
+                and exists (select 1 from user as u where u.name like concat('%',#{gameRoleCommentVo.userName},'%') and grc.user=u.id)
+            </if>
+        </where>
+    </select>
+</mapper>

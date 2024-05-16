@@ -8,7 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 /**
  * 声明该应用是一个 springBoot 应用
  */
-@ServletComponentScan
+//@ServletComponentScan
 @SpringBootApplication
 public class start {
     public static void main(String[] args){

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.VisitLogMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.VisitLog">
+        <id column="id" property="id"/>
+
+        <id column="userId" property="userId"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+        <id column="trueAddress" property="trueAddress"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.VisitLogInfo">
+        <id column="id" property="id"/>
+        <id column="ip" property="ip"/>
+        <id column="address" property="address"/>
+        <id column="trueAddress" property="trueAddress"/>
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+        <association property="user" column="userId" select="com.ding.office.mapper.UserMapper.findById"/>
+    </resultMap>
+    <select id="searchVisitLog" resultMap="resultInfoMap">
+        select * from visit_log
+        <where>
+            <if test="visitLogVo.userId != null">
+                and userId = #{visitLogVo.userId}
+            </if>
+            <if test="visitLogVo.address != null and visitLogVo.address.trim() != ''">
+                and address like concat('%',#{visitLogVo.address},'%')
+            </if>
+            <if test="visitLogVo.trueAddress != null and visitLogVo.trueAddress.trim() != ''">
+                and trueAddress like concat('%',#{visitLogVo.trueAddress},'%')
+            </if>
+            <if test="visitLogVo.userName != null and visitLogVo.userName.trim() != ''">
+                and exists (select 1 from user u where userId = u.id and u.name like concat('%',#{visitLogVo.userName},'%'))
+            </if>
+            <if test="visitLogVo.note != null and visitLogVo.note.trim() != ''">
+                and note like concat('%',#{visitLogVo.note},'%')
+            </if>
+            <if test="visitLogVo.startDate != null and visitLogVo.startDate.trim() != ''">
+                and createTime  > #{visitLogVo.startDate}
+            </if>
+            <if test="visitLogVo.endDate != null and visitLogVo.endDate.trim() != ''">
+                and  #{visitLogVo.endDate} > createTime
+            </if>
+            <if test="!visitLogVo.isAll">
+                and note not like concat('%非法请求%')
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchVisitLogOfPage" resultType="java.lang.Integer">
+        select count(1) from visit_log
+        <where>
+            <if test="visitLogVo.userId != null">
+                and userId = #{visitLogVo.userId}
+            </if>
+            <if test="visitLogVo.address != null and visitLogVo.address.trim() != ''">
+                and address like concat('%',#{visitLogVo.address},'%')
+            </if>
+            <if test="visitLogVo.trueAddress != null and visitLogVo.trueAddress.trim() != ''">
+                and trueAddress like concat('%',#{visitLogVo.trueAddress},'%')
+            </if>
+            <if test="visitLogVo.userName != null and visitLogVo.userName.trim() != ''">
+                and exists (select 1 from user u where userId = u.id and u.name like concat('%',#{visitLogVo.userName},'%'))
+            </if>
+            <if test="visitLogVo.note != null and visitLogVo.note.trim() != ''">
+                and note like concat('%',#{visitLogVo.note},'%')
+            </if>
+            <if test="visitLogVo.startDate != null and visitLogVo.startDate.trim() != ''">
+                and createTime  > #{visitLogVo.startDate}
+            </if>
+            <if test="visitLogVo.endDate != null and visitLogVo.endDate.trim() != ''">
+                and  #{visitLogVo.endDate} > createTime
+            </if>
+            <if test="!visitLogVo.isAll">
+                and note not like concat('%非法请求%')
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into visit_log(ip,address,trueAddress,userId,note)
+        values(#{visitLogVo.ip},#{visitLogVo.address},#{visitLogVo.trueAddress},#{visitLogVo.userId},#{visitLogVo.note})
+    </insert>
+</mapper>

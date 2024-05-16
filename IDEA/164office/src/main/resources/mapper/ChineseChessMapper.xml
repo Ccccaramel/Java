@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.ChineseChessMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.ChineseChess">
+    </resultMap>
+    <resultMap id="resultMapInfo" type="com.ding.office.info.ChineseChessInfo">
+        <association property="rPlayer" column="rPlayer" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="bPlayer" column="bPlayer" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="winner" column="winner" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+    </resultMap>
+    <select id="searchChineseChess" resultMap="resultMapInfo">
+        select * from chinese_chess
+        <where>
+            <if test="chineseChessVo.user != null">
+                and (rPlayer = #{chineseChessVo.user}
+                or bPlayer = #{chineseChessVo.user})
+            </if>
+            <if test="chineseChessVo.rPlayer != null">
+                and rPlayer = #{chineseChessVo.rPlayer}
+            </if>
+            <if test="chineseChessVo.bPlayer != null">
+                and bPlayer = #{chineseChessVo.bPlayer}
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchChineseChessOfPage" resultType="java.lang.Integer">
+        select count(1) from chinese_chess
+        <where>
+            <if test="chineseChessVo.user != null">
+                and (rPlayer = #{chineseChessVo.user}
+                or bPlayer = #{chineseChessVo.user})
+            </if>
+            <if test="chineseChessVo.rPlayer != null">
+                and rPlayer = #{chineseChessVo.rPlayer}
+            </if>
+            <if test="chineseChessVo.bPlayer != null">
+                and bPlayer = #{chineseChessVo.bPlayer}
+            </if>
+        </where>
+        ORDER BY createTime desc
+    </select>
+    <select id="findById" resultMap="resultMapInfo">
+        select * from chinese_chess
+        where id=#{id};
+    </select>
+    <select id="getBattleInfo" resultMap="resultMapInfo">
+        select * from chinese_chess cc1
+        where cc1.rPlayer=#{userId}
+        union
+        select * from chinese_chess cc2
+        where cc2.bPlayer=#{userId};
+    </select>
+    <insert id="add">
+        insert into chinese_chess(rPlayer,bPlayer,rPlayerSkill,bPlayerSkill)
+        values(#{chineseChessVo.rPlayer},#{chineseChessVo.bPlayer},#{chineseChessVo.rPlayerSkill},#{chineseChessVo.bPlayerSkill})
+    </insert>
+</mapper>

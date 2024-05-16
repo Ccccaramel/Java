@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.UserMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.User">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="status" property="status"/>
+        <id column="role" property="role"/>
+        <id column="qq" property="qq"/>
+        <id column="headPortrait" property="headPortrait"/>
+        <id column="password" property="password"/>
+        <id column="ex" property="ex"/>
+        <id column="fingerprint" property="fingerprint"/>
+        <id column="qqOpenId" property="qqOpenId"/>
+        <id column="coin" property="coin"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.UserInfo">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="qq" property="qq"/>
+        <id column="note" property="note"/>
+        <id column="ex" property="ex"/>
+        <id column="email" property="email"/>
+        <id column="coin" property="coin"/>
+
+        <association property="role" column="role" select="com.ding.office.mapper.RoleMapper.findById"/>
+        <association property="status" column="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.HeadPortraitMapper.findById"/>
+    </resultMap>
+    <resultMap id="resultBriefInfoMap" type="com.ding.office.info.UserInfo">
+        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.HeadPortraitMapper.findById"/>
+    </resultMap>
+    <select id="searchUser" resultMap="resultInfoMap">
+        select * from user
+        <where>
+            <if test="userVo.name!=null and userVo.name.trim()!=''">
+                and name like concat('%',#{userVo.name},'%')
+            </if>
+            <if test="userVo.role!=null">
+                and role = #{userVo.role}
+            </if>
+            <if test="userVo.status!=null">
+                and status = #{userVo.status}
+            </if>
+            <if test="userVo.time!=null">
+                and createTime > #{userVo.time}
+            </if>
+            <if test="userVo.fingerprint!=null and userVo.fingerprint.trim()!=''">
+                and fingerprint = #{userVo.fingerprint}
+            </if>
+        </where>
+        ORDER BY id desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchUserOfPage" resultType="java.lang.Integer">
+        select count(1) from user
+        <where>
+            <if test="userVo.name!=null and userVo.name.trim()!=''">
+                and name like concat('%',#{userVo.name},'%')
+            </if>
+            <if test="userVo.role!=null">
+                and role = #{userVo.role}
+            </if>
+            <if test="userVo.status!=null">
+                and status = #{userVo.status}
+            </if>
+            <if test="userVo.time!=null">
+                and createTime > #{userVo.time}
+            </if>
+            <if test="userVo.fingerprint!=null and userVo.fingerprint.trim()!=''">
+                and fingerprint = #{userVo.fingerprint}
+            </if>
+        </where>
+    </select>
+    <select id="findBy" resultMap="resultMap">
+        select * from user
+        where id=#{account};
+    </select>
+    <select id="findByName" resultMap="resultMap">
+        select * from user
+        where name=#{account};
+    </select>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from user
+        where id=#{id};
+    </select>
+    <!--  获取用户部分信息  -->
+    <sql id="briefInfo">id,name,headPortrait,ex,note</sql>
+    <select id="findBriefInfoById" resultMap="resultBriefInfoMap">
+        select
+            <include refid="briefInfo"/>
+        from user
+        where id=#{id};
+    </select>
+    <select id="login" resultMap="resultMap">
+        select * from user
+            where name=#{account}
+                and password=#{password}
+            limit 1;
+    </select>
+    <select id="findUserByToken" resultMap="resultMap">
+        select * from user
+        where id=#{account}
+          and password=#{password}
+            limit 1;
+    </select>
+    <!-- 1:管理员 2:普通用户   -->
+    <insert id="register">
+        insert into user(name,status,role,password,fingerprint,qqOpenId,qqUnionId,coin)
+        values(#{userVo.account},400,2,#{userVo.password},#{userVo.fingerprint},#{userVo.qqOpenId},#{userVo.qqUnionId},#{userVo.coin});
+    </insert>
+    <update id="updateUserInfo">
+        update user
+        set qq = #{userVo.qq},note = #{userVo.note}
+        where id=#{userVo.id}
+    </update>
+    <update id="updateCoin">
+        update user
+        set coin = #{userVo.coin}
+        where id=#{userVo.id}
+    </update>
+    <update id="giftCoin">
+        update user
+        set coin = coin+60
+        where coin &lt; 8000
+            and status=400
+    </update>
+    <update id="saveUser">
+        update user
+        set name = #{userVo.name},qq = #{userVo.qq},role = #{userVo.role},status = #{userVo.status},note = #{userVo.note}
+        where id=#{userVo.id}
+    </update>
+    <update id="saveUserPassword">
+        update user
+        set password = #{userVo.password}
+        where id=#{userVo.id}
+    </update>
+    <update id="saveHeadPortrait">
+        update user
+        set headPortrait = #{userVo.headPortraitId}
+        where id=#{userVo.id}
+    </update>
+    <select id="findByTopicId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from topic t where t.id = #{topicId} and t.userId=u.id);
+    </select>
+    <select id="findByBlogRemarkId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from blog_remark br where br.id = #{blogRemarkId} and br.user=u.id);
+    </select>
+    <select id="findByGameRoleCommentId" resultMap="resultInfoMap">
+        select u.* from user u
+        where exists (select 1 from game_role_comment grc where grc.id = #{gameRoleCommentId} and grc.user=u.id);
+    </select>
+    <update id="addEx">
+        update user
+        set ex = ex + #{i}
+        where id = #{userId}
+    </update>
+    <select id="findByQqOpenId" resultMap="resultMap">
+        select * from user
+        where qqOpenId = #{qqOpenId}
+    </select>
+    <select id="findByEmail" resultMap="resultMap">
+        select * from user
+        where email = #{email}
+    </select>
+    <update id="bindEmail">
+        update user
+        set email = #{userVo.email}
+        where id = #{userVo.id}
+    </update>
+    <update id="unbindEmail">
+        update user
+        set email = ''
+        where id = #{userVo.id}
+    </update>
+    <update id="updatePassword">
+        update user
+        set password = #{user.password}
+        where id=#{user.id}
+    </update>
+</mapper>

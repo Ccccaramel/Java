@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.TeamMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Team">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+        <id column="status" property="status"/>
+        <id column="eliminationLine" property="eliminationLine"/>
+        <id column="excellentLine" property="excellentLine"/>
+        <id column="type" property="type"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association property="teamType" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.TeamInfo">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="scid" property="scid"/>
+        <id column="eliminationLine" property="eliminationLine"/>
+        <id column="excellentLine" property="excellentLine"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association property="type" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association property="status" column="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from team
+        <where>
+            id = #{id}
+        </where>
+    </select>
+    <select id="findByScid" resultMap="resultInfoMap">
+        select * from team
+        where scid = #{scid}
+    </select>
+    <insert id="add" parameterType="com.ding.office.vo.TeamVo" useGeneratedKeys="true" keyProperty="id">
+        insert into team(name,scid,note,status,eliminationLine,excellentLine,type)
+        values (#{teamVo.name},#{teamVo.scid},#{teamVo.note},#{teamVo.status},#{teamVo.eliminationLine},#{teamVo.excellentLine},#{teamVo.type});
+    </insert>
+    <update id="update">
+        update team
+        set name=#{teamVo.name},
+            scid=#{teamVo.scid},
+            note=#{teamVo.note},
+            eliminationLine=#{teamVo.eliminationLine},
+            excellentLine=#{teamVo.excellentLine},
+            type=#{teamVo.type},
+            status=#{teamVo.status}
+        where id=#{teamVo.id}
+    </update>
+    <select id="searchTeamInfo" resultMap="resultInfoMap">
+        select * from team
+        <where>
+            <if test="teamVo.name != null and teamVo.name.trim()!=''">
+                and name like concat('%',#{teamVo.name},'%')
+            </if>
+            <if test="teamVo.scid != null and teamVo.scid.trim()!=''">
+                and scid like concat('%',#{teamVo.scid},'%')
+            </if>
+            <if test="teamVo.status != null">
+                and status = #{teamVo.status}
+            </if>
+            <if test="teamVo.type != null">
+                and type = #{teamVo.type}
+            </if>
+        </where>
+        ORDER BY id
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchTeamInfoOfPage" resultType="java.lang.Integer">
+        select count(1) from team
+        <where>
+            <if test="teamVo.name != null and teamVo.name.trim()!=''">
+                and name like concat('%',#{teamVo.name},'%')
+            </if>
+            <if test="teamVo.scid != null and teamVo.scid.trim()!=''">
+                and scid like concat('%',#{teamVo.scid},'%')
+            </if>
+            <if test="teamVo.status != null">
+                and status = #{teamVo.status}
+            </if>
+            <if test="teamVo.type != null">
+                and type = #{teamVo.type}
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+</mapper>

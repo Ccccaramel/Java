@@ -106,4 +106,47 @@ public class hiController {
         String decUserName = stringEncryptor.decrypt(userName);
         System.out.println("解密："+decUserName);
     }
+
+    @PostMapping("/jsonObject")
+    public String jsonObject(@RequestBody Car car){
+        System.out.println("car:"+car.toString());
+        return car.toString();
+    }
+
+    @PostMapping("/jsonStringData")
+    public String jsonStringData(@RequestBody String str){
+        System.out.println("str:"+str);
+        return str;
+    }
+
+    @PostMapping("/fromObject")
+    public String fromObject(Car car){
+        System.out.println("car:"+car.toString());
+        return car.toString();
+    }
+
+    @GetMapping("/selectById/id/{id}")
+    public String selectById(@PathVariable("id") String id,
+                             @RequestHeader("User-Agent") String userAgent,
+                             @RequestParam("name") String name,
+                             @RequestParam("age") Integer age,
+                             @CookieValue("uid") String uid,
+                             @CookieValue("msg") String msg){
+        System.out.println("id:"+id);
+        System.out.println("userAgent:"+userAgent);
+        System.out.println("name:"+name);
+        System.out.println("age:"+age);
+        return "id:"+id
+                +"   userAgent:"+userAgent
+                +"   name:"+name
+                +"   age:"+age
+                +"   uid:"+uid
+                + "   msg:"+msg;
+    }
+
+    @GetMapping("/findCar")
+    public String findCar(Car car){
+        System.out.println("car:"+car.toString());
+        return car.toString();
+    }
 }

@@ -32,6 +32,7 @@ public class CommonConfig extends WebMvcConfigurationSupport {
 
     @Resource
     private RedisConnectionFactory redisConnectionFactory;
+
     /**
      * 跨域设置,否则将拒绝所有请求
      * @param registry
@@ -61,7 +62,10 @@ public class CommonConfig extends WebMvcConfigurationSupport {
     @Value("${spring.web.resources.static-locations}")
     private String[] staticLocations;
 
-    // 添加资源处理器路径 即每次访问静态资源都得添加"/resources/",例如 http://127.0.0.1:8090/resources/ppp.jpg
+    /**
+     * 添加资源处理器路径 即每次访问静态资源都得添加"/resources/",例如localhost:8080/resources/j1.jpg(本地开发测试)
+     * @param registry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations(staticLocations);
@@ -72,9 +76,7 @@ public class CommonConfig extends WebMvcConfigurationSupport {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
-//        redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;

@@ -2,12 +2,22 @@ package com.ding.office.vo;
 
 public class ChineseChessVo {
     private Integer id;
-
-    private Integer rPlayer;  // 红方(房主)
-    private Integer rPlayerSkill;  // 红方技能
-    private Integer bPlayer;  // 黑方
-    private Integer bPlayerSkill;  // 黑方技能
+    private String name;  // 对战标题
+    private Integer roomOwner;  // 红方(房主)
+    private Integer roomOwnerSkill;  // 红方技能
+    private Integer rival;  // 黑方
+    private Integer rivalSkill;  // 黑方技能
     private Integer winner;  //胜方
+    private String note;
+    private Integer type;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -17,36 +27,36 @@ public class ChineseChessVo {
         this.id = id;
     }
 
-    public Integer getrPlayer() {
-        return rPlayer;
+    public Integer getRoomOwner() {
+        return roomOwner;
     }
 
-    public void setrPlayer(Integer rPlayer) {
-        this.rPlayer = rPlayer;
+    public void setRoomOwner(Integer roomOwner) {
+        this.roomOwner = roomOwner;
     }
 
-    public Integer getrPlayerSkill() {
-        return rPlayerSkill;
+    public Integer getRoomOwnerSkill() {
+        return roomOwnerSkill;
     }
 
-    public void setrPlayerSkill(Integer rPlayerSkill) {
-        this.rPlayerSkill = rPlayerSkill;
+    public void setRoomOwnerSkill(Integer roomOwnerSkill) {
+        this.roomOwnerSkill = roomOwnerSkill;
     }
 
-    public Integer getbPlayer() {
-        return bPlayer;
+    public Integer getRival() {
+        return rival;
     }
 
-    public void setbPlayer(Integer bPlayer) {
-        this.bPlayer = bPlayer;
+    public void setRival(Integer rival) {
+        this.rival = rival;
     }
 
-    public Integer getbPlayerSkill() {
-        return bPlayerSkill;
+    public Integer getRivalSkill() {
+        return rivalSkill;
     }
 
-    public void setbPlayerSkill(Integer bPlayerSkill) {
-        this.bPlayerSkill = bPlayerSkill;
+    public void setRivalSkill(Integer rivalSkill) {
+        this.rivalSkill = rivalSkill;
     }
 
     public Integer getWinner() {
@@ -55,5 +65,21 @@ public class ChineseChessVo {
 
     public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

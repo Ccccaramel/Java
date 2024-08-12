@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.SuperBagMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.SuperBag">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="link" property="link"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.SuperBagInfo">
+        <id column="id" property="id"/>
+
+        <id column="name" property="name"/>
+        <id column="link" property="link"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <insert id="add">
+        insert into
+            super_bag(name,link,note)
+        values(#{superBagVo.name},
+               #{superBagVo.link},
+               #{superBagVo.note})
+    </insert>
+    <select id="searchSuperBag" resultMap="resultInfoMap">
+        select * from super_bag
+        <where>
+            <if test="superBagVo.id != null">
+                and id = #{superBagVo.id}
+            </if>
+            <if test="superBagVo.name != null and superBagVo.name.trim()!=''">
+                and name = #{superBagVo.name}
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchSuperBagOfPage" resultType="java.lang.Integer">
+        select count(1) from super_bag
+        <where>
+            <if test="superBagVo.id != null">
+                and id = #{superBagVo.id}
+            </if>
+            <if test="superBagVo.name != null and superBagVo.name.trim()!=''">
+                and name = #{superBagVo.name}
+            </if>
+        </where>
+        ORDER BY createTime desc
+    </select>
+    <update id="update">
+        update super_bag
+        set name = #{superBagVo.name},
+            link = #{superBagVo.link},
+            note = #{superBagVo.note}
+        where id = #{superBagVo.id}
+    </update>
+    <delete id="delete">
+        delete from super_bag
+        where id = #{superBagVo.id}
+    </delete>
+</mapper>

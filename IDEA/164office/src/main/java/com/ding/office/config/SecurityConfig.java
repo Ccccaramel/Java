@@ -65,21 +65,26 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .build();
     }
 
-    @Value("${spring.web.resources.static-locations}")
-    private String[] staticLocations;
+//    @Value("${spring.web.resources.static-locations}")
+//    private String[] staticLocations;
 
-    // 添加资源处理器路径 即每次访问静态资源都得添加"/hyld/",例如localhost:8080/hyld/j1.jpg(本地开发测试)
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/hyld/**") // url 格式,(在 CommonCode.OPEN_URL 放行该请求路径)
-                .addResourceLocations(staticLocations);
-    }
+    // 添加资源处理器路径 即每次访问静态资源都得添加"/resources/",例如localhost:8080/resources/j1.jpg(本地开发测试)
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/resources/**") // url 格式,(在 CommonCode.OPEN_URL 放行该请求路径)
+//                .addResourceLocations(staticLocations);
+//    }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        log.info("SecurityConfig >>> addInterceptors");
-        registry.addInterceptor(new ResourceInterceptor()) // 添加拦截器
-                .addPathPatterns("/**") // 拦截路径,包括静态资源
-                .excludePathPatterns(CommonCode.OPEN_URL); // 放行请求
-    }
+    /**
+     * 项目启动时就将自定义的拦截器添加到容器中,用以限制访问权限
+     * 有些页面无需登录即可访问
+     * 而有些则必须登录后才可访问,直接输入 url 访问会被拦截,前台也可以通过路由判断是否携带 token 进行初步判断,但最终还是需要后台验证才行
+     */
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) { // 接口的放行与登录拦截检查
+//        log.info("SecurityConfig >>> addInterceptors");
+//        registry.addInterceptor(new ResourceInterceptor()) // 添加拦截器
+//                .addPathPatterns("/**") // 拦截路径,包括静态资源
+//                .excludePathPatterns(CommonCode.OPEN_URL); // 放行请求
+//    }
 }

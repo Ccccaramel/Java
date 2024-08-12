@@ -22,4 +22,6 @@ public interface MusicService extends IService<Music> {
     MusicInfo findBy(MusicVo musicVo);
 
     List<MusicInfo> getAll(MusicVo musicVo);
+
+    void addHot(Integer id);
 }

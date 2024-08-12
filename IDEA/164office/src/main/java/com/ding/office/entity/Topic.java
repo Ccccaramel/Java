@@ -26,14 +26,8 @@ public class Topic extends BaseObject {
         return images;
     }
 
-    public void setImages(String images) {
-        if(StringUtils.hasText(images)){
-            for(String image:images.split(";")){
-                if(StringUtils.hasText(image)){
-                    this.images.add(ResourcesPathUtils.getPhotoPath(ResourcesPathUtils.HYLD) + image);
-                }
-            }
-        }
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public String getRubric() {

@@ -1,16 +1,20 @@
 package com.base.time;
 
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class main {
-    public static void main(String[] args) {
+
+    @Test
+    public void fun1() {
 
         System.out.println("date:"+LocalDateTime.now());
 
@@ -42,6 +46,8 @@ public class main {
         System.out.println("LocalDateTime 今天的起始日期:"+localDateTime.withHour(0).withMinute(0).withSecond(0));
         System.out.println("LocalDateTime 今天的起始日期(Str):"+dateTimeFormatter.format(localDateTime.withHour(0).withMinute(0).withSecond(0)));
 
+        System.out.println("yyyyMMddHHmmss:"+DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
+
         LocalDateTime localDateTime1 = LocalDateTime.of(LocalDate.from(LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth())), LocalTime.MIN);
         System.out.println("LocalDateTime 本月第一天的起始日期(精确):"+localDateTime1);
 
@@ -66,5 +72,42 @@ public class main {
          */
         System.out.println("String转LocalDateTime:" + LocalDateTime.parse("2020-01-01T12:12"));
         System.out.println("String转LocalDateTime:" + LocalDateTime.parse("2022-11-10T19:40:51.657207"));
+    }
+
+    @Test
+    public void fun2(){
+        System.out.println("year:"+LocalDateTime.now().getYear());  // 当前年份
+        System.out.println("month(En):"+LocalDateTime.now().getMonth());  // 当前月份(英文缩写)
+        System.out.println("month:"+LocalDateTime.now().getMonthValue());  // 当前月份
+        System.out.println("day:"+LocalDateTime.now().getDayOfMonth());  // 当前日
+    }
+
+    @Test
+    public void fun3(){
+        System.out.println("时间戳:"+LocalDateTime.now());
+        System.out.println("时间戳:"+ System.currentTimeMillis());
+    }
+
+    /**
+     * 时间比较大小
+     * 比时间戳数值大小
+     */
+    @Test
+    public void fun4(){
+        LocalDateTime localDateTime1=LocalDateTime.of(2001,1,1,1,1,1);
+        LocalDateTime localDateTime2=LocalDateTime.of(2000,1,1,1,1,1);
+        LocalDateTime localDateTime3=LocalDateTime.of(2000,1,1,1,1,1);
+        log.info("localDateTime1.compareTo(localDateTime2)={}",localDateTime2.compareTo(localDateTime1));
+    }
+
+    /**
+     * 时间运算
+     */
+    @Test
+    public void fun5(){
+        LocalDateTime localDateTime1=LocalDateTime.of(2001,1,1,1,1,1);
+        LocalDateTime localDateTime2=LocalDateTime.of(2000,1,1,1,1,1);
+        log.info("Duration.between(localDateTime1,localDateTime2).getSeconds()   {}", Duration.between(localDateTime1,localDateTime2).getSeconds());
+        log.info("Math.abs(Duration.between(localDateTime1,localDateTime2).getSeconds())   {}", Math.abs(Duration.between(localDateTime1,localDateTime2).getSeconds()));
     }
 }

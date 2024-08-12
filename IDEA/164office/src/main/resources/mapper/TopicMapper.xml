@@ -183,10 +183,6 @@
         select * from topic
         where id = #{topicId}
     </select>
-    <select id="findParentById" resultMap="resultMap">
-        select * from topic
-        where id = #{id}
-    </select>
     <update id="updateStatus">
         update topic
         set status = #{topicVo.status}

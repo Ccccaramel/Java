@@ -34,8 +34,8 @@ public class BlogController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
 
         blogVo.setUser(getUserId());
-        blogVo.setTitle(CommonCode.STRING_1);
-        blogVo.setContent(CommonCode.STRING_2);
+        blogVo.setTitle(CommonCode.BLOG_TITLE);
+        blogVo.setContent(CommonCode.BLOG_CONTENT);
         blogVo.setStatus(DictionaryCode.BLOG_STATUS_2);
         blogVo.setPower(DictionaryCode.BLOG_POWER_1);
         blogVo.setType(DictionaryCode.BLOG_TYPE_1);
@@ -145,7 +145,12 @@ public class BlogController extends BaseController {
     @GetMapping("/searchMyBlog")
     public R searchMyBlog(BlogVo blogVo,Page page){
         HashMap<String,Object> result=new HashMap<>();
-        blogVo.setUser(getUserId());
+        if (blogVo.isCollection()) {
+            blogVo.setCollectionUserId(getUserId());
+        }
+        else{
+            blogVo.setUser(getUserId());
+        }
         blogVo.setStatus(DictionaryCode.BLOG_STATUS_2);
 
         result.put("data",blogService.searchBlog(page, blogVo));

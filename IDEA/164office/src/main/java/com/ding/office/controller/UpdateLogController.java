@@ -28,7 +28,7 @@ public class UpdateLogController extends BaseController {
         return R.success(result);
     }
 
-    @PreAuthorize("hasAnyAuthority('updateLog_add','updateLog_update')")
+    @PreAuthorize("hasAnyAuthority('updateLogManage_add','updateLogManage_update')")
     @PostMapping("/saveUpdateLog")
     public R saveUpdateLog(@RequestBody UpdateLogVo updateLogVo){
         if(updateLogVo.isAdd()){

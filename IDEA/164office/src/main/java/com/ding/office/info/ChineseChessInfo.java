@@ -1,22 +1,34 @@
 package com.ding.office.info;
 
+import com.ding.office.entity.Dictionary;
 import com.ding.office.utils.TimeUtils;
 
 import java.time.LocalDateTime;
 
 public class ChineseChessInfo {
-    private Integer id;  // 红方(房主)
-    private Integer rPlayer;  // 红方(房主)
-    private Integer rPlayerSkill;  // 红方技能
-    private Integer bPlayer;  // 黑方
-    private Integer bPlayerSkill;  // 黑方技能
-    private Integer winner;  //胜方
+    private String name;  // 对战标题
+    private Integer id;  // 场次编号
+    private UserInfo roomOwner;  // 房主(红方)
+    private Integer roomOwnerSkill;  // 房主(红方)技能
+    private UserInfo rival;  // 对手(黑方)
+    private Integer rivalSkill;  // 对手(黑方)技能
+    private UserInfo winner;  //胜方
     private LocalDateTime createTime;
     private String createTimeStr;
     private String note;
 
+    private Dictionary type;
+
     private Integer chanceOfWinning;  // 胜率,传给前端,会在末尾加上"%"
     private Integer totalGames;  // 总局数
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -26,43 +38,43 @@ public class ChineseChessInfo {
         this.id = id;
     }
 
-    public Integer getrPlayer() {
-        return rPlayer;
+    public UserInfo getRoomOwner() {
+        return roomOwner;
     }
 
-    public void setrPlayer(Integer rPlayer) {
-        this.rPlayer = rPlayer;
+    public void setRoomOwner(UserInfo roomOwner) {
+        this.roomOwner = roomOwner;
     }
 
-    public Integer getrPlayerSkill() {
-        return rPlayerSkill;
+    public Integer getRoomOwnerSkill() {
+        return roomOwnerSkill;
     }
 
-    public void setrPlayerSkill(Integer rPlayerSkill) {
-        this.rPlayerSkill = rPlayerSkill;
+    public void setRoomOwnerSkill(Integer roomOwnerSkill) {
+        this.roomOwnerSkill = roomOwnerSkill;
     }
 
-    public Integer getbPlayer() {
-        return bPlayer;
+    public UserInfo getRival() {
+        return rival;
     }
 
-    public void setbPlayer(Integer bPlayer) {
-        this.bPlayer = bPlayer;
+    public void setRival(UserInfo rival) {
+        this.rival = rival;
     }
 
-    public Integer getbPlayerSkill() {
-        return bPlayerSkill;
+    public Integer getRivalSkill() {
+        return rivalSkill;
     }
 
-    public void setbPlayerSkill(Integer bPlayerSkill) {
-        this.bPlayerSkill = bPlayerSkill;
+    public void setRivalSkill(Integer rivalSkill) {
+        this.rivalSkill = rivalSkill;
     }
 
-    public Integer getWinner() {
+    public UserInfo getWinner() {
         return winner;
     }
 
-    public void setWinner(Integer winner) {
+    public void setWinner(UserInfo winner) {
         this.winner = winner;
     }
 
@@ -105,5 +117,13 @@ public class ChineseChessInfo {
 
     public void setTotalGames(Integer totalGames) {
         this.totalGames = totalGames;
+    }
+
+    public Dictionary getType() {
+        return type;
+    }
+
+    public void setType(Dictionary type) {
+        this.type = type;
     }
 }

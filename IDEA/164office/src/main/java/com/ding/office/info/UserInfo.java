@@ -18,7 +18,7 @@ public class UserInfo {
     private String note;
     private String name;
     private String qq;
-    private HeadPortraitInfo headPortrait; // 头像
+    private ResourceInfo headPortrait; // 头像
     private Integer ex; // 经验
 
     private RoleInfo role;
@@ -138,11 +138,11 @@ public class UserInfo {
         this.status = status;
     }
 
-    public HeadPortraitInfo getHeadPortrait() {
+    public ResourceInfo getHeadPortrait() {
         return headPortrait;
     }
 
-    public void setHeadPortrait(HeadPortraitInfo headPortrait) {
+    public void setHeadPortrait(ResourceInfo headPortrait) {
         this.headPortrait = headPortrait;
     }
 
@@ -194,7 +194,7 @@ public class UserInfo {
                 ", note='" + note + '\'' +
                 ", name='" + name + '\'' +
                 ", qq='" + qq + '\'' +
-                ", headPortrait=" + headPortrait +
+                ", image=" + headPortrait +
                 ", ex=" + ex +
                 ", role=" + role +
                 ", status=" + status +

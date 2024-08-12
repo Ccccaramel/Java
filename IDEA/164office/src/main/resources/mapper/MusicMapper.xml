@@ -17,6 +17,7 @@
         <id column="audioRef" property="audioRef"/>
         <id column="mvLink" property="mvLink"/>
         <id column="status" property="status"/>
+        <id column="type" property="type"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
@@ -41,6 +42,7 @@
         <id column="note" property="note"/>
 
         <association column="status" property="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association column="type" property="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
     </resultMap>
     <resultMap id="resultDetailInfoMap" type="com.ding.office.info.MusicInfo">
         <id column="id" property="id"/>
@@ -57,16 +59,18 @@
         <id column="audioName" property="audioName"/>
         <id column="audioRef" property="audioRef"/>
         <id column="mvLink" property="mvLink"/>
+        <id column="hot" property="hot"/>
 
         <id column="createTime" property="createTime"/>
         <id column="note" property="note"/>
 
         <association column="status" property="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+        <association column="type" property="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
         <collection property="musicLyricInfoList" column="id" select="com.ding.office.mapper.MusicLyricMapper.findByMusicId"/>
     </resultMap>
     <insert id="add">
         insert into
-            music(coverRef,name,composing,lyrics,arranger,singer,info,album,releaseTime,audioName,audioRef,mvLink,note,status)
+            music(coverRef,name,composing,lyrics,arranger,singer,info,album,releaseTime,audioName,audioRef,mvLink,note,status,type)
         values(#{musicVo.coverRef},
                #{musicVo.name},
                #{musicVo.composing},
@@ -80,7 +84,8 @@
                #{musicVo.audioRef},
                #{musicVo.mvLink},
                #{musicVo.note},
-               #{musicVo.status})
+               #{musicVo.status},
+               #{musicVo.type})
     </insert>
     <select id="searchMusic" resultMap="resultInfoMap">
         select * from music
@@ -97,6 +102,9 @@
                 or info like concat('%',#{musicVo.keywords},'%')
                 or album like concat('%',#{musicVo.keywords},'%'))
             </if>
+            <if test="musicVo.type != null and musicVo.type.trim()!=''">
+                and type = #{musicVo.type}
+            </if>
         </where>
         ORDER BY createTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
@@ -112,6 +120,9 @@
             </if>
             <if test="musicVo.status != null">
                 and status = #{musicVo.status}
+            </if>
+            <if test="musicVo.type != null and musicVo.type.trim()!=''">
+                and type = #{musicVo.type}
             </if>
         </where>
     </select>
@@ -130,6 +141,9 @@
                 or info like concat('%',#{musicVo.keywords},'%')
                 or album like concat('%',#{musicVo.keywords},'%'))
             </if>
+            <if test="musicVo.type != null and musicVo.type.trim()!=''">
+                and type = #{musicVo.type}
+            </if>
         </where>
         ORDER BY createTime desc
     </select>
@@ -141,6 +155,9 @@
             </if>
             <if test="musicVo.status != null">
                 and status = #{musicVo.status}
+            </if>
+            <if test="musicVo.type != null and musicVo.type.trim()!=''">
+                and type = #{musicVo.type}
             </if>
         </where>
     </select>
@@ -163,12 +180,18 @@
             mvLink = #{musicVo.mvLink},
             releaseTime = #{musicVo.releaseTime},
             info = #{musicVo.info},
-            note = #{musicVo.note}
+            note = #{musicVo.note},
+            type = #{musicVo.type}
         where id = #{musicVo.id}
     </update>
     <update id="updateStatus">
         update music
         set status = #{musicVo.status}
         where id = #{musicVo.id}
+    </update>
+    <update id="addHot">
+        update music
+        set hot = hot+1
+        where id = #{blogVo.id}
     </update>
 </mapper>

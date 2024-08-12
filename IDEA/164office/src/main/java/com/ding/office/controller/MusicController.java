@@ -11,6 +11,7 @@ import com.ding.office.utils.ResourcesPathUtils;
 import com.ding.office.vo.MusicVo;
 import com.ding.office.vo.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 @RestController
 @RequestMapping("/music")
 public class MusicController extends BaseController {
@@ -88,6 +90,10 @@ public class MusicController extends BaseController {
         HashMap<String,Object> result=new HashMap<>();
         musicVo.setStatus(DictionaryCode.MUSIC_STATUS_1);
 
+        if(DictionaryCode.MUSIC_TYPE_2.equals(musicVo.getType())){
+            musicVo.setType(null);
+        }
+
         result.put("data",musicService.searchMusic(musicVo,page));
         if(!Objects.equals(page.getSize(),null)){
             result.put("totalPage",Math.ceil(musicService.searchMusicOfPage(musicVo)*1.0/page.getSize()));
@@ -116,10 +122,14 @@ public class MusicController extends BaseController {
      * @return
      */
     @GetMapping("/getMusic")
-    public R getMusic(Integer id){
+    public R getMusic(Integer id,String type){
+        log.info("type:{}",type);
         HashMap<String,Object> result=new HashMap<>();
         MusicVo musicVo=new MusicVo();
         musicVo.setStatus(DictionaryCode.MUSIC_STATUS_1);
+        if(!DictionaryCode.MUSIC_TYPE_2.equals(type)){
+            musicVo.setType(type);
+        }
 
         if(id==0){  // 随机获取
             List<MusicInfo> list=musicService.getAll(musicVo);
@@ -130,6 +140,8 @@ public class MusicController extends BaseController {
         else{
             musicVo.setId(id);
         }
+
+        musicService.addHot(id);// 增加播放次数
 
         MusicInfo musicInfo=musicService.findBy(musicVo);
         result.put("data",musicInfo);

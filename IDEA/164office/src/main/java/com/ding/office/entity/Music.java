@@ -21,6 +21,18 @@ public class Music extends BaseObject {
     private String mvLink;
     private Integer status;
 
+    private Integer hot;
+
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getCoverRef() {
         return coverRef;
     }
@@ -123,5 +135,13 @@ public class Music extends BaseObject {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getHot() {
+        return hot;
+    }
+
+    public void setHot(Integer hot) {
+        this.hot = hot;
     }
 }

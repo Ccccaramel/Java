@@ -48,4 +48,9 @@ public class MusicServiceImpl extends ServiceImpl<MusicMapper, Music> implements
         return baseMapper.getAll(musicVo);
     }
 
+    @Override
+    public void addHot(Integer id) {
+        baseMapper.addHot(id);
+    }
+
 }

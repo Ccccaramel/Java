@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.ResourceMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.Resource">
+        <id column="id" property="id"/>
+
+        <id column="alias" property="alias"/>
+        <id column="fileName" property="fileName"/>
+        <id column="type" property="type"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.ResourceInfo">
+        <id column="id" property="id"/>
+
+        <id column="alias" property="alias"/>
+        <id column="fileName" property="fileName"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+
+        <association property="type" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
+    </resultMap>
+    <select id="searchResource" resultMap="resultInfoMap">
+        select * from resource
+        <where>
+            <if test="resourceVo.alias != null and resourceVo.alias.trim() != ''">
+                and alias like concat('%',#{resourceVo.alias},'%')
+            </if>
+            <if test="resourceVo.type != null">
+                and type = #{resourceVo.type}
+            </if>
+        </where>
+        <if test="page!=null and page.asc != null and page.asc == true">
+            ORDER BY id asc
+        </if>
+        <if test="page!=null and (page.asc == null || page.asc == false)">
+            ORDER BY id desc
+        </if>
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit #{start},#{page.size}
+        </if>
+    </select>
+    <select id="searchResourceOfPage" resultType="java.lang.Integer">
+        select count(1) from resource
+        <where>
+            <if test="resourceVo.alias != null and resourceVo.alias.trim() != ''">
+                and alias like concat('%',#{resourceVo.alias},'%')
+            </if>
+            <if test="resourceVo.type != null">
+                and type = #{resourceVo.type}
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into resource(alias,fileName,note,type)
+        values(#{resourceVo.alias},#{resourceVo.fileName},#{resourceVo.note},#{resourceVo.type})
+    </insert>
+    <update id="update">
+        update resource
+        set alias = #{resourceVo.alias},fileName = #{resourceVo.fileName},note = #{resourceVo.note},type = #{resourceVo.type}
+        where id = #{resourceVo.id}
+    </update>
+    <select id="findById" resultMap="resultInfoMap">
+        select * from resource
+        where id = #{id}
+    </select>
+    <delete id="del">
+        delete from resource where id = #{resourceVo.id}
+    </delete>
+</mapper>

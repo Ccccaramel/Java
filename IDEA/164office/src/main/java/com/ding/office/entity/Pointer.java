@@ -5,6 +5,9 @@ import com.ding.office.entity.base.BaseObject;
 
 import java.time.LocalDateTime;
 
+/**
+ * 反馈与建议
+ */
 @TableName("pointer")
 public class Pointer extends BaseObject {
     private String text;

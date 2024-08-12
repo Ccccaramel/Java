@@ -27,13 +27,18 @@ public class ChineseChessServiceImpl extends ServiceImpl<ChineseChessMapper, Chi
         Integer i=0;
         List<ChineseChessInfo> list = baseMapper.getBattleInfo(userId);
         for (ChineseChessInfo chineseChessInfo :list) {
-            if(chineseChessInfo.getWinner().equals(userId)){
+            if(chineseChessInfo.getWinner()!=null&&chineseChessInfo.getWinner().getId().equals(userId)){
                 i++;
             }
         }
         info.setChanceOfWinning(list.size()==0?0:i*100 / list.size());
         info.setTotalGames(list.size());
         return info;
+    }
+
+    @Override
+    public void settlement(ChineseChessVo chineseChessVo) {
+        baseMapper.settlement(chineseChessVo);
     }
 
 }

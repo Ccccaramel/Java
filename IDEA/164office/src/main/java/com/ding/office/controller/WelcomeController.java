@@ -88,7 +88,7 @@ public class WelcomeController extends BaseController {
         String ip = IpUtils.getIpAddress(request);
         visitLogVo.setIp(ip);
         String data=vo.getData()==null ? "" : vo.getData();
-        visitLogVo.setNote(CommonCode.accessType.get(vo.getKey())+data);
+        visitLogVo.setNote(CommonCode.ACCESS_TYPE.get(vo.getKey())+data);
 
         Map<String, String> addressInfo = ibsService.getAddress(ip);
         visitLogVo.setTrueAddress(addressInfo.get("trueAddress"));

@@ -10,13 +10,13 @@ spring:
     password: caramel(WfVDUPYIngICicX/xtJm3EV+pIT+AOTDWjDnoj+S/30ZCGqd/ATFw3BTqOyouoqW)
   web:
     resources:
-      static-locations: classpath:/static/,file:D:/hyldResources/
+      static-locations: classpath:/static/,file:D:/164officeResources/
 
 # 数据库映射
 mybatis:
   mapper-locations: classpath*:/mapper/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.ding.hyld.entity
+  typeAliasesPackage: com.ding.office.entity
   # 打印 sql
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -24,7 +24,7 @@ mybatis:
 # 全局变量
 resourcespathutils:
   url: http://127.0.0.1:8090/resources
-  realpath: D:/hyldResources
+  realpath: D:/164officeResources
   photopathprefix: /photo
   videopathprefix: /video
   audiopathprefix: /audio

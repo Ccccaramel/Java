@@ -33,6 +33,18 @@ public class MusicInfo {
 
     private List<MusicLyricInfo> musicLyricInfoList;
 
+    private Integer hot;
+
+    private Dictionary type;
+
+    public Dictionary getType() {
+        return type;
+    }
+
+    public void setType(Dictionary type) {
+        this.type = type;
+    }
+
     public List<MusicLyricInfo> getMusicLyricInfoList() {
         return musicLyricInfoList;
     }
@@ -207,5 +219,13 @@ public class MusicInfo {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public Integer getHot() {
+        return hot;
+    }
+
+    public void setHot(Integer hot) {
+        this.hot = hot;
     }
 }

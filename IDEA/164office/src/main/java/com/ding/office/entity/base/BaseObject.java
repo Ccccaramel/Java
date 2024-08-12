@@ -1,9 +1,13 @@
 package com.ding.office.entity.base;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class BaseObject implements Serializable {
+
+    @TableId
     private Integer id;
     private LocalDateTime createTime;
     private String note;

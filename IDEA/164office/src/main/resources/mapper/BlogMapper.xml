@@ -64,6 +64,9 @@
             <if test="blogVo.label != null and blogVo.label.trim() != ''">
                 and label like concat('%',#{blogVo.label},'%')
             </if>
+            <if test="blogVo.collection != null and blogVo.collection == true">
+                and id in (select blog from blog_collection where user = #{blogVo.collectionUserId} )
+            </if>
         </where>
         ORDER BY createTime desc
         <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
@@ -97,6 +100,9 @@
             </if>
             <if test="blogVo.label != null and blogVo.label.trim() != ''">
                 and label like concat('%',#{blogVo.label},'%')
+            </if>
+            <if test="blogVo.collection != null and blogVo.collection == true">
+                and id in (select blog from blog_collection where user = #{blogVo.collectionUserId} )
             </if>
         </where>
     </select>

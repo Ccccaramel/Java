@@ -29,10 +29,10 @@
 
         <association property="role" column="role" select="com.ding.office.mapper.RoleMapper.findById"/>
         <association property="status" column="status" select="com.ding.office.mapper.DictionaryMapper.findById"/>
-        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.HeadPortraitMapper.findById"/>
+        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.ResourceMapper.findById"/>
     </resultMap>
     <resultMap id="resultBriefInfoMap" type="com.ding.office.info.UserInfo">
-        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.HeadPortraitMapper.findById"/>
+        <association property="headPortrait" column="headPortrait" select="com.ding.office.mapper.ResourceMapper.findById"/>
     </resultMap>
     <select id="searchUser" resultMap="resultInfoMap">
         select * from user

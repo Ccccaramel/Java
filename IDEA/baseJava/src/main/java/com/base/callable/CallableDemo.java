@@ -12,18 +12,20 @@ public class CallableDemo implements Callable<Integer> {
     }
 
     @Override
-    public Integer call(){
+    public Integer call() throws InterruptedException {
         int sum = 0;
-        for (int i=0;i<=this.num;i++)
+        for (int i=0;i<=this.num;i++){
             sum+=i;
+            Thread.sleep(10);
+        }
         System.out.println(this.name+ " >>> "+sum);
         return sum;
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        CallableDemo c1 = new CallableDemo("A",39);
-        CallableDemo c2 = new CallableDemo("B",40);
-        CallableDemo c3 = new CallableDemo("C",41);
+        CallableDemo c1 = new CallableDemo("A",4);
+        CallableDemo c2 = new CallableDemo("B",3);
+        CallableDemo c3 = new CallableDemo("C",2);
 
         // 将线程提交并执行
         FutureTask<Integer> f1= new FutureTask<>(c1);
@@ -38,5 +40,7 @@ public class CallableDemo implements Callable<Integer> {
         System.out.println("A:"+f1.get());
         System.out.println("B:"+f2.get());
         System.out.println("C:"+f3.get());
+
+        System.out.println("-end-");
     }
 }

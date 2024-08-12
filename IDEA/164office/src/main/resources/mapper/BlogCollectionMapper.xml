@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ding.office.mapper.BlogCollectionMapper">
+    <resultMap id="resultMap" type="com.ding.office.entity.BlogCollection">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="user" property="user"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <resultMap id="resultInfoMap" type="com.ding.office.info.BlogCollectionInfo">
+        <id column="id" property="id"/>
+
+        <id column="blog" property="blog"/>
+        <id column="user" property="user"/>
+
+        <id column="createTime" property="createTime"/>
+        <id column="note" property="note"/>
+    </resultMap>
+    <select id="searchBlogCollection" resultMap="resultInfoMap">
+        select * from blog_collection
+        <where>
+            <if test="blogCollectionVo.blog != null">
+                and blog = #{blogCollectionVo.blog}
+            </if>
+            <if test="blogCollectionVo.user != null">
+                and user = #{blogCollectionVo.user}
+            </if>
+        </where>
+        ORDER BY createTime desc
+        <if test="page!=null and page.currentPage!=null and page.currentPage!=0 and page.size!=null and page.size!=0">
+            <bind name="start" value="(page.currentPage-1)*page.size"/>
+            limit ${start},${page.size}
+        </if>
+    </select>
+    <select id="searchBlogCollectionOfPage" resultType="java.lang.Integer">
+        select count(1) from blog_collection
+        <where>
+            <if test="blogCollectionVo.blog != null">
+                and blog = #{blogCollectionVo.blog}
+            </if>
+            <if test="blogCollectionVo.user != null">
+                and user = #{blogCollectionVo.user}
+            </if>
+        </where>
+    </select>
+    <insert id="collection">
+        insert into blog_collection(user,blog,note)
+        values(#{blogCollectionVo.user},#{blogCollectionVo.blog},#{blogCollectionVo.note})
+    </insert>
+    <delete id="cancelCollection">
+        delete from blog_collection
+        where blog = #{blogCollectionVo.blog}
+        and user = #{blogCollectionVo.user}
+    </delete>
+</mapper>

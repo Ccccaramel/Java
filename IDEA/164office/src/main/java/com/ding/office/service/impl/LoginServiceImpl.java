@@ -274,6 +274,7 @@ public class LoginServiceImpl implements LoginService {
             return null;
         }
         Map<String,Object> objectMap = JWTUtils.checkToken(token);
+        log.info("objectMap:{}",objectMap);
         if(objectMap==null){
             return null;
         }
@@ -281,6 +282,7 @@ public class LoginServiceImpl implements LoginService {
         if(userJson==null){
             return null;
         }
+        log.info("userJson:{}",userJson);
         CurrentUser currentUser=JSON.parseObject(userJson,CurrentUser.class); // 将字符串转换为对象
         return currentUser;
     }

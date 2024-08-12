@@ -19,6 +19,10 @@ public class BlogVo {
 
     private boolean isAutoSave;
 
+    private boolean collection;
+
+    private Integer collectionUserId;
+
     public boolean isAutoSave() {
         return isAutoSave;
     }
@@ -129,5 +133,21 @@ public class BlogVo {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public boolean isCollection() {
+        return collection;
+    }
+
+    public void setCollection(boolean collection) {
+        this.collection = collection;
+    }
+
+    public Integer getCollectionUserId() {
+        return collectionUserId;
+    }
+
+    public void setCollectionUserId(Integer collectionUserId) {
+        this.collectionUserId = collectionUserId;
     }
 }

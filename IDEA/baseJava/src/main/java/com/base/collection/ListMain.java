@@ -1,5 +1,7 @@
 package com.base.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -64,5 +66,10 @@ public class ListMain {
         System.out.println("*** contains() ***");
         String s4=",12,";
         System.out.println("exits:"+Arrays.asList("",",").contains(s4));
+    }
+
+    @Test
+    public void fun1(){
+        System.out.println(Arrays.asList("1","2").contains("3"));
     }
 }

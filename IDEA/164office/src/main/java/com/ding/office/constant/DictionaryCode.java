@@ -203,6 +203,16 @@ public interface DictionaryCode {
      */
     Integer MUSIC_STATUS_2 =3101;
 
+    // music类型
+    /**
+     * 精选
+     */
+    String MUSIC_TYPE_1 ="3700";
+    /**
+     * 全部
+     */
+    String MUSIC_TYPE_2 ="3701";
+
     // musicLyric状态
     /**
      * 正常
@@ -270,4 +280,22 @@ public interface DictionaryCode {
      */
     Integer CHAT_TYPE_2 =3601;
 
+    // 中国象棋胜方战胜方式
+    /**
+     * 吃掉【帅/将】对战胜利
+     */
+    Integer CHINESE_CHESS_WINNER_WAY_0=3900;
+    /**
+     * 和棋
+     */
+    Integer CHINESE_CHESS_WINNER_WAY_1=3901;
+    /**
+     * 对方投降
+     */
+    Integer CHINESE_CHESS_WINNER_WAY_2=3902;
+    /**
+     * 对方超时
+     */
+    Integer CHINESE_CHESS_WINNER_WAY_3=3903;
 }
+

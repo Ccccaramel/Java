@@ -5,42 +5,52 @@ import com.ding.office.entity.base.BaseObject;
 
 @TableName("chinese_chess")
 public class ChineseChess extends BaseObject {
-    private Integer rPlayer;  // 红方(房主)
-    private Integer rPlayerSkill;  // 红方技能
-    private Integer bPlayer;  // 黑方
-    private Integer bPlayerSkill;  // 黑方技能
-    private Integer winner;  //胜方
+    private Integer name;  // 对战标题
+    private Integer roomOwner;  // 房主(红方)
+    private Integer roomOwnerSkill;  // 房主(红方)技能
+    private Integer rival;  // 对手(黑方)
+    private Integer rivalSkill;  // 对手(黑方)技能
+    private Integer winner;  // 胜方
+    private Integer type;  // 胜方战胜方式
 
-    public Integer getrPlayer() {
-        return rPlayer;
+    public Integer getName() {
+        return name;
     }
 
-    public void setrPlayer(Integer rPlayer) {
-        this.rPlayer = rPlayer;
+    public void setName(Integer name) {
+        this.name = name;
     }
 
-    public Integer getrPlayerSkill() {
-        return rPlayerSkill;
+    public Integer getRoomOwner() {
+        return roomOwner;
     }
 
-    public void setrPlayerSkill(Integer rPlayerSkill) {
-        this.rPlayerSkill = rPlayerSkill;
+    public void setRoomOwner(Integer roomOwner) {
+        this.roomOwner = roomOwner;
     }
 
-    public Integer getbPlayer() {
-        return bPlayer;
+    public Integer getRoomOwnerSkill() {
+        return roomOwnerSkill;
     }
 
-    public void setbPlayer(Integer bPlayer) {
-        this.bPlayer = bPlayer;
+    public void setRoomOwnerSkill(Integer roomOwnerSkill) {
+        this.roomOwnerSkill = roomOwnerSkill;
     }
 
-    public Integer getbPlayerSkill() {
-        return bPlayerSkill;
+    public Integer getRival() {
+        return rival;
     }
 
-    public void setbPlayerSkill(Integer bPlayerSkill) {
-        this.bPlayerSkill = bPlayerSkill;
+    public void setRival(Integer rival) {
+        this.rival = rival;
+    }
+
+    public Integer getRivalSkill() {
+        return rivalSkill;
+    }
+
+    public void setRivalSkill(Integer rivalSkill) {
+        this.rivalSkill = rivalSkill;
     }
 
     public Integer getWinner() {
@@ -49,5 +59,13 @@ public class ChineseChess extends BaseObject {
 
     public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

@@ -16,4 +16,6 @@ public interface ChineseChessMapper extends BaseMapper<ChineseChess> {
     List<ChineseChessInfo> searchChineseChess(@Param("chineseChessVo") ChineseChessVo chineseChessVo);
 
     List<ChineseChessInfo> getBattleInfo(Integer userId);
+
+    void settlement(@Param("chineseChessVo") ChineseChessVo chineseChessVo);
 }

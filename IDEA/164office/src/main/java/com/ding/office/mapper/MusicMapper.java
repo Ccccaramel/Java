@@ -25,4 +25,6 @@ public interface MusicMapper extends BaseMapper<Music> {
     MusicInfo findBy(@Param("musicVo") MusicVo musicVo);
 
     List<MusicInfo> getAll(@Param("musicVo") MusicVo musicVo);
+
+    void addHot(Integer id);
 }

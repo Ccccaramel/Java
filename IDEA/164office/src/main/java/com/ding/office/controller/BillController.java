@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,26 +94,44 @@ public class BillController extends BaseController {
         billVo.setStatus(DictionaryCode.BILL_STATUS_1);
         billVo.setOrderByExpenseTime(true);
         List<BillStatisticsInfo> infos = billService.getBillStatistics(billVo);
+        Integer len = infos.size();
+
+        Integer nowYear = LocalDateTime.now().getYear();  // 当前月份
+        Integer nowMonth=LocalDateTime.now().getMonthValue();  // 当前月份
 
         if(infos ==null || infos.size()==0){
+            // 没有数据,都是0
+        }else if (infos.size()==1){  // 只有一个月份的数据,那么这个月份的数据是当前月份的数据,则上个月数据,最高消费月均为0
+            thisMonth=infos.get(0).getValueOfMonth();  // 本月消费
+            // 上月为0
+            // 历史最高月消费为0
+            // 历史最低月消费为0
+            total=thisMonth;  // 总消费
+        }else{   // 有两个月份的数据,比包含一个当前月分数据,其余全为历史数据
+            boolean isLast=false;
 
-        }else if (infos.size()==1){
-            thisMonth=infos.get(0).getValueOfMonth();
+            // 判断"当前月"的数据是否是当前月的
+            BillStatisticsInfo thisBillInfo=infos.get(len-1);
+            if(thisBillInfo.getYear().equals(nowYear)&&thisBillInfo.getMonth().equals((nowMonth))){  // 这个月有数据
+                thisMonth = thisBillInfo.getValueOfMonth();  // 本月消费
+                isLast=true;
+            }
+
+            // 判断"上个月"的数据是否是上个月的
+            BillStatisticsInfo lastBillInfo=infos.get(len-2);
+            if(lastBillInfo.getYear().equals(nowYear)&&lastBillInfo.getMonth().equals((nowMonth-1))){  // 上个月有数据
+                lastMonth=lastBillInfo.getValueOfMonth();
+            }
+
             minMonth=infos.get(0).getValueOfMonth();
-            maxMonth=infos.get(0).getValueOfMonth();
-            total=infos.get(0).getValueOfMonth();
-        }else{
-            thisMonth=infos.get(infos.size()-1).getValueOfMonth();
-            lastMonth=infos.get(infos.size()-2).getValueOfMonth();
-            minMonth=infos.get(0).getValueOfMonth();
-            for(int i=0;i<infos.size();i++){
+            for(int i=0;i<len;i++){
                 BillStatisticsInfo info = infos.get(i);
+                total = total.add(info.getValueOfMonth());  // 统计总消费
+                if(i==(len-1)&&isLast){  // infos已按时间排序,遍历至当前月的数据,跳过
+                    break;
+                }
                 if(info.getValueOfMonth().compareTo(maxMonth) > 0){
                     maxMonth=info.getValueOfMonth();
-                }
-                total = total.add(info.getValueOfMonth());
-                if(i==infos.size()-1){
-                    continue;
                 }
                 if(info.getValueOfMonth().compareTo(minMonth) < 0){
                     minMonth=info.getValueOfMonth();

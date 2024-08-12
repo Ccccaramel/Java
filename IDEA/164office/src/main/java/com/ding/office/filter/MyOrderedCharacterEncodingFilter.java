@@ -82,7 +82,7 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
 
             logger.info("响应...");
             response.setContentType("text/html; charset=UTF-8");
-            response.getWriter().println(JSON.toJSONString(R.fail(CommonCode.STRING_1)));
+            response.getWriter().println(JSON.toJSONString(R.fail(CommonCode.ILLEGAL_REQUEST_MSG)));
             return;
         }
         try {
@@ -96,7 +96,7 @@ public class MyOrderedCharacterEncodingFilter extends OrderedCharacterEncodingFi
             visitLogService.add(visitLogVo);
 
             response.setContentType("text/html; charset=UTF-8");
-            response.getWriter().println(JSON.toJSONString(R.fail(CommonCode.STRING_1)));
+            response.getWriter().println(JSON.toJSONString(R.fail(CommonCode.ILLEGAL_REQUEST_MSG)));
             return;
         }
     }

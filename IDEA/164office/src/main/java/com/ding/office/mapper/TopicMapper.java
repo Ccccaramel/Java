@@ -26,8 +26,6 @@ public interface TopicMapper extends BaseMapper<Topic> {
 
     TopicInfo findById(@Param("topicId") Integer topicId);
 
-    Topic findParentById(Integer id);
-
     void updateStatus(@Param("topicVo") TopicVo topicVo);
 
     List<TopicInfo> getTopicReply(@Param("page") Page page, @Param("topicVo") TopicVo topicVo);

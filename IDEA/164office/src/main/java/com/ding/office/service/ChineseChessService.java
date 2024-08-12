@@ -18,4 +18,6 @@ public interface ChineseChessService extends IService<ChineseChess> {
      * @return
      */
     ChineseChessInfo getBattleInfo(Integer userId);
+
+    void settlement(ChineseChessVo chineseChessVo);
 }

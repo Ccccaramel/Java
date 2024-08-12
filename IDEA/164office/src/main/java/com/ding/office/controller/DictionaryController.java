@@ -158,6 +158,17 @@ public class DictionaryController {
         return R.success(dictionaryService.findByType("musicLyricStatus", null));
     }
 
+    @GetMapping("/getMusicType")
+    public R getMusicType(){
+        return R.success(dictionaryService.findByType("musicType", null));
+    }
+
+
+    @GetMapping("/getResourceType")
+    public R getResourceType(){
+        return R.success(dictionaryService.findByType("resourceType", null));
+    }
+
 
     @GetMapping("searchDictionary")
     public R searchDictionary(Page page, DictionaryInfo dictionaryInfo){

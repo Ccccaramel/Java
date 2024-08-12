@@ -4,22 +4,30 @@
     <resultMap id="resultMap" type="com.ding.office.entity.ChineseChess">
     </resultMap>
     <resultMap id="resultMapInfo" type="com.ding.office.info.ChineseChessInfo">
-        <association property="rPlayer" column="rPlayer" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
-        <association property="bPlayer" column="bPlayer" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="name" column="name"/>
+        <association property="roomOwner" column="roomOwner" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="rival" column="rival" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
         <association property="winner" column="winner" select="com.ding.office.mapper.UserMapper.findBriefInfoById"/>
+        <association property="type" column="type" select="com.ding.office.mapper.DictionaryMapper.findById"/>
     </resultMap>
     <select id="searchChineseChess" resultMap="resultMapInfo">
         select * from chinese_chess
         <where>
+            <if test="chineseChessVo.name != null">
+                and name = #{chineseChessVo.name}
+            </if>
             <if test="chineseChessVo.user != null">
-                and (rPlayer = #{chineseChessVo.user}
-                or bPlayer = #{chineseChessVo.user})
+                and (roomOwner = #{chineseChessVo.user}
+                or rival = #{chineseChessVo.user})
             </if>
-            <if test="chineseChessVo.rPlayer != null">
-                and rPlayer = #{chineseChessVo.rPlayer}
+            <if test="chineseChessVo.roomOwner != null">
+                and roomOwner = #{chineseChessVo.roomOwner}
             </if>
-            <if test="chineseChessVo.bPlayer != null">
-                and bPlayer = #{chineseChessVo.bPlayer}
+            <if test="chineseChessVo.rival != null">
+                and rival = #{chineseChessVo.rival}
+            </if>
+            <if test="chineseChessVo.type != null">
+                and type = #{chineseChessVo.type}
             </if>
         </where>
         ORDER BY createTime desc
@@ -31,15 +39,21 @@
     <select id="searchChineseChessOfPage" resultType="java.lang.Integer">
         select count(1) from chinese_chess
         <where>
+            <if test="chineseChessVo.name != null">
+                and name = #{chineseChessVo.name}
+            </if>
             <if test="chineseChessVo.user != null">
-                and (rPlayer = #{chineseChessVo.user}
-                or bPlayer = #{chineseChessVo.user})
+                and (roomOwner = #{chineseChessVo.user}
+                or rival = #{chineseChessVo.user})
             </if>
-            <if test="chineseChessVo.rPlayer != null">
-                and rPlayer = #{chineseChessVo.rPlayer}
+            <if test="chineseChessVo.roomOwner != null">
+                and roomOwner = #{chineseChessVo.roomOwner}
             </if>
-            <if test="chineseChessVo.bPlayer != null">
-                and bPlayer = #{chineseChessVo.bPlayer}
+            <if test="chineseChessVo.rival != null">
+                and rival = #{chineseChessVo.rival}
+            </if>
+            <if test="chineseChessVo.type != null">
+                and type = #{chineseChessVo.type}
             </if>
         </where>
         ORDER BY createTime desc
@@ -50,13 +64,17 @@
     </select>
     <select id="getBattleInfo" resultMap="resultMapInfo">
         select * from chinese_chess cc1
-        where cc1.rPlayer=#{userId}
+        where cc1.roomOwner=#{userId}
         union
         select * from chinese_chess cc2
-        where cc2.bPlayer=#{userId};
+        where cc2.rival=#{userId};
     </select>
-    <insert id="add">
-        insert into chinese_chess(rPlayer,bPlayer,rPlayerSkill,bPlayerSkill)
-        values(#{chineseChessVo.rPlayer},#{chineseChessVo.bPlayer},#{chineseChessVo.rPlayerSkill},#{chineseChessVo.bPlayerSkill})
+    <insert id="add" parameterType="com.ding.office.vo.BlogVo" useGeneratedKeys="true" keyProperty="id">
+        insert into chinese_chess(name,roomOwner,rival,roomOwnerSkill,rivalSkill,note)
+        values(#{chineseChessVo.name},#{chineseChessVo.roomOwner},#{chineseChessVo.rival},#{chineseChessVo.roomOwnerSkill},#{chineseChessVo.rivalSkill},#{chineseChessVo.note})
     </insert>
+    <update id="settlement">
+        update chinese_chess set winner=#{chineseChessVo.winner},type=#{chineseChessVo.type}
+        where id=#{chineseChessVo.id}
+    </update>
 </mapper>

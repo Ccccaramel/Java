@@ -5,7 +5,13 @@ import java.math.BigDecimal;
 public class BillStatisticsInfo {
     private Integer year;
     private Integer month;
+    /**
+     * 本月消费总金额
+     */
     private BigDecimal valueOfMonth;
+    /**
+     * 本月消费单笔最高金额
+     */
     private BigDecimal maxOfMonth;
 
     public Integer getYear() {

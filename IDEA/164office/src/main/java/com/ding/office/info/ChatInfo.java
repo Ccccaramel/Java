@@ -5,6 +5,9 @@ import com.ding.office.utils.TimeUtils;
 
 import java.time.LocalDateTime;
 
+/**
+ * 单条对话数据
+ */
 public class ChatInfo {
     private Integer id;
 

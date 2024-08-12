@@ -25,12 +25,8 @@ public interface CommonCode {
      */
     String[] OPEN_URL = {
             "/static/**", // 放行静态资源
-//            "/photo/**", // 放行静态资源
             "/resources/**", // 放行静态资源
-//            "/static/ppp.jpg",
-//            "/upload/**", // 放行静态资源
             "/api/**", // 放行静态资源
-//            "/hyld/**", // 放行静态资源
 
             "/dictionary/getTeamCompetitionType",
             "/dictionary/getTeamType",
@@ -102,14 +98,24 @@ public interface CommonCode {
 
             "/linkChat/*",  // 必须放开!
             "/linkChineseChess/*",
+
+            "/resource/searchResource",
+
+            // 测试时开放
+//            "/blogCollection",
     };
 
-    String FORM_EMAIL = "by164office@163.com"; // 平台发送验证码专用邮箱
+    /**
+     * 平台发送验证码专用邮箱
+     */
+    String FORM_EMAIL = "by164office@163.com";
 
-    String STRING_1 = "急冻树，急冻树，好吃的~急冻树~";
-    String STRING_2 = "急冻树!";
 
-    Map<Integer,String> accessType=new HashMap<Integer,String>(){{
+    String ILLEGAL_REQUEST_MSG="非法请求!";
+    String BLOG_TITLE = "标题";
+    String BLOG_CONTENT = "在此处编辑";
+
+    Map<Integer,String> ACCESS_TYPE =new HashMap<Integer,String>(){{
         put(0, "访问首页");
         put(1, "访问【战队竞赛奖励一览】");
         put(2, "访问【社区】");
@@ -137,6 +143,8 @@ public interface CommonCode {
         put(24, "访问【Music列表】");
         put(25, "进入【Music】");
         put(26, "播放【Music】");
+        put(27, "访问【中国象棋】");
+        put(28, "访问【平台更新日志】");
     }};
 
     String SEC_WEBSOCKET_PROTOCOL="Sec-Websocket-Protocol";
